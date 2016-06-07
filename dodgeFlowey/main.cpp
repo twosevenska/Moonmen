@@ -71,8 +71,6 @@ void drawScene() {
 		glVertex3i(0, 0, 0);
 		glVertex3i(0, 0, 10);
 	glEnd();
-
-
 }
 
 void display(void) {

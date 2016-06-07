@@ -1,4 +1,5 @@
 #include "Header.h"
+#include "loadBlenderModels.h"
 
 GLuint texture[128];
 RgbImage imag;
@@ -610,4 +611,5 @@ void drawLevel() {
 	drawTrapDoor(15.0, 0.0, 20.0);
 	drawTrapRoom(15.0, 4.0, 20.0);
 	drawGlass(15.0, glassHeight, 20.0);
+	//drawmodel();
 }

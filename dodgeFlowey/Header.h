@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <time.h>
+#include <Windows.h>
 #include <GL/glut.h>
 #include "RgbImage.h"
 
