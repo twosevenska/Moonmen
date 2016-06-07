@@ -1,68 +1,92 @@
 #include "Header.h"
-#include <assimp/Importer.hpp>      // C++ importer interface
-#include <assimp/scene.h>           // Output data structure
-#include <assimp/postprocess.h>     // Post processing fla
+// assimp include files. These three are usually needed.
+#include "assimp/Importer.hpp"	//OO version Header!
+#include "assimp/postprocess.h"
+#include "assimp/scene.h"
+
+const struct aiScene* scene = NULL;
+GLuint scene_list = 0;
+
+// Create an instance of the Importer class
+Assimp::Importer importer;
+
+#define aisgl_min(x,y) (x<y?x:y)
+#define aisgl_max(x,y) (y>x?y:x)
 
 
-void drawmodel(void){
-	Assimp::Importer importer;
-	const aiScene* scene = importer.ReadFile("resources/models/Sans/Sans.obj",
-		aiProcess_CalcTangentSpace |
-		aiProcess_Triangulate |
-		aiProcess_JoinIdenticalVertices |
-		aiProcess_SortByPType);
+int loadasset(const char* path){
+	// we are taking one of the postprocessing presets to avoid
+	// spelling out 20+ single postprocessing flags here.
+	scene = importer.ReadFile(path, aiProcessPreset_TargetRealtime_Fast);
+	return 1;
+}
 
-	aiMesh *mesh = scene->mMeshes[0];
 
-	float *vertexArray;
-	float *normalArray;
-	float *uvArray;
+void renderModel(const struct aiScene *sc, const struct aiNode* nd) {
+	unsigned int i;
+	unsigned int n = 0, t;
+	aiMatrix4x4 m = nd->mTransformation;
 
-	int numVerts;
+	// update transform
+	m.Transpose();
+	glPushMatrix();
+	glMultMatrixf((float*)&m);
 
-	numVerts = mesh->mNumFaces * 3;
+	// draw all meshes assigned to this node
+	for (; n < nd->mNumMeshes; ++n) {
+		const struct aiMesh* mesh = scene->mMeshes[nd->mMeshes[n]];
 
-	vertexArray = new float[mesh->mNumFaces * 3 * 3];
-	normalArray = new float[mesh->mNumFaces * 3 * 3];
-	uvArray = new float[mesh->mNumFaces * 3 * 2];
+		//apply_material(sc->mMaterials[mesh->mMaterialIndex]);
 
-	for (unsigned int i = 0; i<mesh->mNumFaces; i++)
-	{
-		const aiFace& face = mesh->mFaces[i];
-
-		for (int j = 0; j<3; j++)
-		{
-			aiVector3D uv = mesh->mTextureCoords[0][face.mIndices[j]];
-			memcpy(uvArray, &uv, sizeof(float) * 2);
-			uvArray += 2;
-
-			aiVector3D normal = mesh->mNormals[face.mIndices[j]];
-			memcpy(normalArray, &normal, sizeof(float) * 3);
-			normalArray += 3;
-
-			aiVector3D pos = mesh->mVertices[face.mIndices[j]];
-			memcpy(vertexArray, &pos, sizeof(float) * 3);
-			vertexArray += 3;
+		if (mesh->mNormals == NULL) {
+			glDisable(GL_LIGHTING);
 		}
+		else {
+			glEnable(GL_LIGHTING);
+		}
+
+		for (t = 0; t < mesh->mNumFaces; ++t) {
+			const struct aiFace* face = &mesh->mFaces[t];
+			GLenum face_mode;
+
+			switch (face->mNumIndices) {
+			case 1: face_mode = GL_POINTS; break;
+			case 2: face_mode = GL_LINES; break;
+			case 3: face_mode = GL_TRIANGLES; break;
+			default: face_mode = GL_POLYGON; break;
+			}
+
+			glBegin(face_mode);
+
+			for (i = 0; i < face->mNumIndices; i++) {
+				int index = face->mIndices[i];
+				if (mesh->mColors[0] != NULL)
+					glColor4fv((GLfloat*)&mesh->mColors[0][index]);
+				if (mesh->mNormals != NULL)
+					glNormal3fv((GLfloat*)&mesh->mNormals[index].x);
+				
+				glVertex3fv(&mesh->mVertices[index].x);
+			}
+
+			glEnd();
+		}
+
 	}
 
-	uvArray -= mesh->mNumFaces * 3 * 2;
-	normalArray -= mesh->mNumFaces * 3 * 3;
-	vertexArray -= mesh->mNumFaces * 3 * 3;
+	// draw all children
+	for (n = 0; n < nd->mNumChildren; ++n) {
+		renderModel(sc, nd->mChildren[n]);
+	}
 
-	glEnableClientState(GL_VERTEX_ARRAY);
-	glEnableClientState(GL_NORMAL_ARRAY);
-	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+	glPopMatrix();
+}
 
-	glVertexPointer(3, GL_FLOAT, 0, vertexArray);
-	glNormalPointer(GL_FLOAT, 0, normalArray);
+void drawmodel(void){
+	loadasset("monkey.obj");
+	if (!scene) {
+		printf("\nCAN'T LOAD OBJ\n");
+		exit(0);
+	}
 
-	//glClientActiveTexture(GL_TEXTURE,0_ARB);
-	glTexCoordPointer(2, GL_FLOAT, 0, uvArray);
-
-	glDrawArrays(GL_TRIANGLES, 0, numVerts);
-	glDisableClientState(GL_VERTEX_ARRAY);
-	glDisableClientState(GL_NORMAL_ARRAY);
-	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
-
+	renderModel(scene, scene->mRootNode);
 }
