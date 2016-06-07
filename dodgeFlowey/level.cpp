@@ -260,14 +260,6 @@ void drawSpectator(GLfloat x, GLfloat y, GLfloat z) {
 	glColor4f(HGLASS);
 	glPushMatrix();
 	glBegin(GL_TRIANGLES);
-	glVertex3f(-x / 2.0, y + 5.0, -z / 2.0);
-	glVertex3f(-x / 2.0, y + 5.0, z / 2.0);
-	glVertex3f(-x / 2.0, y, -z / 2.0);
-
-	glVertex3f(-x / 2.0, y, z / 2.0);
-	glVertex3f(-x / 2.0, y + 5.0, z / 2.0);
-	glVertex3f(-x / 2.0, y, -z / 2.0);
-
 	glVertex3f(-x / 2.0, y + 5.0, -z);
 	glVertex3f(-x / 2.0, y + 5.0, z);
 	glVertex3f(-x / 2.0, y, -z);
