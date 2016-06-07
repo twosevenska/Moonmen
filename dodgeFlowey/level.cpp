@@ -23,12 +23,12 @@ void drawFloor(GLfloat x, GLfloat y, GLfloat z) {
 	glPushMatrix();
 	glBegin(GL_TRIANGLES);
 	glTexCoord2f(0.0f, 0.0f); glVertex3f(-x / 2.0, 0.0, z - 3.0);
-	glTexCoord2f(10.0f, 10.0f); glVertex3f(x / 2.0, 0.0, -z);
-	glTexCoord2f(0.0f, 10.0f); glVertex3f(-x / 2.0, 0.0, -z); 
+	glTexCoord2f(4.0f, 4.0f); glVertex3f(x / 2.0, 0.0, -z);
+	glTexCoord2f(0.0f, 4.0f); glVertex3f(-x / 2.0, 0.0, -z); 
 
-	glVertex3f(-x / 2.0, 0.0, z - 3.0);
-	/*glTexCoord2f(10.0f, 0.0f);*/ glVertex3f(x / 2.0, 0.0, z - 3.0);
-	glVertex3f(x / 2.0, 0.0, -z);
+	glTexCoord2f(0.0f, 0.0f); glVertex3f(-x / 2.0, 0.0, z - 3.0);
+	glTexCoord2f(0.0f, 4.0f); glVertex3f(x / 2.0, 0.0, z - 3.0);
+	glTexCoord2f(4.0f, 4.0f); glVertex3f(x / 2.0, 0.0, -z);
 	
 	glEnd();
 	glPopMatrix();
