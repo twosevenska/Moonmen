@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <time.h>
 #include <GL/glut.h>
+#include "RgbImage.h"
 
 //Some colors
 #define BLUE     0.0, 0.0, 1.0, 1.0

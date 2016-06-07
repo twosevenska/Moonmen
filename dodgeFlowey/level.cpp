@@ -1,18 +1,37 @@
 #include "Header.h"
 
+GLuint texture[128];
+RgbImage imag;
+
 void drawFloor(GLfloat x, GLfloat y, GLfloat z) {
-	glColor4f(DGREY);
+	glGenTextures(1, &texture[0]);
+	glBindTexture(GL_TEXTURE_2D, texture[0]);
+	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	imag.LoadBmpFile("resources/textures/floorTile.bmp");
+	glTexImage2D(GL_TEXTURE_2D, 0, 3,
+		imag.GetNumCols(),
+		imag.GetNumRows(), 0, GL_RGB, GL_UNSIGNED_BYTE,
+		imag.ImageData());
+
+	glEnable(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D, texture[0]);
 	glPushMatrix();
 	glBegin(GL_TRIANGLES);
-	glVertex3f(-x / 2.0, 0.0, -z);
-	glVertex3f(x / 2.0, 0.0, -z);
-	glVertex3f(-x / 2.0, 0.0, z - 3.0);
+	glTexCoord2f(0.0f, 0.0f); glVertex3f(-x / 2.0, 0.0, z - 3.0);
+	glTexCoord2f(10.0f, 10.0f); glVertex3f(x / 2.0, 0.0, -z);
+	glTexCoord2f(0.0f, 10.0f); glVertex3f(-x / 2.0, 0.0, -z); 
 
-	glVertex3f(x / 2.0, 0.0, z - 3.0);
-	glVertex3f(x / 2.0, 0.0, -z);
 	glVertex3f(-x / 2.0, 0.0, z - 3.0);
+	/*glTexCoord2f(10.0f, 0.0f);*/ glVertex3f(x / 2.0, 0.0, z - 3.0);
+	glVertex3f(x / 2.0, 0.0, -z);
+	
 	glEnd();
 	glPopMatrix();
+	glDisable(GL_TEXTURE_2D);
 }
 
 void drawTrapDoor(GLfloat x, GLfloat y, GLfloat z) {
