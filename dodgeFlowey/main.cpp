@@ -29,10 +29,8 @@ GLint    maxR = 20;
 GLint    numFrames = 60;              //numero de imagens a colocar em loop na tela
 GLint    msec = 100;					//.. definicao do timer (actualizacao)
 
-										//================================================================================
-										//=========================================================================== INIT
-
-										//------------------------------------------------------------ Texturas
+// Sounds 
+irrklang::ISoundEngine *SoundEngine = irrklang::createIrrKlangDevice();
 
 
 void init(void)
@@ -156,7 +154,7 @@ void teclasNotAscii(int key, int x, int y) {
 
 //======================================================= MAIN
 int main(int argc, char** argv) {
-
+	//SoundEngine->play2D("resources/sounds/jacks_office.mp3", GL_FALSE);
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
 	glutInitWindowSize(wScreen, hScreen);

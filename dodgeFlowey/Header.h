@@ -5,6 +5,7 @@
 #include <Windows.h>
 #include <GL/glut.h>
 #include "RgbImage.h"
+#include <irrKlang.h>
 
 //Some colors
 #define BLUE     0.0, 0.0, 1.0, 1.0
