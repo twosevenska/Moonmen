@@ -598,10 +598,25 @@ void drawGlass(GLfloat x, GLfloat y, GLfloat z) {
 	glDisable(GL_BLEND);
 }
 
+void drawLightPos() {
+	glPushMatrix();
+	//glEnable(GL_COLOR_MATERIAL);
+	//glColor4f(RED);
+	glBegin(GL_LINES);
+	glVertex3i(0, 10, 0);
+	glVertex3i(0, 12, 0);
+	glEnd();
+	//glDisable(GL_COLOR_MATERIAL);
+	glPopMatrix();
+}
+
+
 void drawLevel() {
+	
 	bool lockWindow = false;
 	GLfloat glassHeight = 15.0 - 13.0;
 	glBlendFunc(GL_ONE, GL_ZERO);
+	//drawmodel();
 	drawFloor(15.0, 0.0, 20.0);
 	drawCeiling(15.0, 15.0, 20.0);
 	drawWalls(15.0, 15.0, 20.0);
@@ -611,5 +626,5 @@ void drawLevel() {
 	drawTrapDoor(15.0, 0.0, 20.0);
 	drawTrapRoom(15.0, 4.0, 20.0);
 	drawGlass(15.0, glassHeight, 20.0);
-	//drawmodel();
+	//drawLightPos();
 }

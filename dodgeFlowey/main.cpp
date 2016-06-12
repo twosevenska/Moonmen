@@ -35,9 +35,24 @@ irrklang::ISoundEngine *SoundEngine = irrklang::createIrrKlangDevice();
 
 void init(void)
 {
+	//GLfloat LightAmbient[] = { 0.5f, 0.5f, 0.5f, 1.0f };
+	//GLfloat LightDiffuse[] = { 1.0f, 1.0f, 1.0f, 1.0f };
+	//GLfloat LightPosition[] = { 0.0f, 10.0f, 0.0f, 1.0f };
+
 	glClearColor(SWHITE);
 	glShadeModel(GL_SMOOTH);
 	glEnable(GL_DEPTH_TEST);
+	glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
+
+	//glEnable(GL_LIGHTING);
+	//glEnable(GL_LIGHT0);    // Uses default lighting parameters
+	//glLightModeli(GL_LIGHT_MODEL_TWO_SIDE, GL_TRUE);
+	glEnable(GL_NORMALIZE);
+
+	//glLightfv(GL_LIGHT1, GL_AMBIENT, LightAmbient);
+	//glLightfv(GL_LIGHT1, GL_DIFFUSE, LightDiffuse);
+	//glLightfv(GL_LIGHT1, GL_POSITION, LightPosition);
+	//glEnable(GL_LIGHT1);
 }
 
 
@@ -154,6 +169,7 @@ void teclasNotAscii(int key, int x, int y) {
 
 //======================================================= MAIN
 int main(int argc, char** argv) {
+	//Start the background music
 	//SoundEngine->play2D("resources/sounds/jacks_office.mp3", GL_FALSE);
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
