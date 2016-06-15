@@ -116,7 +116,7 @@ void drawBlock(GLfloat x, GLfloat y, GLfloat z) {
 }
 
 void drawWalls(GLfloat x, GLfloat y, GLfloat z) {
-	GLfloat meshDensity = 4.0;
+	GLfloat meshDensity = 4.00;
 
 	//Ceiling
 	glEnable(GL_TEXTURE_2D);
@@ -202,7 +202,7 @@ void drawCover(GLfloat x, GLfloat y, GLfloat z) {
 	glEnable(GL_TEXTURE_2D);
 	glBindTexture(GL_TEXTURE_2D, texture[2]);
 	glPushMatrix();
-	glTranslatef( 0.0, 0.0, z - 4.0);
+	glTranslatef( 0.0, 0.0, z - 6.0);
 	drawBlock(x, 2.0, 0.2);
 	glPopMatrix();
 	glDisable(GL_TEXTURE_2D);
@@ -211,7 +211,7 @@ void drawCover(GLfloat x, GLfloat y, GLfloat z) {
 	glEnable(GL_TEXTURE_2D);
 	glBindTexture(GL_TEXTURE_2D, texture[3]);
 	glPushMatrix();
-	glTranslatef(-x / 2.0 + x / 4.0, 0.0, z - 8.0);
+	glTranslatef(-x / 2.0 + x / 4.0, 0.0, z - 10.0);
 	drawBlock(x / 2.0, 2.0, 1.6);
 	glPopMatrix();
 	glDisable(GL_TEXTURE_2D);
@@ -239,7 +239,7 @@ void drawCoverGlass(GLfloat x, GLfloat y, GLfloat z) {
 	glEnable(GL_BLEND);
 	glColor4f(CGLASS);
 	glPushMatrix();
-	glTranslatef(-x / 2.0, 0.0, z - 4.1);
+	glTranslatef(-x / 2.0, 0.0, z - 6.1);
 	make_plane(x, y, 4.0);
 	glPopMatrix();
 	glDisable(GL_BLEND);
