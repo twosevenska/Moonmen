@@ -1,4 +1,5 @@
 #include "Header.h"
+#include "light.h"
 #include "loadBlenderModels.h"
 
 GLuint texture[128];
@@ -33,6 +34,11 @@ void make_plane(GLfloat width, GLfloat height, GLfloat densityValue) {
 			}
 		}else{
 			for (GLfloat h = height; h >= 0.0; h -= densityValue) {
+				if (textureHalf % 2 == 0)
+					glTexCoord2f(1.0f, 0.0f);
+				else
+					glTexCoord2f(1.0f, 1.0f);
+				glVertex3f(w + densityValue, h, 0);
 				if (textureHalf % 2 == 0) {
 					glTexCoord2f(0.0f, 0.0f);
 				}
@@ -40,11 +46,6 @@ void make_plane(GLfloat width, GLfloat height, GLfloat densityValue) {
 					glTexCoord2f(0.0f, 1.0f);
 				}
 				glVertex3f(w, h, 0);
-				if (textureHalf % 2 == 0)
-					glTexCoord2f(1.0f, 0.0f);
-				else
-					glTexCoord2f(1.0f, 1.0f);
-				glVertex3f(w + densityValue, h, 0);
 				textureHalf++;
 			}
 		}
@@ -56,7 +57,8 @@ void make_plane(GLfloat width, GLfloat height, GLfloat densityValue) {
 void load_texture(std::string name, GLint texId) {
 	glGenTextures(1, &texture[texId]);
 	glBindTexture(GL_TEXTURE_2D, texture[texId]);
-	//glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
+	if(!lights_on)
+		glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
@@ -102,15 +104,15 @@ void drawBlock(GLfloat x, GLfloat y, GLfloat z) {
 
 	//LeftSide
 	glPushMatrix();
-	glTranslatef(-x / 2.0, 0.0, 0.0);
-	glRotatef(90.0, 0.0, 1.0, 0.0);
+	glTranslatef(-x / 2.0, 0.0, -z);
+	glRotatef(-90.0, 0.0, 1.0, 0.0);
 	make_plane(z, y, 0.05);
 	glPopMatrix();
 
 	//RightSide
 	glPushMatrix();
-	glTranslatef(x / 2.0, 0.0, -z);
-	glRotatef(-90.0, 0.0, 1.0, 0.0);
+	glTranslatef(x / 2.0, 0.0, 0.0);
+	glRotatef(90.0, 0.0, 1.0, 0.0);
 	make_plane(z, y, 0.05);
 	glPopMatrix();
 }
@@ -134,7 +136,7 @@ void drawWalls(GLfloat x, GLfloat y, GLfloat z) {
 	glTranslatef(x / 2.0, 0, z - 4.0);
 	glRotatef(90.0, 0.0, 0.0, 1.0);
 	glRotatef(90.0, 0.0, 1.0, 0.0);
-	make_plane(z * 2, x, meshDensity);
+	make_plane((z * 2) - 4.0, x, meshDensity);
 	glPopMatrix();
 
 	//Left Wall
@@ -148,7 +150,7 @@ void drawWalls(GLfloat x, GLfloat y, GLfloat z) {
 	//Right Wall
 	glBindTexture(GL_TEXTURE_2D, texture[1]);
 	glPushMatrix();
-	glTranslatef(x / 2.0, 0, -z);
+	glTranslatef((x / 2.0) + 0.0, 0, -z);
 	glRotatef(-90.0, 0.0, 1.0, 0.0);
 	make_plane(z*2.0, y, meshDensity);
 	glPopMatrix();
@@ -156,8 +158,8 @@ void drawWalls(GLfloat x, GLfloat y, GLfloat z) {
 	//Back Wall
 	glBindTexture(GL_TEXTURE_2D, texture[1]);
 	glPushMatrix();
-	glTranslatef(-x, 0, -z);
-	make_plane(x * 2.0 , y, meshDensity);
+	glTranslatef(-x/2.0, 0, -z);
+	make_plane(x * 1.0 , y, meshDensity);
 	glPopMatrix();
 
 	//Wall Behind
@@ -184,7 +186,9 @@ void drawSpectator(GLfloat x, GLfloat y, GLfloat z) {
 	glDisable(GL_TEXTURE_2D);
 
 	//Glass
-	glDisable(GL_LIGHTING);
+	if (lights_on)
+		glDisable(GL_LIGHTING);
+
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glEnable(GL_BLEND);
 	glColor4f(HGLASS);
@@ -194,7 +198,9 @@ void drawSpectator(GLfloat x, GLfloat y, GLfloat z) {
 	make_plane(z*2.0, 4.0, 4.0);
 	glPopMatrix();
 	glDisable(GL_BLEND);
-	glEnable(GL_LIGHTING);
+	
+	if (lights_on)
+		glEnable(GL_LIGHTING);
 }
 
 void drawCover(GLfloat x, GLfloat y, GLfloat z) {
@@ -234,7 +240,9 @@ void drawCover(GLfloat x, GLfloat y, GLfloat z) {
 
 void drawCoverGlass(GLfloat x, GLfloat y, GLfloat z) {
 	//Glass
-	glDisable(GL_LIGHTING);
+	if (lights_on)
+		glDisable(GL_LIGHTING);
+	
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE);
 	glEnable(GL_BLEND);
 	glColor4f(CGLASS);
@@ -243,7 +251,9 @@ void drawCoverGlass(GLfloat x, GLfloat y, GLfloat z) {
 	make_plane(x, y, 4.0);
 	glPopMatrix();
 	glDisable(GL_BLEND);
-	glEnable(GL_LIGHTING);
+	
+	if (lights_on)
+		glEnable(GL_LIGHTING);
 }
 
 void drawTrapFloor(GLfloat x, GLfloat y, GLfloat z, GLfloat slide) {
@@ -292,14 +302,6 @@ void drawFog(GLfloat distance, GLfloat density) {
 	glFogf(GL_FOG_START, distance);
 	glFogf(GL_FOG_END, 16.0f);							
 	glEnable(GL_FOG);									
-}
-
-void drawLightPos() {
-	glPushMatrix();
-	glColor4f(YELLOW);
-	glTranslatef(0.0, 10.0, 0.0);
-	glutSolidSphere(0.2, 250, 250);
-	glPopMatrix();
 }
 
 void drawLevel() {

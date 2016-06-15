@@ -3,6 +3,7 @@
 #include <math.h>
 #include "Header.h"
 #include "level.h"
+#include "light.h"
 
 //================================================================================
 //===========================================================Variaveis e constantes
@@ -31,39 +32,19 @@ GLint    msec = 100;					//.. definicao do timer (actualizacao)
 irrklang::ISoundEngine *SoundEngine = irrklang::createIrrKlangDevice();
 
 
-void init(void)
-{
-	GLfloat localAttCon = 1.0;
-	GLfloat localAttLin = 0.05;
-	GLfloat localAttQua = 0.0;
-
-	GLfloat GlobalLightAmbient[] = { 1.0f, 1.0f, 1.0f, 1.0f };
-
-	GLfloat LightAmbient[] = { 0.1f, 0.1f, 0.1f, 1.0f };
-	GLfloat LightDiffuse[] = { 1.0f, 1.0f, 1.0f, 1.0f };
-	GLfloat LightPosition[] = { 0.0f, 10.0f, 0.0f, 1.0f };
-	
+void init(void){
 	glClearColor(0.0f, 0.0f, 0.0f, 0.5f);
 	glShadeModel(GL_SMOOTH);
 	glClearDepth(1.0f);
 	glEnable(GL_DEPTH_TEST);
 	glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
 
-	glEnable(GL_LIGHTING);
-	
-	//glLightModeli(GL_LIGHT_MODEL_LOCAL_VIEWER, GL_TRUE);
-	//glEnable(GL_NORMALIZE);
+	//Define the visible faces
+	glEnable(GL_CULL_FACE);
+	glCullFace(GL_BACK); //Culling da face atrás
 
-	//Ambiente
-	glLightModelfv(GL_LIGHT_MODEL_AMBIENT, GlobalLightAmbient);
-	//Tecto
-	glLightfv(GL_LIGHT0, GL_AMBIENT, LightAmbient);
-	glLightfv(GL_LIGHT0, GL_DIFFUSE, LightDiffuse);
-	glLightfv(GL_LIGHT0, GL_POSITION, LightPosition);
-	glLightf(GL_LIGHT0, GL_CONSTANT_ATTENUATION, localAttCon);
-	glLightf(GL_LIGHT0, GL_LINEAR_ATTENUATION, localAttLin);
-	glLightf(GL_LIGHT0, GL_QUADRATIC_ATTENUATION, localAttQua);
-	glEnable(GL_LIGHT0);
+	//Don't mind Nelly Furtado, this keeps the lights on
+	//lightinit();
 }
 
 
