@@ -14,7 +14,7 @@ void lightinit() {
 
 	GLfloat LightAmbient[] = { 0.1f, 0.1f, 0.1f, 1.0f };
 	GLfloat LightDiffuse[] = { 1.0f, 1.0f, 1.0f, 1.0f };
-	GLfloat LightPosition[] = { 0.0f, -1000.0f, 0.0f, 1.0f };
+	GLfloat LightPosition[] = { 0.0f, 10.0f, 0.0f, 1.0f };
 
 	glEnable(GL_LIGHTING);
 	//glLightModeli(GL_LIGHT_MODEL_LOCAL_VIEWER, GL_TRUE);
