@@ -3,16 +3,15 @@
 #include <math.h>
 #include "Header.h"
 #include "level.h"
-#include "light.h"
 
-//Dev flags
-GLboolean drawAxis = true;
+//================================================================================
+//===========================================================Variaveis e constantes
 
-//Coordinate system variables
+//------------------------------------------------------------ Sistema Coordenadas
 GLfloat   xC = 70.0, yC = 70.0, zC = 70.0;
 GLint     wScreen = 800, hScreen = 600;
 
-//Observer Stuff
+//------------------------------------------------------------ Observador
 GLint    defineView = 0;
 GLint    defineProj = 1;
 GLfloat  raio = 20;
@@ -28,7 +27,7 @@ GLfloat  limitsLookP[] = { -rayVision, rayVision};
 GLfloat  posLimit = 6.5;
 GLfloat  limitsWalkP[] = { -posLimit, posLimit};
 
-//Time is a woobly thing
+//------------------------------------------------------------ Texturas
 GLint    repete = 2;
 GLfloat  rr = 1;
 GLint    maxR = 20;
@@ -39,23 +38,44 @@ GLint    msec = 100;					//.. definicao do timer (actualizacao)
 irrklang::ISoundEngine *SoundEngine = irrklang::createIrrKlangDevice();
 
 
-void init(void){
+void init(void)
+{
+	GLfloat localAttCon = 1.0;
+	GLfloat localAttLin = 0.05;
+	GLfloat localAttQua = 0.0;
+
+	GLfloat GlobalLightAmbient[] = { 1.0f, 1.0f, 1.0f, 1.0f };
+
+	GLfloat LightAmbient[] = { 0.1f, 0.1f, 0.1f, 1.0f };
+	GLfloat LightDiffuse[] = { 1.0f, 1.0f, 1.0f, 1.0f };
+	GLfloat LightPosition[] = { 0.0f, 10.0f, 0.0f, 1.0f };
+	
 	glClearColor(0.0f, 0.0f, 0.0f, 0.5f);
 	glShadeModel(GL_SMOOTH);
 	glClearDepth(1.0f);
 	glEnable(GL_DEPTH_TEST);
 	glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
 
-	//Define the visible faces
-	glEnable(GL_CULL_FACE);
-	glCullFace(GL_BACK); 
+	glEnable(GL_LIGHTING);
+	
+	//glLightModeli(GL_LIGHT_MODEL_LOCAL_VIEWER, GL_TRUE);
+	//glEnable(GL_NORMALIZE);
 
-	//Don't mind Nelly Furtado, this keeps the lights on
-	lightinit();
+	//Ambiente
+	glLightModelfv(GL_LIGHT_MODEL_AMBIENT, GlobalLightAmbient);
+	//Tecto
+	glLightfv(GL_LIGHT0, GL_AMBIENT, LightAmbient);
+	glLightfv(GL_LIGHT0, GL_DIFFUSE, LightDiffuse);
+	glLightfv(GL_LIGHT0, GL_POSITION, LightPosition);
+	glLightf(GL_LIGHT0, GL_CONSTANT_ATTENUATION, localAttCon);
+	glLightf(GL_LIGHT0, GL_LINEAR_ATTENUATION, localAttLin);
+	glLightf(GL_LIGHT0, GL_QUADRATIC_ATTENUATION, localAttQua);
+	glEnable(GL_LIGHT0);
 }
 
 
-void resizeWindow(GLsizei w, GLsizei h){
+void resizeWindow(GLsizei w, GLsizei h)
+{
 	wScreen = w;
 	hScreen = h;
 	//glViewport( 0, 0, wScreen,hScreen );	
@@ -65,41 +85,36 @@ void resizeWindow(GLsizei w, GLsizei h){
 
 
 void drawScene() {
-	
 	drawLevel();
-	
-	if (drawAxis) {
-		//Basic axis
-		if(lights_on)
-		 glDisable(GL_LIGHTING);
-		
-		glColor4f(PURPLE);
-		glBegin(GL_LINES);
+	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Eixos
+	glDisable(GL_LIGHTING);
+	glColor4f(PURPLE);
+	glBegin(GL_LINES);
 		glVertex3i(0, 0, 0);
 		glVertex3i(10, 0, 0);
-		glEnd();
-		glColor4f(ORANGE);
-		glBegin(GL_LINES);
+	glEnd();
+	glColor4f(ORANGE);
+	glBegin(GL_LINES);
 		glVertex3i(0, 0, 0);
 		glVertex3i(0, 10, 0);
-		glEnd();
-		glColor4f(BLUE);
-		glBegin(GL_LINES);
+	glEnd();
+	glColor4f(BLUE);
+	glBegin(GL_LINES);
 		glVertex3i(0, 0, 0);
 		glVertex3i(0, 0, 10);
-		glEnd();
-
-		if (lights_on)
-			glEnable(GL_LIGHTING);
-	}
+	glEnd();
+	glEnable(GL_LIGHTING);
 }
 
 void display(void) {
 
+	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[ Apagar ]
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[ Janela Visualizacao ]
 	glViewport(0, 0, wScreen, hScreen);
 
-	//Allow changing perspective in-game
+	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[ Projeccao]
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	switch (defineProj) {
@@ -108,16 +123,21 @@ void display(void) {
 		break;
 	}
 
+	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[ Modelo+View(camera/observador) ]
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 	gluLookAt(obsP[0], obsP[1], obsP[2], lookP[0], lookP[1], lookP[2], 0, 1, 0);
 
+	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[ Objectos ]
 	drawScene();
+
+	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Actualizacao
 	glutSwapBuffers();
 }
 
 
-void Timer(int value){
+void Timer(int value)
+{
 	glutPostRedisplay();
 	glutTimerFunc(msec, Timer, 1);
 }
@@ -163,8 +183,8 @@ void keyboard(unsigned char key, int x, int y) {
 	//--------------------------- Movimento
 	case 'd':		
 	case 'D':
-		//keysNotAscii(GLUT_KEY_RIGHT, 0, 0);
-		//break;
+		keysNotAscii(GLUT_KEY_RIGHT, 0, 0);
+		break;
 		obsP[0] = obsP[0] + incy;		
 		flag_movement = 1;
 		if (obsP[0] < limitsWalkP[0]) {
@@ -183,8 +203,8 @@ void keyboard(unsigned char key, int x, int y) {
 		break;		
 	case 'a':		
 	case 'A':
-		//keysNotAscii(GLUT_KEY_LEFT,0,0);
-		//break;
+		keysNotAscii(GLUT_KEY_LEFT,0,0);
+		break;
 		obsP[0] = obsP[0] - incy;		
 		flag_movement = 1;
 		if (obsP[0] < limitsWalkP[0]) {
@@ -203,8 +223,8 @@ void keyboard(unsigned char key, int x, int y) {
 		break;
 	case 'w':
 	case 'W':
-		//keysNotAscii(GLUT_KEY_UP, 0, 0);
-		//break;
+		keysNotAscii(GLUT_KEY_UP, 0, 0);
+		break;
 		obsP[0] = obsP[0] + incy;
 		flag_movement = 1;
 		if (obsP[0] < limitsWalkP[0]) {
@@ -223,8 +243,8 @@ void keyboard(unsigned char key, int x, int y) {
 		break;
 	case 's':
 	case 'S':
-		//keysNotAscii(GLUT_KEY_DOWN, 0, 0);
-		//break;
+		keysNotAscii(GLUT_KEY_DOWN, 0, 0);
+		break;
 		obsP[0] = obsP[0] + incy;
 		flag_movement = 1;
 		if (obsP[0] < limitsWalkP[0]) {
@@ -257,6 +277,7 @@ void createWindow() {
 }
 
 
+//======================================================= MAIN
 int main(int argc, char** argv) {
 	//Start the background music
 	//SoundEngine->play2D("resources/sounds/jacks_office.mp3", GL_FALSE);
