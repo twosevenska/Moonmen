@@ -130,6 +130,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="ballz.cpp" />
     <ClCompile Include="level.cpp" />
     <ClCompile Include="light.cpp" />
     <ClCompile Include="loadBlenderModels.cpp" />
@@ -137,6 +138,7 @@
     <ClCompile Include="RgbImage.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ballz.h" />
     <ClInclude Include="Header.h" />
     <ClInclude Include="level.h" />
     <ClInclude Include="light.h" />
