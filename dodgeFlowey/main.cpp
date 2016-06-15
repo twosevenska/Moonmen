@@ -3,10 +3,11 @@
 #include <math.h>
 #include "Header.h"
 #include "level.h"
+#include "ballz.h"
 
 //================================================================================
 //===========================================================Variaveis e constantes
-
+GLboolean god = true;
 //------------------------------------------------------------ Sistema Coordenadas
 GLfloat   xC = 70.0, yC = 70.0, zC = 70.0;
 GLint     wScreen = 800, hScreen = 600;
@@ -14,9 +15,9 @@ GLint     wScreen = 800, hScreen = 600;
 //------------------------------------------------------------ Observador
 GLint    defineView = 0;
 GLint    defineProj = 1;
-GLfloat  raio = 20;
-GLfloat  angulo = 0.35*PI;
-GLfloat  obsP[] = { 0, 5, 18.5};
+GLfloat  raio = 18;
+GLfloat  obsP[] = { 0, 5, 18};
+GLfloat  angulo = 0.5*PI;
 GLfloat  incy = 1;
 GLfloat  inca = 1;
 
@@ -40,6 +41,10 @@ irrklang::ISoundEngine *SoundEngine = irrklang::createIrrKlangDevice();
 
 void init(void)
 {
+	if (god) {
+		incy = 0.5;
+		inca = 0.03;
+	}
 	GLfloat localAttCon = 1.0;
 	GLfloat localAttLin = 0.05;
 	GLfloat localAttQua = 0.0;
@@ -86,6 +91,7 @@ void resizeWindow(GLsizei w, GLsizei h)
 
 void drawScene() {
 	drawLevel();
+	drawBall();
 	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Eixos
 	glDisable(GL_LIGHTING);
 	glColor4f(PURPLE);
@@ -144,6 +150,27 @@ void Timer(int value)
 
 //======================================================= EVENTOS
 void keysNotAscii(int key, int x, int y) {
+	if (god) {
+		if (key == GLUT_KEY_UP)
+			obsP[1] = obsP[1] + incy;
+		if (key == GLUT_KEY_DOWN)
+			obsP[1] = obsP[1] - incy;
+		if (key == GLUT_KEY_LEFT)
+			angulo = angulo + inca;
+		if (key == GLUT_KEY_RIGHT)
+			angulo = angulo - inca;
+
+		if (obsP[1]> yC)
+			obsP[1] = yC;
+		if (obsP[1]<-yC)
+			obsP[1] = -yC;
+
+		obsP[0] = raio*cos(angulo);
+		obsP[2] = raio*sin(angulo);
+
+		glutPostRedisplay();
+		return;
+	}
 	if (key == GLUT_KEY_UP)
 		lookP[1] = lookP[1] + incy;
 	if (key == GLUT_KEY_DOWN)
