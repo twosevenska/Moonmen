@@ -15,7 +15,7 @@ GLint     wScreen = 800, hScreen = 600;
 GLint    defineView = 0;
 GLint    defineProj = 1;
 GLfloat  raio = 20;
-GLfloat  angulo = 0.35*PI;
+GLfloat  angulo = 0.5*PI;
 GLfloat  obsP[] = { 0, 5, 18.5};
 GLfloat  incy = 1;
 GLfloat  inca = 1;
