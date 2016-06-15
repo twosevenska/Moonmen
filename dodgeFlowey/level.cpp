@@ -75,12 +75,12 @@ void load_all_level_textures() {
 	load_texture("floorTile.bmp", 0);
 	load_texture("wallTile.bmp", 1);
 	load_texture("blockTexture.bmp", 2);
+	load_texture("BlueblockTexture.bmp", 3);
+	load_texture("OrangeblockTexture.bmp", 4);
 }
 
 void drawBlock(GLfloat x, GLfloat y, GLfloat z) {
 	//Top
-	glEnable(GL_TEXTURE_2D);
-	glBindTexture(GL_TEXTURE_2D, texture[2]);
 	glPushMatrix();
 	glTranslatef(-x / 2.0, y, 0.0);
 	glRotatef(-90.0, 1.0, 0.0, 0.0);
@@ -113,8 +113,6 @@ void drawBlock(GLfloat x, GLfloat y, GLfloat z) {
 	glRotatef(-90.0, 0.0, 1.0, 0.0);
 	make_plane(z, y, 0.05);
 	glPopMatrix();
-
-	glDisable(GL_TEXTURE_2D);
 }
 
 void drawWalls(GLfloat x, GLfloat y, GLfloat z) {
@@ -201,25 +199,37 @@ void drawSpectator(GLfloat x, GLfloat y, GLfloat z) {
 
 void drawCover(GLfloat x, GLfloat y, GLfloat z) {
 	//Main Cover
+	glEnable(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D, texture[2]);
 	glPushMatrix();
 	glTranslatef( 0.0, 0.0, z - 4.0);
 	drawBlock(x, 2.0, 0.2);
 	glPopMatrix();
+	glDisable(GL_TEXTURE_2D);
 
 	//First Target Block
+	glEnable(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D, texture[3]);
 	glPushMatrix();
 	glTranslatef(-x / 2.0 + x / 4.0, 0.0, z - 8.0);
-	drawBlock(x / 2.0, 2.0, 0.8);
+	drawBlock(x / 2.0, 2.0, 1.6);
 	glPopMatrix();
+	glDisable(GL_TEXTURE_2D);
 
 	//Second Target Block
-	drawBlock(x / 2.0 , 2.0, 0.8);
+	glEnable(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D, texture[4]);
+	drawBlock(x / 2.0 , 2.0, 1.6);
+	glDisable(GL_TEXTURE_2D);
 
 	//Third Target Block
+	glEnable(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D, texture[3]);
 	glPushMatrix();
 	glTranslatef(x / 2.0 - x / 4.0, 0.0, -z + 4.0);
-	drawBlock(x / 2.0, 2.0, 0.8);
+	drawBlock(x / 2.0, 2.0, 1.6);
 	glPopMatrix();
+	glDisable(GL_TEXTURE_2D);
 }
 
 void drawCoverGlass(GLfloat x, GLfloat y, GLfloat z) {
@@ -262,7 +272,8 @@ void drawTrapFloor(GLfloat x, GLfloat y, GLfloat z, GLfloat slide) {
 
 void drawModels(GLfloat x, GLfloat y, GLfloat z) {
 	glPushMatrix();
-	glTranslatef(0.0, 2.0, 0.0);
+	glTranslatef(-12.0, 11.0, -6.0);
+	glRotatef(90.0, 0.0, 1.0, 0.0);
 	drawmodel();
 	glPopMatrix();
 }
@@ -298,7 +309,7 @@ void drawLevel() {
 	}
 	bool lockWindow = false;
 	GLfloat glassHeight = 16.0 - 12.0;
-	drawModels(16.0, 16.0, 20.0);
+	//drawModels(16.0, 16.0, 20.0);
 	drawWalls(16.0, 16.0, 20.0);
 	drawLightPos();
 	drawSpectator(16.0, 12.0, 20.0);
