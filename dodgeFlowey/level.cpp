@@ -2,629 +2,278 @@
 #include "loadBlenderModels.h"
 
 GLuint texture[128];
+GLboolean texturesLoaded = false;
 RgbImage imag;
 
-void drawFloor(GLfloat x, GLfloat y, GLfloat z) {
-	glGenTextures(1, &texture[0]);
-	glBindTexture(GL_TEXTURE_2D, texture[0]);
+void make_plane(GLfloat width, GLfloat height, GLfloat densityValue) {
+	//Draw a Plane
+	glBegin(GL_TRIANGLE_STRIP);
+	glNormal3f(0, 0, 1);
+	GLint col = 0.0;
+	for (GLfloat w = 0.0; w < width; w += densityValue) {
+		GLint textureHalf = 0;
+		if (col % 2 == 0) {
+			for (GLfloat h = 0.0; h <= height; h += densityValue) {
+				if (textureHalf % 2 == 0) {
+					glTexCoord2f(0.0f, 0.0f);
+				}
+				else {
+					glTexCoord2f(0.0f, 1.0f);
+				}
+				glVertex3f(w, h, 0);
+				if (textureHalf % 2 == 0)
+					glTexCoord2f(1.0f, 0.0f);
+				else
+					glTexCoord2f(1.0f, 1.0f);
+				glVertex3f(w + densityValue, h, 0);
+				textureHalf++;
+			}
+		}else{
+			for (GLfloat h = height; h >= 0.0; h -= densityValue) {
+				if (textureHalf % 2 == 0) {
+					glTexCoord2f(0.0f, 0.0f);
+				}
+				else {
+					glTexCoord2f(0.0f, 1.0f);
+				}
+				glVertex3f(w, h, 0);
+				if (textureHalf % 2 == 0)
+					glTexCoord2f(1.0f, 0.0f);
+				else
+					glTexCoord2f(1.0f, 1.0f);
+				glVertex3f(w + densityValue, h, 0);
+				textureHalf++;
+			}
+		}
+		col++;
+	}
+	glEnd();
+}
+
+void load_texture(std::string name, GLint texId) {
+	glGenTextures(1, &texture[texId]);
+	glBindTexture(GL_TEXTURE_2D, texture[texId]);
 	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-	imag.LoadBmpFile("resources/textures/floorTile.bmp");
+	std::string textureLocation = "resources/textures/" + name;
+	const char * tl = textureLocation.c_str();
+	imag.LoadBmpFile(tl);
+	gluBuild2DMipmaps(GL_TEXTURE_2D, 3, imag.GetNumCols(), imag.GetNumRows(), GL_RGB, GL_UNSIGNED_BYTE, imag.ImageData());
 	glTexImage2D(GL_TEXTURE_2D, 0, 3,
 		imag.GetNumCols(),
 		imag.GetNumRows(), 0, GL_RGB, GL_UNSIGNED_BYTE,
 		imag.ImageData());
+}
 
+void load_all_level_textures() {
+	load_texture("floorTile.bmp", 0);
+	load_texture("wallTile.bmp", 1);
+	load_texture("blockTexture.bmp", 2);
+}
+
+void drawBlock(GLfloat x, GLfloat y, GLfloat z) {
+	//Top
+	glEnable(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D, texture[2]);
+	glPushMatrix();
+	glTranslatef(-x / 2.0, y, 0.0);
+	glRotatef(-90.0, 1.0, 0.0, 0.0);
+	make_plane(x, z, 0.05);
+	glPopMatrix();
+
+	//Back
+	glPushMatrix();
+	glTranslatef(x / 2.0, 0.0, -z);
+	glRotatef(180.0, 0.0, 1.0, 0.0);
+	make_plane(x, y, 0.05);
+	glPopMatrix();
+
+	//Front
+	glPushMatrix();
+	glTranslatef(-x / 2.0, 0.0, 0.0);
+	make_plane(x, y, 0.05);
+	glPopMatrix();
+
+	//LeftSide
+	glPushMatrix();
+	glTranslatef(-x / 2.0, 0.0, 0.0);
+	glRotatef(90.0, 0.0, 1.0, 0.0);
+	make_plane(z, y, 0.05);
+	glPopMatrix();
+
+	//RightSide
+	glPushMatrix();
+	glTranslatef(x / 2.0, 0.0, -z);
+	glRotatef(-90.0, 0.0, 1.0, 0.0);
+	make_plane(z, y, 0.05);
+	glPopMatrix();
+
+	glDisable(GL_TEXTURE_2D);
+}
+
+void drawWalls(GLfloat x, GLfloat y, GLfloat z) {
+	//Ceiling
 	glEnable(GL_TEXTURE_2D);
 	glBindTexture(GL_TEXTURE_2D, texture[0]);
 	glPushMatrix();
-	glBegin(GL_TRIANGLES);
-	glTexCoord2f(0.0f, 0.0f); glVertex3f(-x / 2.0, 0.0, z - 3.0);
-	glTexCoord2f(4.0f, 4.0f); glVertex3f(x / 2.0, 0.0, -z);
-	glTexCoord2f(0.0f, 4.0f); glVertex3f(-x / 2.0, 0.0, -z); 
+	glTranslatef(x / 2.0, y, -z);
+	glRotatef(90.0, 0.0, 0.0, 1.0);
+	glRotatef(-90.0, 0.0, 1.0, 0.0);
+	make_plane(z * 2, x*2, 4.0);
+	glPopMatrix();
+	glDisable(GL_TEXTURE_2D);
 
-	glTexCoord2f(0.0f, 0.0f); glVertex3f(-x / 2.0, 0.0, z - 3.0);
-	glTexCoord2f(0.0f, 4.0f); glVertex3f(x / 2.0, 0.0, z - 3.0);
-	glTexCoord2f(4.0f, 4.0f); glVertex3f(x / 2.0, 0.0, -z);
-	
-	glEnd();
+	//Floor
+	glEnable(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D, texture[0]);
+	glPushMatrix();
+	glTranslatef(x / 2.0, 0, z - 4.0);
+	glRotatef(90.0, 0.0, 0.0, 1.0);
+	glRotatef(90.0, 0.0, 1.0, 0.0);
+	make_plane(z * 2, x, 4.0);
+	glPopMatrix();
+	glDisable(GL_TEXTURE_2D);
+
+	//Left Wall
+	glEnable(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D, texture[1]);
+	glPushMatrix();
+	glTranslatef(-x / 2.0, 0, z);
+	glRotatef(90.0, 0.0, 1.0, 0.0);
+	make_plane(z*2.0, y - 4.0, 4.0);
+	glPopMatrix();
+	glDisable(GL_TEXTURE_2D);
+
+	//Right Wall
+	glEnable(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D, texture[1]);
+	glPushMatrix();
+	glTranslatef(x / 2.0, 0, -z);
+	glRotatef(-90.0, 0.0, 1.0, 0.0);
+	make_plane(z*2.0, y, 4.0);
+	glPopMatrix();
+	glDisable(GL_TEXTURE_2D);
+
+	//Back Wall
+	glEnable(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D, texture[1]);
+	glPushMatrix();
+	glTranslatef(-x, 0, -z);
+	make_plane(x * 2.0 , y, 4.0);
+	glPopMatrix();
+	glDisable(GL_TEXTURE_2D);
+
+	//Wall Behind
+	glEnable(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D, texture[1]);
+	glPushMatrix();
+	glTranslatef(x/2.0, 0, z);
+	glRotatef(180.0, 0.0, 1.0, 0.0);
+	make_plane(x, y, 4.0);
 	glPopMatrix();
 	glDisable(GL_TEXTURE_2D);
 }
 
-void drawTrapDoor(GLfloat x, GLfloat y, GLfloat z) {
-	glColor4f(DGREY);
-	glPushMatrix();
-	glBegin(GL_TRIANGLES);
-	glVertex3f(-x / 2.0, 0.0, z - 3.0);
-	glVertex3f(0.0, 0.0, z - 3.0);
-	glVertex3f(-x / 2.0, 0.0, z);
-
-	glVertex3f(0.0, 0.0, z);
-	glVertex3f(0.0, 0.0, z - 3.0);
-	glVertex3f(-x / 2.0, 0.0, z);
-
-	glVertex3f(0.0, 0.0, z - 3.0);
-	glVertex3f(x / 2.0, 0.0, z - 3.0);
-	glVertex3f(0.0, 0.0, z);
-
-	glVertex3f(x / 2.0, 0.0, z);
-	glVertex3f(x / 2.0, 0.0, z - 3.0);
-	glVertex3f(0.0, 0.0, z);
-	glEnd();
-	glPopMatrix();
-}
-
-void drawTrapRoom(GLfloat x, GLfloat y, GLfloat z) {
-	//Back Wall
-	glColor4f(BLACK);
-	glPushMatrix();
-	glBegin(GL_TRIANGLES);
-	glVertex3f(-x / 2.0, 0.0, z - 3.0);
-	glVertex3f(x / 2.0, 0.0, z - 3.0);
-	glVertex3f(-x / 2.0, -y, z - 3.0);
-
-	glVertex3f(x / 2.0, 0.0, z - 3.0);
-	glVertex3f(-x / 2.0, -y, z - 3.0);
-	glVertex3f(x / 2.0, -y, z - 3.0);
-	glEnd();
-	glPopMatrix();
-
-	//Back Wall
-	glColor4f(BLACK);
-	glPushMatrix();
-	glBegin(GL_TRIANGLES);
-	glVertex3f(-x / 2.0, 0.0, z);
-	glVertex3f(x / 2.0, 0.0, z);
-	glVertex3f(-x / 2.0, -y, z);
-
-	glVertex3f(x / 2.0, 0.0, z);
-	glVertex3f(-x / 2.0, -y, z);
-	glVertex3f(x / 2.0, -y, z);
-	glEnd();
-	glPopMatrix();
-
-	//Bottom
-	glColor4f(BLACK);
-	glPushMatrix();
-	glBegin(GL_TRIANGLES);
-	glVertex3f(-x / 2.0, -y, z - 3.0);
-	glVertex3f(x / 2.0, -y, z - 3.0);
-	glVertex3f(-x / 2.0, -y, z);
-
-	glVertex3f(x / 2.0, -y, z - 3.0);
-	glVertex3f(-x / 2.0, -y, z);
-	glVertex3f(x / 2.0, -y, z);
-	glEnd();
-	glPopMatrix();
-
-	//Side Walls
-	glColor4f(BLACK);
-	glPushMatrix();
-	glBegin(GL_TRIANGLES);
-	glVertex3f(-x / 2.0, 0.0, z - 3.0);
-	glVertex3f(-x / 2.0, -y, z - 3.0);
-	glVertex3f(-x / 2.0, 0.0, z);
-
-	glVertex3f(-x / 2.0, -y, z - 3.0);
-	glVertex3f(-x / 2.0, 0.0, z);
-	glVertex3f(-x / 2.0, -y, z);
-
-	glVertex3f(x / 2.0, 0.0, z - 3.0);
-	glVertex3f(x / 2.0, -y, z - 3.0);
-	glVertex3f(x / 2.0, 0.0, z);
-
-	glVertex3f(x / 2.0, -y, z - 3.0);
-	glVertex3f(x / 2.0, 0.0, z);
-	glVertex3f(x / 2.0, -y, z);
-	glEnd();
-	glPopMatrix();
-}
-
-void drawCeiling(GLfloat x, GLfloat y, GLfloat z) {
-	glColor4f(DGREY);
-	glPushMatrix();
-	glBegin(GL_TRIANGLES);
-	glVertex3f(-x, y, -z);
-	glVertex3f(x / 2.0, y, -z);
-	glVertex3f(-x, y, z);
-
-	glVertex3f(x / 2.0, y, z);
-	glVertex3f(x / 2.0, y, -z);
-	glVertex3f(-x, y, z);
-
-	glVertex3f(-x, y, -z / 2.0);
-	glVertex3f(x / 2.0, y, -z / 2.0);
-	glVertex3f(-x, y, z / 2.0);
-
-	glVertex3f(x / 2.0, y, z / 2.0);
-	glVertex3f(x / 2.0, y, -z / 2.0);
-	glVertex3f(-x, y, z / 2.0);
-	glEnd();
-	glPopMatrix();
-}
-
-void drawWalls(GLfloat x, GLfloat y, GLfloat z) {
-	//Left Wall
-	glColor4f(LGREY);
-	glPushMatrix();
-	glBegin(GL_TRIANGLES);
-	glVertex3f(-x / 2.0, 0.0, -z / 2.0);
-	glVertex3f(-x / 2.0, 0.0, z / 2.0);
-	glVertex3f(-x / 2.0, y - 5.0, -z / 2.0);
-
-	glVertex3f(-x / 2.0, y - 5.0, z / 2.0);
-	glVertex3f(-x / 2.0, 0.0, z / 2.0);
-	glVertex3f(-x / 2.0, y - 5.0, -z / 2.0);
-
-	glVertex3f(-x / 2.0, 0.0, -z);
-	glVertex3f(-x / 2.0, 0.0, z);
-	glVertex3f(-x / 2.0, y - 5.0, -z);
-
-	glVertex3f(-x / 2.0, y - 5.0, z);
-	glVertex3f(-x / 2.0, 0.0, z);
-	glVertex3f(-x / 2.0, y - 5.0, -z);
-	glEnd();
-	glPopMatrix();
-
-	//Right Wall
-	glColor4f(LGREY);
-	glPushMatrix();
-	glBegin(GL_TRIANGLES);
-	glVertex3f(x / 2.0, 0.0, -z / 2.0);
-	glVertex3f(x / 2.0, 0.0, z / 2.0);
-	glVertex3f(x / 2.0, y, -z / 2.0);
-
-	glVertex3f(x / 2.0, y, z / 2.0);
-	glVertex3f(x / 2.0, 0.0, z / 2.0);
-	glVertex3f(x / 2.0, y, -z / 2.0);
-
-	glVertex3f(x / 2.0, 0.0, -z);
-	glVertex3f(x / 2.0, 0.0, z);
-	glVertex3f(x / 2.0, y, -z);
-
-	glVertex3f(x / 2.0, y, z);
-	glVertex3f(x / 2.0, 0.0, z);
-	glVertex3f(x / 2.0, y, -z);
-	glEnd();
-	glPopMatrix();
-
-	//Back Wall
-	glColor4f(LGREY);
-	glPushMatrix();
-	glBegin(GL_TRIANGLES);
-	glVertex3f(-x, 0.0, -z);
-	glVertex3f(x / 2.0, 0.0, -z);
-	glVertex3f(x / 2.0, y, -z);
-
-	glVertex3f(-x, 0.0, -z);
-	glVertex3f(x / 2.0, y, -z);
-	glVertex3f(-x, y, -z);
-	glEnd();
-	glPopMatrix();
-
-	/*
-	//Front Wall
-	glColor4f(RED);
-	glPushMatrix();
-	glBegin(GL_TRIANGLES);
-	glVertex3f(-x, 0.0, z);
-	glVertex3f(x / 2.0, 0.0, z);
-	glVertex3f(x / 2.0, y, z);
-
-	glVertex3f(-x, 0.0, z);
-	glVertex3f(x / 2.0, y, z);
-	glVertex3f(-x, y, z);
-	glEnd();
-	glPopMatrix();
-	*/
-}
-
-
-void drawSpectatorFloor(GLfloat x, GLfloat y, GLfloat z) {
-	glColor4f(DGREY);
-	glPushMatrix();
-	glBegin(GL_TRIANGLES);
-	glVertex3f(-x, 10.0, -z);
-	glVertex3f(-x / 2.0, 10.0, -z);
-	glVertex3f(-x, 10.0, z);
-
-	glVertex3f(-x / 2.0, 10.0, z);
-	glVertex3f(-x / 2.0, 10.0, -z);
-	glVertex3f(-x, 10.0, z);
-
-	glVertex3f(-x, 10.0, -z / 2.0);
-	glVertex3f(-x / 2.0, 10.0, -z / 2.0);
-	glVertex3f(-x, 10.0, z / 2.0);
-
-	glVertex3f(-x / 2.0, 10.0, z / 2.0);
-	glVertex3f(-x / 2.0, 10.0, -z / 2.0);
-	glVertex3f(-x, 10.0, z / 2.0);
-	glEnd();
-	glPopMatrix();
-}
-
 void drawSpectator(GLfloat x, GLfloat y, GLfloat z) {
-	drawSpectatorFloor(x, y, z);
-
-	y = 10.0;
 
 	//Left Wall
-	glColor4f(LGREY);
+	glEnable(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D, texture[1]);
 	glPushMatrix();
-	glBegin(GL_TRIANGLES);
-	glVertex3f(-x, y + 5.0, -z / 2.0);
-	glVertex3f(-x, y + 5.0, z / 2.0);
-	glVertex3f(-x, y, -z / 2.0);
-
-	glVertex3f(-x, y, z / 2.0);
-	glVertex3f(-x, y + 5.0, z / 2.0);
-	glVertex3f(-x, y, -z / 2.0);
-
-	glVertex3f(-x, y + 5.0, -z);
-	glVertex3f(-x, y + 5.0, z);
-	glVertex3f(-x, y, -z);
-
-	glVertex3f(-x, y, z);
-	glVertex3f(-x, y + 5.0, z);
-	glVertex3f(-x, y, -z);
-	glEnd();
+	glTranslatef(-x, y, z);
+	glRotatef(90.0, 0.0, 1.0, 0.0);
+	make_plane(z*2.0, 4.0, 4.0);
 	glPopMatrix();
+	glDisable(GL_TEXTURE_2D);
 
 	//Glass
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glEnable(GL_BLEND);
 	glColor4f(HGLASS);
 	glPushMatrix();
-	glBegin(GL_TRIANGLES);
-	glVertex3f(-x / 2.0, y + 5.0, -z);
-	glVertex3f(-x / 2.0, y + 5.0, z);
-	glVertex3f(-x / 2.0, y, -z);
-
-	glVertex3f(-x / 2.0, y, z);
-	glVertex3f(-x / 2.0, y + 5.0, z);
-	glVertex3f(-x / 2.0, y, -z);
-	glEnd();
+	glTranslatef(-x / 2.0, y, z);
+	glRotatef(90.0, 0.0, 1.0, 0.0);
+	make_plane(z*2.0, 4.0, 4.0);
 	glPopMatrix();
 	glDisable(GL_BLEND);
 }
 
-void drawTargetCovers(GLfloat x, GLfloat y, GLfloat z) {
-	//Front Wall
-	glColor4f(RED);
-	glPushMatrix();
-	glBegin(GL_TRIANGLES);
-	glVertex3f(-x / 2.0, 0.0, z - 8.0);
-	glVertex3f(0.0, 0.0, z - 8.0);
-	glVertex3f(0.0, y, z - 8.0);
-
-	glVertex3f(-x / 2.0, 0.0, z - 8.0);
-	glVertex3f(0.0, y, z - 8.0);
-	glVertex3f(-x / 2.0, y, z - 8.0);
-	glEnd();
-	glPopMatrix();
-
-	glColor4f(RED);
-	glPushMatrix();
-	glBegin(GL_TRIANGLES);
-	glVertex3f(-x / 4.0, 0.0, 0.0);
-	glVertex3f(x / 4.0, 0.0, 0.0);
-	glVertex3f(x / 4.0, y, 0.0);
-
-	glVertex3f(-x / 4.0, 0.0, 0.0);
-	glVertex3f(x / 4.0, y, 0.0);
-	glVertex3f(-x / 4.0, y, 0.0);
-	glEnd();
-	glPopMatrix();
-
-	glColor4f(RED);
-	glPushMatrix();
-	glBegin(GL_TRIANGLES);
-	glVertex3f(0.0, 0.0, -z + 8.0);
-	glVertex3f(x / 2.0, 0.0, -z + 8.0);
-	glVertex3f(x / 2.0, y, -z + 8.0);
-
-	glVertex3f(0.0, 0.0, -z + 8.0);
-	glVertex3f(x / 2.0, y, -z + 8.0);
-	glVertex3f(0.0, y, -z + 8.0);
-	glEnd();
-	glPopMatrix();
-
-	//Back Wall
-	glColor4f(BLUE);
-	glPushMatrix();
-	glBegin(GL_TRIANGLES);
-	glVertex3f(-x / 2.0, 0.0, z - 9.0);
-	glVertex3f(0.0, 0.0, z - 9.0);
-	glVertex3f(0.0, y, z - 9.0);
-
-	glVertex3f(-x / 2.0, 0.0, z - 9.0);
-	glVertex3f(0.0, y, z - 9.0);
-	glVertex3f(-x / 2.0, y, z - 9.0);
-	glEnd();
-	glPopMatrix();
-
-	glColor4f(BLUE);
-	glPushMatrix();
-	glBegin(GL_TRIANGLES);
-	glVertex3f(-x / 4.0, 0.0, -1.0);
-	glVertex3f(x / 4.0, 0.0, -1.0);
-	glVertex3f(x / 4.0, y, -1.0);
-
-	glVertex3f(-x / 4.0, 0.0, -1.0);
-	glVertex3f(x / 4.0, y, -1.0);
-	glVertex3f(-x / 4.0, y, -1.0);
-	glEnd();
-	glPopMatrix();
-
-	glColor4f(BLUE);
-	glPushMatrix();
-	glBegin(GL_TRIANGLES);
-	glVertex3f(0.0, 0.0, -z + 7.0);
-	glVertex3f(x / 2.0, 0.0, -z + 7.0);
-	glVertex3f(x / 2.0, y, -z + 7.0);
-
-	glVertex3f(0.0, 0.0, -z + 7.0);
-	glVertex3f(x / 2.0, y, -z + 7.0);
-	glVertex3f(0.0, y, -z + 7.0);
-	glEnd();
-	glPopMatrix();
-
-	//Top
-	glColor4f(GREEN);
-	glPushMatrix();
-	glBegin(GL_TRIANGLES);
-	glVertex3f(-x / 2.0, y, z - 8.0);
-	glVertex3f(0.0, y, z - 8.0);
-	glVertex3f(-x / 2.0, y, z - 9.0);
-
-	glVertex3f(0.0, y, z - 9.0);
-	glVertex3f(0.0, y, z - 8.0);
-	glVertex3f(-x / 2.0, y, z - 9.0);
-
-	glVertex3f(-x / 2.0, y, z - 8.0);
-	glVertex3f(0.0, y, z - 8.0);
-	glVertex3f(-x / 2.0, y, z - 8.0);
-
-	glVertex3f(0.0, y, z - 9.0);
-	glVertex3f(0.0, y, z - 8.0);
-	glVertex3f(-x / 2.0, y, z - 9.0);
-	glEnd();
-	glPopMatrix();
-
-	glColor4f(GREEN);
-	glPushMatrix();
-	glBegin(GL_TRIANGLES);
-	glVertex3f(-x / 4.0, y, 0.0);
-	glVertex3f(x / 4.0, y, 0.0);
-	glVertex3f(-x / 4.0, y, -1.0);
-
-	glVertex3f(x / 4.0, y, -1.0);
-	glVertex3f(x / 4.0, y, 0.0);
-	glVertex3f(-x / 4.0, y, -1.0);
-
-	glVertex3f(-x / 4.0, y, 0.0);
-	glVertex3f(x / 4.0, y, 0.0);
-	glVertex3f(-x / 4.0, y, 0.0);
-
-	glVertex3f(x / 4.0, y, -1.0);
-	glVertex3f(x / 4.0, y, 0.0);
-	glVertex3f(-x / 4.0, y, -1.0);
-	glEnd();
-	glPopMatrix();
-
-	glColor4f(GREEN);
-	glPushMatrix();
-	glBegin(GL_TRIANGLES);
-	glVertex3f(x / 2.0, y, -z + 7.0);
-	glVertex3f(0.0, y, -z + 7.0);
-	glVertex3f(x / 2.0, y, -z + 8.0);
-
-	glVertex3f(0.0, y, -z + 8.0);
-	glVertex3f(0.0, y, -z + 7.0);
-	glVertex3f(x / 2.0, y, -z + 8.0);
-
-	glVertex3f(x / 2.0, y, -z + 7.0);
-	glVertex3f(0.0, y, -z + 7.0);
-	glVertex3f(x / 2.0, y, -z + 7.0);
-
-	glVertex3f(0.0, y, -z + 8.0);
-	glVertex3f(0.0, y, -z + 7.0);
-	glVertex3f(x / 2.0, y, -z + 8.0);
-	glEnd();
-	glPopMatrix();
-
-	//Right Wall
-	glColor4f(YELLOW);
-	glPushMatrix();
-	glBegin(GL_TRIANGLES);
-	glVertex3f(0.0, 0.0, z - 8.0);
-	glVertex3f(0.0, 0.0, z - 9.0);
-	glVertex3f(0.0, y, z - 8.0);
-
-	glVertex3f(0.0, y, z - 9.0);
-	glVertex3f(0.0, 0.0, z - 9.0);
-	glVertex3f(0.0, y, z - 8.0);
-
-	glVertex3f(0.0, 0.0, z - 8.0);
-	glVertex3f(0.0, 0.0, z - 9.0);
-	glVertex3f(0.0, y, z - 8.0);
-
-	glVertex3f(0.0, y, z - 9.0);
-	glVertex3f(0.0, 0.0, z - 9.0);
-	glVertex3f(0.0, y, z - 8.0);
-	glEnd();
-	glPopMatrix();
-
-	glColor4f(YELLOW);
-	glPushMatrix();
-	glBegin(GL_TRIANGLES);
-	glVertex3f(x / 4.0, 0.0, 0.0);
-	glVertex3f(x / 4.0, 0.0, -1.0);
-	glVertex3f(x / 4.0, y, 0.0);
-
-	glVertex3f(x / 4.0, y, -1.0);
-	glVertex3f(x / 4.0, 0.0, -1.0);
-	glVertex3f(x / 4.0, y, 0.0);
-
-	glVertex3f(x / 4.0, 0.0, 0.0);
-	glVertex3f(x / 4.0, 0.0, -1.0);
-	glVertex3f(x / 4.0, y, 0.0);
-
-	glVertex3f(x / 4.0, y, -1.0);
-	glVertex3f(x / 4.0, 0.0, -1.0);
-	glVertex3f(x / 4.0, y, 0.0);
-	glEnd();
-	glPopMatrix();
-
-	//Left Wall
-
-	glColor4f(YELLOW);
-	glPushMatrix();
-	glBegin(GL_TRIANGLES);
-	glVertex3f(-x / 4.0, 0.0, 0.0);
-	glVertex3f(-x / 4.0, 0.0, -1.0);
-	glVertex3f(-x / 4.0, y, 0.0);
-
-	glVertex3f(-x / 4.0, y, -1.0);
-	glVertex3f(-x / 4.0, 0.0, -1.0);
-	glVertex3f(-x / 4.0, y, 0.0);
-
-	glVertex3f(-x / 4.0, 0.0, 0.0);
-	glVertex3f(-x / 4.0, 0.0, -1.0);
-	glVertex3f(-x / 4.0, y, 0.0);
-
-	glVertex3f(-x / 4.0, y, -1.0);
-	glVertex3f(-x / 4.0, 0.0, -1.0);
-	glVertex3f(-x / 4.0, y, 0.0);
-	glEnd();
-	glPopMatrix();
-
-
-	glColor4f(YELLOW);
-	glPushMatrix();
-	glBegin(GL_TRIANGLES);
-	glVertex3f(0.0, 0.0, -z + 7.0);
-	glVertex3f(0.0, 0.0, -z + 8.0);
-	glVertex3f(0.0, y, -z + 7.0);
-
-	glVertex3f(0.0, y, -z + 8.0);
-	glVertex3f(0.0, 0.0, -z + 8.0);
-	glVertex3f(0.0, y, -z + 7.0);
-
-	glVertex3f(0.0, 0.0, -z + 7.0);
-	glVertex3f(0.0, 0.0, -z + 8.0);
-	glVertex3f(0.0, y, -z + 7.0);
-
-	glVertex3f(0.0, y, -z + 8.0);
-	glVertex3f(0.0, 0.0, -z + 8.0);
-	glVertex3f(0.0, y, -z + 7.0);
-	glEnd();
-	glPopMatrix();
-}
-
 void drawCover(GLfloat x, GLfloat y, GLfloat z) {
-
-	//Front Wall
-	glColor4f(RED);
+	//Main Cover
 	glPushMatrix();
-	glBegin(GL_TRIANGLES);
-	glVertex3f(-x / 2.0, 0.0, z - 3.0);
-	glVertex3f(x / 2.0, 0.0, z - 3.0);
-	glVertex3f(x / 2.0, y, z - 3.0);
-
-	glVertex3f(-x / 2.0, 0.0, z - 3.0);
-	glVertex3f(x / 2.0, y, z - 3.0);
-	glVertex3f(-x / 2.0, y, z - 3.0);
-	glEnd();
+	glTranslatef( 0.0, 0.0, z - 4.0);
+	drawBlock(x, 2.0, 0.2);
 	glPopMatrix();
 
-	//Back Wall
-	glColor4f(BLUE);
+	//First Target Block
 	glPushMatrix();
-	glBegin(GL_TRIANGLES);
-	glVertex3f(-x / 2.0, 0.0, z - 3.2);
-	glVertex3f(x / 2.0, 0.0, z - 3.2);
-	glVertex3f(x / 2.0, y, z - 3.2);
-
-	glVertex3f(-x / 2.0, 0.0, z - 3.2);
-	glVertex3f(x / 2.0, y, z - 3.2);
-	glVertex3f(-x / 2.0, y, z - 3.2);
-	glEnd();
+	glTranslatef(-x / 2.0 + x / 4.0, 0.0, z - 8.0);
+	drawBlock(x / 2.0, 2.0, 0.8);
 	glPopMatrix();
 
-	//Top
-	glColor4f(GREEN);
+	//Second Target Block
+	drawBlock(x / 2.0 , 2.0, 0.8);
+
+	//Third Target Block
 	glPushMatrix();
-	glBegin(GL_TRIANGLES);
-	glVertex3f(-x / 2.0, y, z - 3.0);
-	glVertex3f(x / 2.0, y, z - 3.0);
-	glVertex3f(-x / 2.0, y, z - 3.2);
-
-	glVertex3f(x / 2.0, y, z - 3.2);
-	glVertex3f(x / 2.0, y, z - 3.0);
-	glVertex3f(-x / 2.0, y, z - 3.2);
-
-	glVertex3f(-x / 2.0, y, z - 3.0);
-	glVertex3f(x / 2.0, y, z - 3.0);
-	glVertex3f(-x / 2.0, y, z - 3.0);
-
-	glVertex3f(x / 2.0, y, z - 3.2);
-	glVertex3f(x / 2.0, y, z - 3.0);
-	glVertex3f(-x / 2.0, y, z - 3.2);
-	glEnd();
+	glTranslatef(x / 2.0 - x / 4.0, 0.0, -z + 4.0);
+	drawBlock(x / 2.0, 2.0, 0.8);
 	glPopMatrix();
 }
 
-void drawGlass(GLfloat x, GLfloat y, GLfloat z) {
+void drawCoverGlass(GLfloat x, GLfloat y, GLfloat z) {
 	//Glass
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glEnable(GL_BLEND);
 	glColor4f(CGLASS);
 	glPushMatrix();
-	glBegin(GL_TRIANGLES);
-	glVertex3f(-x / 2.0, 0.0, z - 3.1);
-	glVertex3f(x / 2.0, 0.0, z - 3.1);
-	glVertex3f(x / 2.0, y, z - 3.1);
-
-	glVertex3f(-x / 2.0, 0.0, z - 3.1);
-	glVertex3f(x / 2.0, y, z - 3.1);
-	glVertex3f(-x / 2.0, y, z - 3.1);
-	glEnd();
+	glTranslatef(-x / 2.0, 0.0, z - 4.1);
+	make_plane(x, y, 4.0);
 	glPopMatrix();
 	glDisable(GL_BLEND);
 }
 
-void drawLightPos() {
+void drawTrapFloor(GLfloat x, GLfloat y, GLfloat z, GLfloat slide) {
+	//Left Segment
+	glEnable(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D, texture[0]);
 	glPushMatrix();
-	//glEnable(GL_COLOR_MATERIAL);
-	//glColor4f(RED);
-	glBegin(GL_LINES);
-	glVertex3i(0, 10, 0);
-	glVertex3i(0, 12, 0);
-	glEnd();
-	//glDisable(GL_COLOR_MATERIAL);
+	glTranslatef(-x / 2.0 - slide, 0, z - 4.0);
+	glRotatef(-90.0, 1.0, 0.0, 0.0);
+	glRotatef(-90.0, 0.0, 0.0, 1.0);
+	make_plane(4.0, x / 2.0, 4.0);
 	glPopMatrix();
+	glDisable(GL_TEXTURE_2D);
+
+	//Right Segment
+	glEnable(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D, texture[0]);
+	glPushMatrix();
+	glTranslatef(x / 2.0 + slide, 0, z - 4.0);
+	glRotatef(90.0, 1.0, 0.0, 0.0);
+	glRotatef(90.0, 0.0, 0.0, 1.0);
+	make_plane(4.0, x / 2.0, 4.0);
+	glPopMatrix();
+	glDisable(GL_TEXTURE_2D);
 }
 
 
 void drawLevel() {
-	
+	if (!texturesLoaded) {
+		load_all_level_textures();
+		texturesLoaded = true;
+	}
 	bool lockWindow = false;
-	GLfloat glassHeight = 15.0 - 13.0;
+	GLfloat glassHeight = 16.0 - 12.0;
 	glBlendFunc(GL_ONE, GL_ZERO);
 	//drawmodel();
-	drawFloor(15.0, 0.0, 20.0);
-	drawCeiling(15.0, 15.0, 20.0);
-	drawWalls(15.0, 15.0, 20.0);
-	drawSpectator(15.0, 0.0, 20.0);
-	drawTargetCovers(15.0, 2.0, 20.0);
-	drawCover(15.0, 1.0, 20.0);
-	drawTrapDoor(15.0, 0.0, 20.0);
-	drawTrapRoom(15.0, 4.0, 20.0);
-	drawGlass(15.0, glassHeight, 20.0);
+	drawWalls(16.0, 16.0, 20.0);
+	drawSpectator(16.0, 12.0, 20.0);
+	drawCover(16.0, 16.0, 20.0);
+	drawCoverGlass(16.0, glassHeight, 20.0);
+	drawTrapFloor(16.0, 16.0, 20.0, 0.0);
 	//drawLightPos();
 }

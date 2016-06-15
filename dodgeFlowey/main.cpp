@@ -39,7 +39,7 @@ void init(void)
 	//GLfloat LightDiffuse[] = { 1.0f, 1.0f, 1.0f, 1.0f };
 	//GLfloat LightPosition[] = { 0.0f, 10.0f, 0.0f, 1.0f };
 
-	glClearColor(SWHITE);
+	glClearColor(BLACK);
 	glShadeModel(GL_SMOOTH);
 	glEnable(GL_DEPTH_TEST);
 	glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
