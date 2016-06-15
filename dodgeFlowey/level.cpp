@@ -175,6 +175,17 @@ void drawWalls(GLfloat x, GLfloat y, GLfloat z) {
 
 void drawSpectator(GLfloat x, GLfloat y, GLfloat z) {
 
+	//Back Wall
+	glEnable(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D, texture[1]);
+	glPushMatrix();
+	glTranslatef((x / 2.0) - 1.0 , y, z);
+	glRotatef(90.0, 0.0, 1.0, 0.0);
+	glTranslatef(-x / 4.0, 0.0, 0.0);
+	make_plane(x / 2.0, x / 2.0, 4.0);
+	glPopMatrix();
+	glDisable(GL_TEXTURE_2D);
+
 	//Left Wall
 	glEnable(GL_TEXTURE_2D);
 	glBindTexture(GL_TEXTURE_2D, texture[1]);
@@ -186,7 +197,7 @@ void drawSpectator(GLfloat x, GLfloat y, GLfloat z) {
 	glDisable(GL_TEXTURE_2D);
 
 	//Glass
-	if (lights_on)
+	/*if (lights_on)
 		glDisable(GL_LIGHTING);
 
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -200,7 +211,7 @@ void drawSpectator(GLfloat x, GLfloat y, GLfloat z) {
 	glDisable(GL_BLEND);
 	
 	if (lights_on)
-		glEnable(GL_LIGHTING);
+		glEnable(GL_LIGHTING);*/
 }
 
 void drawCover(GLfloat x, GLfloat y, GLfloat z) {
