@@ -42,7 +42,7 @@ void init(void)
 	GLfloat LightAmbient[] = { 0.1f, 0.1f, 0.1f, 1.0f };
 	GLfloat LightDiffuse[] = { 1.0f, 1.0f, 1.0f, 1.0f };
 	GLfloat LightPosition[] = { 0.0f, 10.0f, 0.0f, 1.0f };
-
+	
 	glClearColor(0.0f, 0.0f, 0.0f, 0.5f);
 	glShadeModel(GL_SMOOTH);
 	glClearDepth(1.0f);
@@ -179,16 +179,23 @@ void teclasNotAscii(int key, int x, int y) {
 	glutPostRedisplay();
 }
 
+
+void createWindow() {
+	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH | GLUT_MULTISAMPLE);
+	glutInitWindowSize(wScreen, hScreen);
+	glutInitWindowPosition(-1, -1);
+	int window = glutCreateWindow("Moonmen");
+}
+
+
 //======================================================= MAIN
 int main(int argc, char** argv) {
 	//Start the background music
 	//SoundEngine->play2D("resources/sounds/jacks_office.mp3", GL_FALSE);
 	glutInit(&argc, argv);
-	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
-	glutInitWindowSize(wScreen, hScreen);
-	glutInitWindowPosition(-1, -1);
-	glutCreateWindow("Moonmen");
-
+	
+	createWindow();
+	
 	init();
 
 	glutSpecialFunc(teclasNotAscii);

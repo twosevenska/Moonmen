@@ -184,7 +184,7 @@ void renderModel(const struct aiScene *sc, const struct aiNode* nd) {
 }
 
 void drawmodel(void){
-	loadasset("resources/models/Sans/Sans.obj");
+	loadasset("resources/models/Sans/Pre-Posed/Sans_Figure_Pose.obj");
 	if (!scene) {
 		printf("\nCAN'T LOAD OBJ\n");
 		exit(0);

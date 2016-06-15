@@ -262,7 +262,7 @@ void drawTrapFloor(GLfloat x, GLfloat y, GLfloat z, GLfloat slide) {
 
 void drawModels(GLfloat x, GLfloat y, GLfloat z) {
 	glPushMatrix();
-	glTranslatef(0.0, 0.0, 0.8);
+	glTranslatef(0.0, 2.0, 0.0);
 	drawmodel();
 	glPopMatrix();
 }
@@ -298,7 +298,7 @@ void drawLevel() {
 	}
 	bool lockWindow = false;
 	GLfloat glassHeight = 16.0 - 12.0;
-	//drawModels(16.0, 16.0, 20.0);
+	drawModels(16.0, 16.0, 20.0);
 	drawWalls(16.0, 16.0, 20.0);
 	drawLightPos();
 	drawSpectator(16.0, 12.0, 20.0);
