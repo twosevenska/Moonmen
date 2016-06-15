@@ -16,11 +16,9 @@ GLint    defineView = 0;
 GLint    defineProj = 1;
 GLfloat  raio = 20;
 GLfloat  angulo = 0.35*PI;
-GLfloat  obsP[] = { raio*cos(angulo), 5.5, raio*sin(angulo) };
+GLfloat  obsP[] = { 0.0 , 6.0, 20.0 };
 GLfloat  incy = 0.5;
 GLfloat  inca = 0.03;
-GLfloat  angBule = 0;
-GLfloat  incBule = 10;
 
 //------------------------------------------------------------ Texturas
 GLint    repete = 2;
@@ -35,24 +33,37 @@ irrklang::ISoundEngine *SoundEngine = irrklang::createIrrKlangDevice();
 
 void init(void)
 {
-	//GLfloat LightAmbient[] = { 0.5f, 0.5f, 0.5f, 1.0f };
-	//GLfloat LightDiffuse[] = { 1.0f, 1.0f, 1.0f, 1.0f };
-	//GLfloat LightPosition[] = { 0.0f, 10.0f, 0.0f, 1.0f };
+	GLfloat localAttCon = 1.0;
+	GLfloat localAttLin = 0.05;
+	GLfloat localAttQua = 0.0;
 
-	glClearColor(BLACK);
+	GLfloat GlobalLightAmbient[] = { 1.0f, 1.0f, 1.0f, 1.0f };
+
+	GLfloat LightAmbient[] = { 0.1f, 0.1f, 0.1f, 1.0f };
+	GLfloat LightDiffuse[] = { 1.0f, 1.0f, 1.0f, 1.0f };
+	GLfloat LightPosition[] = { 0.0f, 10.0f, 0.0f, 1.0f };
+
+	glClearColor(0.0f, 0.0f, 0.0f, 0.5f);
 	glShadeModel(GL_SMOOTH);
+	glClearDepth(1.0f);
 	glEnable(GL_DEPTH_TEST);
 	glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
 
-	//glEnable(GL_LIGHTING);
-	//glEnable(GL_LIGHT0);    // Uses default lighting parameters
-	//glLightModeli(GL_LIGHT_MODEL_TWO_SIDE, GL_TRUE);
-	glEnable(GL_NORMALIZE);
+	glEnable(GL_LIGHTING);
+	
+	//glLightModeli(GL_LIGHT_MODEL_LOCAL_VIEWER, GL_TRUE);
+	//glEnable(GL_NORMALIZE);
 
-	//glLightfv(GL_LIGHT1, GL_AMBIENT, LightAmbient);
-	//glLightfv(GL_LIGHT1, GL_DIFFUSE, LightDiffuse);
-	//glLightfv(GL_LIGHT1, GL_POSITION, LightPosition);
-	//glEnable(GL_LIGHT1);
+	//Ambiente
+	glLightModelfv(GL_LIGHT_MODEL_AMBIENT, GlobalLightAmbient);
+	//Tecto
+	glLightfv(GL_LIGHT0, GL_AMBIENT, LightAmbient);
+	glLightfv(GL_LIGHT0, GL_DIFFUSE, LightDiffuse);
+	glLightfv(GL_LIGHT0, GL_POSITION, LightPosition);
+	glLightf(GL_LIGHT0, GL_CONSTANT_ATTENUATION, localAttCon);
+	glLightf(GL_LIGHT0, GL_LINEAR_ATTENUATION, localAttLin);
+	glLightf(GL_LIGHT0, GL_QUADRATIC_ATTENUATION, localAttQua);
+	glEnable(GL_LIGHT0);
 }
 
 
@@ -69,7 +80,7 @@ void resizeWindow(GLsizei w, GLsizei h)
 void drawScene() {
 	drawLevel();
 	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Eixos
-	glColor4f(PURPLE);
+	/*glColor4f(PURPLE);
 	glBegin(GL_LINES);
 		glVertex3i(0, 0, 0);
 		glVertex3i(10, 0, 0);
@@ -83,7 +94,7 @@ void drawScene() {
 	glBegin(GL_LINES);
 		glVertex3i(0, 0, 0);
 		glVertex3i(0, 0, 10);
-	glEnd();
+	glEnd();*/
 }
 
 void display(void) {
@@ -118,8 +129,6 @@ void display(void) {
 
 void Timer(int value)
 {
-	//TODO: mudar imagem na tela
-	angBule = angBule + incBule;
 	glutPostRedisplay();
 	glutTimerFunc(msec, Timer, 1);
 }
@@ -161,6 +170,7 @@ void teclasNotAscii(int key, int x, int y) {
 		obsP[1] = yC;
 	if (obsP[1]<-yC)
 		obsP[1] = -yC;
+
 	obsP[0] = (GLfloat)raio*cos(angulo);
 	obsP[2] = (GLfloat)raio*sin(angulo);
 

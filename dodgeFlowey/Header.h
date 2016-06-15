@@ -11,7 +11,7 @@
 //Some colors
 #define BLUE     0.0, 0.0, 1.0, 1.0
 #define LBLUE     0.6, 0.8, 0.8, 1.0
-#define HGLASS     0.6, 0.8, 0.8, 0.9
+#define HGLASS     0.6f, 0.8f, 0.8f, 0.09f
 #define CGLASS     0.6, 0.8, 0.8, 0.2
 #define RED 1.0, 0.0, 0.0, 1.0
 #define YELLOW  1.0, 1.0, 0.0, 1.0

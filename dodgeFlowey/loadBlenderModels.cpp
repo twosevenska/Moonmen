@@ -125,7 +125,7 @@ void renderModel(const struct aiScene *sc, const struct aiNode* nd) {
 	for (; n < nd->mNumMeshes; ++n) {
 		const struct aiMesh* mesh = scene->mMeshes[nd->mMeshes[n]];
 
-		apply_material(sc->mMaterials[mesh->mMaterialIndex]);
+		//apply_material(sc->mMaterials[mesh->mMaterialIndex]);
 
 		if (mesh->mNormals == NULL) {
 			glDisable(GL_LIGHTING);
@@ -184,7 +184,7 @@ void renderModel(const struct aiScene *sc, const struct aiNode* nd) {
 }
 
 void drawmodel(void){
-	loadasset("monkey.obj");
+	loadasset("resources/models/Sans/Sans.obj");
 	if (!scene) {
 		printf("\nCAN'T LOAD OBJ\n");
 		exit(0);
