@@ -9,7 +9,7 @@
 //===========================================================Variaveis e constantes
 
 //------------------------------------------------------------ Sistema Coordenadas
-GLfloat   xC = 15.0, yC = 15.0, zC = 100.0;
+GLfloat   xC = 70.0, yC = 70.0, zC = 70.0;
 GLint     wScreen = 800, hScreen = 600;
 
 //------------------------------------------------------------ Observador
@@ -17,9 +17,16 @@ GLint    defineView = 0;
 GLint    defineProj = 1;
 GLfloat  raio = 20;
 GLfloat  angulo = 0.35*PI;
-GLfloat  obsP[] = { 0.0 , 6.0, 20.0 };
-GLfloat  incy = 0.5;
-GLfloat  inca = 0.03;
+GLfloat  obsP[] = { 0, 5, 18.5};
+GLfloat  incy = 1;
+GLfloat  inca = 1;
+
+GLfloat  lookP[] = { 0, 0};
+GLfloat  rayVision = 45;
+GLfloat  limitsLookP[] = { -rayVision, rayVision};
+
+GLfloat  posLimit = 6.5;
+GLfloat  limitsWalkP[] = { -posLimit, posLimit};
 
 //------------------------------------------------------------ Texturas
 GLint    repete = 2;
@@ -100,7 +107,7 @@ void display(void) {
 	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[ Modelo+View(camera/observador) ]
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
-	gluLookAt(obsP[0], obsP[1], obsP[2], 0, 0, 0, 0, 1, 0);
+	gluLookAt(obsP[0], obsP[1], obsP[2], lookP[0], lookP[1], lookP[2], 0, 1, 0);
 
 	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[ Objectos ]
 	drawScene();
@@ -117,8 +124,30 @@ void Timer(int value)
 }
 
 //======================================================= EVENTOS
-void keyboard(unsigned char key, int x, int y) {
+void keysNotAscii(int key, int x, int y) {
+	if (key == GLUT_KEY_UP)
+		lookP[1] = lookP[1] + incy;
+	if (key == GLUT_KEY_DOWN)
+		lookP[1] = lookP[1] - incy;
+	if (key == GLUT_KEY_LEFT)
+		lookP[0] = lookP[0] - inca;
+	if (key == GLUT_KEY_RIGHT)
+		lookP[0] = lookP[0] + inca;
 
+	if (lookP[0] < limitsLookP[0])
+		lookP[0] = limitsLookP[0];
+	if (lookP[0] > limitsLookP[1])
+		lookP[0] = limitsLookP[1];
+	if (lookP[1] < limitsLookP[0])
+		lookP[1] = limitsLookP[0];
+	if (lookP[1] > limitsLookP[1])
+		lookP[1] = limitsLookP[1];
+
+	glutPostRedisplay();
+}
+
+void keyboard(unsigned char key, int x, int y) {
+	int flag_movement = 0;
 	switch (key) {
 
 		//--------------------------- Textura no papel de parede
@@ -132,6 +161,87 @@ void keyboard(unsigned char key, int x, int y) {
 		defineProj = (defineProj + 1) % 2;
 		glutPostRedisplay();
 		break;
+	//--------------------------- Movimento
+	case 'd':		
+	case 'D':
+		keysNotAscii(GLUT_KEY_RIGHT, 0, 0);
+		break;
+		obsP[0] = obsP[0] + incy;		
+		flag_movement = 1;
+		if (obsP[0] < limitsWalkP[0]) {
+			obsP[0] = limitsWalkP[0];
+			flag_movement = 0;
+		}
+		if (obsP[0] > limitsWalkP[1]){
+			obsP[0] = limitsWalkP[1];
+			flag_movement = 0;
+		}
+
+		if(flag_movement)
+			lookP[0] = lookP[0] + incy;
+		
+		glutPostRedisplay();		
+		break;		
+	case 'a':		
+	case 'A':
+		keysNotAscii(GLUT_KEY_LEFT,0,0);
+		break;
+		obsP[0] = obsP[0] - incy;		
+		flag_movement = 1;
+		if (obsP[0] < limitsWalkP[0]) {
+			obsP[0] = limitsWalkP[0];
+			flag_movement = 0;
+		}
+		if (obsP[0] > limitsWalkP[1]) {
+			obsP[0] = limitsWalkP[1];
+			flag_movement = 0;
+		}
+
+		if (flag_movement)
+			lookP[0] = lookP[0] - incy;
+
+		glutPostRedisplay();		
+		break;
+	case 'w':
+	case 'W':
+		keysNotAscii(GLUT_KEY_UP, 0, 0);
+		break;
+		obsP[0] = obsP[0] + incy;
+		flag_movement = 1;
+		if (obsP[0] < limitsWalkP[0]) {
+			obsP[0] = limitsWalkP[0];
+			flag_movement = 0;
+		}
+		if (obsP[0] > limitsWalkP[1]) {
+			obsP[0] = limitsWalkP[1];
+			flag_movement = 0;
+		}
+
+		if (flag_movement)
+			lookP[0] = lookP[0] + incy;
+
+		glutPostRedisplay();
+		break;
+	case 's':
+	case 'S':
+		keysNotAscii(GLUT_KEY_DOWN, 0, 0);
+		break;
+		obsP[0] = obsP[0] + incy;
+		flag_movement = 1;
+		if (obsP[0] < limitsWalkP[0]) {
+			obsP[0] = limitsWalkP[0];
+			flag_movement = 0;
+		}
+		if (obsP[0] > limitsWalkP[1]) {
+			obsP[0] = limitsWalkP[1];
+			flag_movement = 0;
+		}
+
+		if (flag_movement)
+			lookP[0] = lookP[0] + incy;
+
+		glutPostRedisplay();
+		break;
 		//--------------------------- Escape
 	case 27:
 		exit(0);
@@ -139,32 +249,11 @@ void keyboard(unsigned char key, int x, int y) {
 	}
 }
 
-void teclasNotAscii(int key, int x, int y) {
-	if (key == GLUT_KEY_UP)
-		obsP[1] = obsP[1] + incy;
-	if (key == GLUT_KEY_DOWN)
-		obsP[1] = obsP[1] - incy;
-	if (key == GLUT_KEY_LEFT)
-		angulo = angulo + inca;
-	if (key == GLUT_KEY_RIGHT)
-		angulo = angulo - inca;
-
-	if (obsP[1]> yC)
-		obsP[1] = yC;
-	if (obsP[1]<-yC)
-		obsP[1] = -yC;
-
-	obsP[0] = (GLfloat)raio*cos(angulo);
-	obsP[2] = (GLfloat)raio*sin(angulo);
-
-	glutPostRedisplay();
-}
-
 
 void createWindow() {
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH | GLUT_MULTISAMPLE);
 	glutInitWindowSize(wScreen, hScreen);
-	glutInitWindowPosition(-1, -1);
+	glutInitWindowPosition(200, 50);
 	int window = glutCreateWindow("Moonmen");
 }
 
@@ -179,11 +268,12 @@ int main(int argc, char** argv) {
 	
 	init();
 
-	glutSpecialFunc(teclasNotAscii);
+	glutSpecialFunc(keysNotAscii);
 	glutDisplayFunc(display);
 	glutReshapeFunc(resizeWindow);
 	glutKeyboardFunc(keyboard);
 	glutTimerFunc(msec, Timer, 1);
+	glutSetCursor(GLUT_CURSOR_FULL_CROSSHAIR);
 
 	glutMainLoop();
 
