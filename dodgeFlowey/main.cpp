@@ -80,7 +80,8 @@ void resizeWindow(GLsizei w, GLsizei h)
 void drawScene() {
 	drawLevel();
 	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Eixos
-	/*glColor4f(PURPLE);
+	glDisable(GL_LIGHTING);
+	glColor4f(PURPLE);
 	glBegin(GL_LINES);
 		glVertex3i(0, 0, 0);
 		glVertex3i(10, 0, 0);
@@ -94,7 +95,8 @@ void drawScene() {
 	glBegin(GL_LINES);
 		glVertex3i(0, 0, 0);
 		glVertex3i(0, 0, 10);
-	glEnd();*/
+	glEnd();
+	glEnable(GL_LIGHTING);
 }
 
 void display(void) {

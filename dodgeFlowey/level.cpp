@@ -118,14 +118,16 @@ void drawBlock(GLfloat x, GLfloat y, GLfloat z) {
 }
 
 void drawWalls(GLfloat x, GLfloat y, GLfloat z) {
+	GLfloat meshDensity = 4.0;
+
 	//Ceiling
 	glEnable(GL_TEXTURE_2D);
 	glBindTexture(GL_TEXTURE_2D, texture[0]);
 	glPushMatrix();
 	glTranslatef(x / 2.0, y, -z);
+	glRotatef(90.0, 1.0, 0.0, 0.0);
 	glRotatef(90.0, 0.0, 0.0, 1.0);
-	glRotatef(-90.0, 0.0, 1.0, 0.0);
-	make_plane(z * 2, x*2, 4.0);
+	make_plane(z * 2, x*2, meshDensity);
 	glPopMatrix();
 
 	//Floor
@@ -134,7 +136,7 @@ void drawWalls(GLfloat x, GLfloat y, GLfloat z) {
 	glTranslatef(x / 2.0, 0, z - 4.0);
 	glRotatef(90.0, 0.0, 0.0, 1.0);
 	glRotatef(90.0, 0.0, 1.0, 0.0);
-	make_plane(z * 2, x, 4.0);
+	make_plane(z * 2, x, meshDensity);
 	glPopMatrix();
 
 	//Left Wall
@@ -142,7 +144,7 @@ void drawWalls(GLfloat x, GLfloat y, GLfloat z) {
 	glPushMatrix();
 	glTranslatef(-x / 2.0, 0, z);
 	glRotatef(90.0, 0.0, 1.0, 0.0);
-	make_plane(z*2.0, y - 4.0, 4.0);
+	make_plane(z*2.0, y - 4.0, meshDensity);
 	glPopMatrix();
 
 	//Right Wall
@@ -150,14 +152,14 @@ void drawWalls(GLfloat x, GLfloat y, GLfloat z) {
 	glPushMatrix();
 	glTranslatef(x / 2.0, 0, -z);
 	glRotatef(-90.0, 0.0, 1.0, 0.0);
-	make_plane(z*2.0, y, 4.0);
+	make_plane(z*2.0, y, meshDensity);
 	glPopMatrix();
 
 	//Back Wall
 	glBindTexture(GL_TEXTURE_2D, texture[1]);
 	glPushMatrix();
 	glTranslatef(-x, 0, -z);
-	make_plane(x * 2.0 , y, 4.0);
+	make_plane(x * 2.0 , y, meshDensity);
 	glPopMatrix();
 
 	//Wall Behind
@@ -165,7 +167,7 @@ void drawWalls(GLfloat x, GLfloat y, GLfloat z) {
 	glPushMatrix();
 	glTranslatef(x/2.0, 0, z);
 	glRotatef(180.0, 0.0, 1.0, 0.0);
-	make_plane(x, y, 4.0);
+	make_plane(x, y, meshDensity);
 	glPopMatrix();
 
 	glDisable(GL_TEXTURE_2D);
@@ -184,7 +186,8 @@ void drawSpectator(GLfloat x, GLfloat y, GLfloat z) {
 	glDisable(GL_TEXTURE_2D);
 
 	//Glass
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE);
+	glDisable(GL_LIGHTING);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glEnable(GL_BLEND);
 	glColor4f(HGLASS);
 	glPushMatrix();
@@ -193,6 +196,7 @@ void drawSpectator(GLfloat x, GLfloat y, GLfloat z) {
 	make_plane(z*2.0, 4.0, 4.0);
 	glPopMatrix();
 	glDisable(GL_BLEND);
+	glEnable(GL_LIGHTING);
 }
 
 void drawCover(GLfloat x, GLfloat y, GLfloat z) {
@@ -220,6 +224,7 @@ void drawCover(GLfloat x, GLfloat y, GLfloat z) {
 
 void drawCoverGlass(GLfloat x, GLfloat y, GLfloat z) {
 	//Glass
+	glDisable(GL_LIGHTING);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE);
 	glEnable(GL_BLEND);
 	glColor4f(CGLASS);
@@ -228,6 +233,7 @@ void drawCoverGlass(GLfloat x, GLfloat y, GLfloat z) {
 	make_plane(x, y, 4.0);
 	glPopMatrix();
 	glDisable(GL_BLEND);
+	glEnable(GL_LIGHTING);
 }
 
 void drawTrapFloor(GLfloat x, GLfloat y, GLfloat z, GLfloat slide) {
