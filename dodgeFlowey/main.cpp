@@ -4,6 +4,7 @@
 #include "Header.h"
 #include "level.h"
 #include "light.h"
+#include "ballz.h"
 
 GLboolean god = true;
 
@@ -73,7 +74,7 @@ void resizeWindow(GLsizei w, GLsizei h) {
 void drawScene() {
 
 	drawLevel();
-
+	drawBall(obsP, lookP);
 	if (drawAxis) {
 		//Basic axis
 		if (lights_on)

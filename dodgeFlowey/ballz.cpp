@@ -1,7 +1,7 @@
 #include "Header.h"
 #include "level.h"
 
-GLuint textures[128];
+GLuint texture;
 GLboolean textureLoaded = false;
 RgbImage img;
 
@@ -26,9 +26,9 @@ void animate() {
 
 }
 
-void load(std::string name, GLint texId) {
-	glGenTextures(1, &textures[texId]);
-	glBindTexture(GL_TEXTURE_2D, textures[texId]);
+void load(std::string name) {
+	glGenTextures(1, &texture);
+	glBindTexture(GL_TEXTURE_2D, texture);
 	//glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
@@ -44,16 +44,16 @@ void load(std::string name, GLint texId) {
 		img.ImageData());
 }
 
-void drawBall() {
+void drawBall(GLfloat *obsP, GLfloat *lookP) {
 	if (!textureLoaded) {
-		load("ballTexture.bmp", 0);
+		load("ballTexture.bmp");
 		textureLoaded = true;
 	}
 
 	glDisable(GL_TEXTURE_2D);
-	glBindTexture(GL_TEXTURE_2D, textures[6]);
+	glBindTexture(GL_TEXTURE_2D, texture);
 	glPushMatrix();
-	glTranslatef(ballx, bally, ballz);
+	glTranslatef(obsP[0], obsP[1], obsP[2] - 1.0f);
 	glutSolidSphere(0.2, 250, 250);
 	glPopMatrix();
 	glDisable(GL_TEXTURE_2D);
