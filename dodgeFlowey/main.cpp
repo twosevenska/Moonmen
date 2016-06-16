@@ -5,9 +5,8 @@
 #include "level.h"
 #include "light.h"
 
-GLboolean god = true;
-
 //Dev flags
+GLboolean god = true;
 GLboolean drawAxis = true;
 
 //Coordinate system variables
@@ -57,7 +56,7 @@ void init(void) {
 	glCullFace(GL_BACK);
 
 	//Don't mind Nelly Furtado, this keeps the lights on
-	lightinit();
+	//lightinit();
 }
 
 

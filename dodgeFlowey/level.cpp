@@ -8,6 +8,7 @@ RgbImage imag;
 
 void make_plane(GLfloat width, GLfloat height, GLfloat densityValue) {
 	//Draw a Plane
+	glColor3f(1.0f, 1.0f, 1.0f);
 	glBegin(GL_TRIANGLE_STRIP);
 	GLint col = 0.0;
 	for (GLfloat w = 0.0; w < width; w += densityValue) {
@@ -179,9 +180,7 @@ void drawSpectator(GLfloat x, GLfloat y, GLfloat z) {
 	glEnable(GL_TEXTURE_2D);
 	glBindTexture(GL_TEXTURE_2D, texture[1]);
 	glPushMatrix();
-	glTranslatef((x / 2.0) - 1.0 , y, z);
-	glRotatef(90.0, 0.0, 1.0, 0.0);
-	glTranslatef(-x / 4.0, 0.0, 0.0);
+	glTranslatef(-x, y - x / 4.0, -z);
 	make_plane(x / 2.0, x / 2.0, 4.0);
 	glPopMatrix();
 	glDisable(GL_TEXTURE_2D);
@@ -197,7 +196,7 @@ void drawSpectator(GLfloat x, GLfloat y, GLfloat z) {
 	glDisable(GL_TEXTURE_2D);
 
 	//Glass
-	/*if (lights_on)
+	if (lights_on)
 		glDisable(GL_LIGHTING);
 
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -211,7 +210,7 @@ void drawSpectator(GLfloat x, GLfloat y, GLfloat z) {
 	glDisable(GL_BLEND);
 	
 	if (lights_on)
-		glEnable(GL_LIGHTING);*/
+		glEnable(GL_LIGHTING);
 }
 
 void drawCover(GLfloat x, GLfloat y, GLfloat z) {
@@ -324,7 +323,6 @@ void drawLevel() {
 	GLfloat glassHeight = 16.0 - 12.0;
 	//drawModels(16.0, 16.0, 20.0);
 	drawWalls(16.0, 16.0, 20.0);
-	drawLightPos();
 	drawSpectator(16.0, 12.0, 20.0);
 	//drawFog(5.0, 0.01);
 	drawCover(16.0, 16.0, 20.0);
