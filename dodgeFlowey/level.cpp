@@ -7,6 +7,10 @@ GLboolean texturesLoaded = false;
 GLboolean modelsLoaded = false;
 RgbImage imag;
 
+//Models
+const struct aiScene* sans = NULL;
+const struct aiScene* kleiner = NULL;
+
 void make_plane(GLfloat width, GLfloat height, GLfloat densityValue) {
 	//Draw a Plane
 	//glColor3f(1.0f, 1.0f, 1.0f);
@@ -296,20 +300,22 @@ void drawTrapFloor(GLfloat x, GLfloat y, GLfloat z, GLfloat slide) {
 }
 
 void drawModels(GLfloat x, GLfloat y, GLfloat z) {
-	const struct aiScene* sans = NULL;
-	const struct aiScene* kleiner = NULL;
-
 	if (!modelsLoaded) {
 		sans = loadModel("Sans/Pre-Posed/Sans_Figure_Pose.obj");
-		//kleiner = loadModel("Kleiner/Kleiner.obj");
-		modelsLoaded = true;
+		kleiner = loadModel("Kleiner/Kleiner.obj");
+		
+		if(sans != NULL)
+			modelsLoaded = true;
+		else {
+			std::cout << "Failed loading models @drawModels";
+		}
 	}
 	glPushMatrix();
 	glTranslatef(-12.0, 11.0, -6.0);
 	glRotatef(90.0, 0.0, 1.0, 0.0);
 	drawmodel(sans);
 	glPopMatrix();
-	//drawmodel(kleiner);
+	drawmodel(kleiner);
 	
 }
 

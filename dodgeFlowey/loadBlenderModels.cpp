@@ -9,7 +9,8 @@
 std::map<std::string, GLuint*> textureIdMap;	// map image filenames to textureIds
 
 // Create an instance of the Importer class
-Assimp::Importer importer;
+Assimp::Importer importer[10];
+GLint importerId = 0;
 
 #define aisgl_min(x,y) (x<y?x:y)
 #define aisgl_max(x,y) (y>x?y:x)
@@ -19,7 +20,8 @@ const struct aiScene* loadasset(const char* path){
 	const struct aiScene* scene;
 	// we are taking one of the postprocessing presets to avoid
 	// spelling out 20+ single postprocessing flags here.
-	scene = importer.ReadFile(path, aiProcessPreset_TargetRealtime_Quality);
+	scene = importer[importerId].ReadFile(path, aiProcessPreset_TargetRealtime_Quality);
+	importerId++;
 	return scene;
 }
 
@@ -57,12 +59,12 @@ void apply_material(const aiMaterial *mtl)
 	int texIndex = 0;
 	aiString texPath;	//contains filename of texture
 
-	/*if (AI_SUCCESS == mtl->GetTexture(aiTextureType_DIFFUSE, texIndex, &texPath))
+	if (AI_SUCCESS == mtl->GetTexture(aiTextureType_DIFFUSE, texIndex, &texPath))
 	{
 		//bind texture
 		unsigned int texId = *textureIdMap[texPath.data];
 		glBindTexture(GL_TEXTURE_2D, texId);
-	}*/
+	}
 
 	set_float4(c, 0.8f, 0.8f, 0.8f, 1.0f);
 	if (AI_SUCCESS == aiGetMaterialColor(mtl, AI_MATKEY_COLOR_DIFFUSE, &diffuse))
@@ -194,5 +196,10 @@ const struct aiScene* loadModel(std::string name) {
 }
 
 void drawmodel(const struct aiScene* scene){
-	renderModel(scene, scene->mRootNode);
+	if(scene != NULL){
+		std::cout << "There were two,  the one in the middle fell.\n";
+		renderModel(scene, scene->mRootNode);
+	}else{
+		std::cout << "Warning, received a null scene to draw! Ignoring.\n";
+	}
 }
