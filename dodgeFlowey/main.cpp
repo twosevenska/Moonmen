@@ -4,6 +4,7 @@
 #include "Header.h"
 #include "level.h"
 #include "light.h"
+#include "ballz.h"
 
 //Dev flags
 GLboolean god = true;
@@ -27,7 +28,7 @@ GLfloat  rayVision = 45;
 GLfloat  limitsLookP[] = { -rayVision, rayVision };
 
 GLfloat  posLimit = 6.5;
-GLfloat  limitsWalkP[] = { -posLimit, posLimit };
+GLfloat  limitsWalkP[] = { -posLimit + 1, posLimit - 1 };
 
 //Time is a woobly thing
 GLint    repete = 2;
@@ -42,7 +43,8 @@ irrklang::ISoundEngine *SoundEngine = irrklang::createIrrKlangDevice();
 
 void init(void) {
 	if(god){
-		inca = 0.5; inca = 0.03;
+		incy = 0.5;
+		inca = 0.03;
 	}
 
 	glClearColor(0.0f, 0.0f, 0.0f, 0.5f);
@@ -68,11 +70,11 @@ void resizeWindow(GLsizei w, GLsizei h) {
 	glutPostRedisplay();
 }
 
-
 void drawScene() {
 
 	reloadLightPos();
 
+	//drawBall(obsP, lookP);
 	drawLevel();
 
 	if (drawAxis) {
@@ -176,6 +178,17 @@ void keysNotAscii(int key, int x, int y) {
 void keyboard(unsigned char key, int x, int y) {
 	int flag_movement = 0;
 	switch (key) {
+	case 'g':
+	case 'G':
+		if (god) {
+			incy = 1; inca = 1;
+			god = !god;
+		}
+		else {
+			incy = 0.5; inca = 0.03;
+			god = !god;
+		}
+		break;
 
 		//--------------------------- Textura no papel de parede
 	case 't':
@@ -192,7 +205,8 @@ void keyboard(unsigned char key, int x, int y) {
 	case 'd':
 	case 'D':
 		if (god) {
-			keysNotAscii(GLUT_KEY_RIGHT, 0, 0);
+			obsP[0] = obsP[0] + incy;
+			glutPostRedisplay();
 			break;
 		}
 		obsP[0] = obsP[0] + incy;
@@ -214,7 +228,8 @@ void keyboard(unsigned char key, int x, int y) {
 	case 'a':
 	case 'A':
 		if (god) {
-			keysNotAscii(GLUT_KEY_LEFT,0,0);
+			obsP[0] = obsP[0] - incy;
+			glutPostRedisplay();
 			break;
 		}
 		obsP[0] = obsP[0] - incy;
@@ -239,6 +254,7 @@ void keyboard(unsigned char key, int x, int y) {
 			keysNotAscii(GLUT_KEY_UP, 0, 0);
 			break;
 		}
+		break;
 		obsP[0] = obsP[0] + incy;
 		flag_movement = 1;
 		if (obsP[0] < limitsWalkP[0]) {
@@ -261,6 +277,7 @@ void keyboard(unsigned char key, int x, int y) {
 			keysNotAscii(GLUT_KEY_DOWN, 0, 0);
 			break;
 		}
+		break;
 		obsP[0] = obsP[0] + incy;
 		flag_movement = 1;
 		if (obsP[0] < limitsWalkP[0]) {
@@ -283,7 +300,6 @@ void keyboard(unsigned char key, int x, int y) {
 		break;
 	}
 }
-
 
 void createWindow() {
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH | GLUT_MULTISAMPLE);
