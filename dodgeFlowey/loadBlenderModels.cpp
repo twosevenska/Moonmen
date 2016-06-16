@@ -5,10 +5,8 @@
 #include "assimp/postprocess.h"
 #include "assimp/scene.h"
 
-const struct aiScene* scene[10];
-GLuint sceneN = 0;
+
 std::map<std::string, GLuint*> textureIdMap;	// map image filenames to textureIds
-std::map<std::string, int> modelsIds;
 
 // Create an instance of the Importer class
 Assimp::Importer importer;
@@ -17,11 +15,12 @@ Assimp::Importer importer;
 #define aisgl_max(x,y) (y>x?y:x)
 
 
-int loadasset(const char* path, int id){
+const struct aiScene* loadasset(const char* path){
+	const struct aiScene* scene;
 	// we are taking one of the postprocessing presets to avoid
 	// spelling out 20+ single postprocessing flags here.
-	scene[id] = importer.ReadFile(path, aiProcessPreset_TargetRealtime_Quality);
-	return 1;
+	scene = importer.ReadFile(path, aiProcessPreset_TargetRealtime_Quality);
+	return scene;
 }
 
 void set_float4(float f[4], float a, float b, float c, float d)
@@ -58,12 +57,12 @@ void apply_material(const aiMaterial *mtl)
 	int texIndex = 0;
 	aiString texPath;	//contains filename of texture
 
-	if (AI_SUCCESS == mtl->GetTexture(aiTextureType_DIFFUSE, texIndex, &texPath))
+	/*if (AI_SUCCESS == mtl->GetTexture(aiTextureType_DIFFUSE, texIndex, &texPath))
 	{
 		//bind texture
 		unsigned int texId = *textureIdMap[texPath.data];
 		glBindTexture(GL_TEXTURE_2D, texId);
-	}
+	}*/
 
 	set_float4(c, 0.8f, 0.8f, 0.8f, 1.0f);
 	if (AI_SUCCESS == aiGetMaterialColor(mtl, AI_MATKEY_COLOR_DIFFUSE, &diffuse))
@@ -111,7 +110,7 @@ void apply_material(const aiMaterial *mtl)
 		glDisable(GL_CULL_FACE);
 }
 
-void renderModel(const struct aiScene *sc, const struct aiNode* nd, int id) {
+void renderModel(const struct aiScene *sc, const struct aiNode* nd) {
 	unsigned int i;
 	unsigned int n = 0, t;
 	aiMatrix4x4 m = nd->mTransformation;
@@ -123,7 +122,7 @@ void renderModel(const struct aiScene *sc, const struct aiNode* nd, int id) {
 
 	// draw all meshes assigned to this node
 	for (; n < nd->mNumMeshes; ++n) {
-		const struct aiMesh* mesh = scene[id]->mMeshes[nd->mMeshes[n]];
+		const struct aiMesh* mesh = sc->mMeshes[nd->mMeshes[n]];
 
 		apply_material(sc->mMaterials[mesh->mMaterialIndex]);
 
@@ -177,25 +176,23 @@ void renderModel(const struct aiScene *sc, const struct aiNode* nd, int id) {
 
 	// draw all children
 	for (n = 0; n < nd->mNumChildren; ++n) {
-		renderModel(sc, nd->mChildren[n],  id);
+		renderModel(sc, nd->mChildren[n]);
 	}
 
 	glPopMatrix();
 }
 
-void loadModel(std::string name) {
+const struct aiScene* loadModel(std::string name) {
 	std::string objLocation = "resources/models/" + name;
 	const char * ol = objLocation.c_str();
-	loadasset(ol, sceneN);
+	const struct aiScene* scene = loadasset(ol);
 	if (!scene) {
 		printf("\nCAN'T LOAD OBJ\n");
 		exit(0);
 	}
-	modelsIds.insert( std::pair<std::string, int>(name, sceneN) );
-	sceneN++;
+	return scene;
 }
 
-void drawmodel(std::string name){
-	int id = modelsIds[name];
-	renderModel(scene[id], scene[id]->mRootNode, id);
+void drawmodel(const struct aiScene* scene){
+	renderModel(scene, scene->mRootNode);
 }

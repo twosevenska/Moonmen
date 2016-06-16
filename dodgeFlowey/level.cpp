@@ -4,6 +4,7 @@
 
 GLuint texture[128];
 GLboolean texturesLoaded = false;
+GLboolean modelsLoaded = false;
 RgbImage imag;
 
 void make_plane(GLfloat width, GLfloat height, GLfloat densityValue) {
@@ -295,13 +296,20 @@ void drawTrapFloor(GLfloat x, GLfloat y, GLfloat z, GLfloat slide) {
 }
 
 void drawModels(GLfloat x, GLfloat y, GLfloat z) {
-	loadModel("Sans/Pre-Posed/Sans_Figure_Pose.obj");
+	const struct aiScene* sans = NULL;
+	const struct aiScene* kleiner = NULL;
+
+	if (!modelsLoaded) {
+		sans = loadModel("Sans/Pre-Posed/Sans_Figure_Pose.obj");
+		//kleiner = loadModel("Kleiner/Kleiner.obj");
+		modelsLoaded = true;
+	}
 	glPushMatrix();
 	glTranslatef(-12.0, 11.0, -6.0);
 	glRotatef(90.0, 0.0, 1.0, 0.0);
-	//drawmodel("Sans/Pre-Posed/Sans_Figure_Pose.obj");
+	drawmodel(sans);
 	glPopMatrix();
-	//drawmodel("Papyrus/Pre-Posed/Papyrus_Figure_Pose.obj");
+	//drawmodel(kleiner);
 	
 }
 

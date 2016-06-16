@@ -1,3 +1,3 @@
 #pragma once
-void loadModel(std::string name);
-void drawmodel(std::string name);
+void drawmodel(const struct aiScene* scene);
+const struct aiScene* loadModel(std::string name);
