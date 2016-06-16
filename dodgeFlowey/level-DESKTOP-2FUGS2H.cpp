@@ -4,12 +4,7 @@
 
 GLuint texture[128];
 GLboolean texturesLoaded = false;
-GLboolean modelsLoaded = false;
 RgbImage imag;
-
-//Models
-const struct aiScene* sans = NULL;
-const struct aiScene* papyrus = NULL;
 
 void make_plane(GLfloat width, GLfloat height, GLfloat densityValue) {
 	//Draw a Plane
@@ -300,29 +295,14 @@ void drawTrapFloor(GLfloat x, GLfloat y, GLfloat z, GLfloat slide) {
 }
 
 void drawModels(GLfloat x, GLfloat y, GLfloat z) {
-	if (!modelsLoaded) {
-		sans = loadModel("Sans/Pre-Posed/Sans_Figure_Pose.obj");
-		papyrus = loadModel("Papyrus/Pre-posed/Papyrus_Figure_Pose.obj");
-		
-		if(sans != NULL)
-			modelsLoaded = true;
-		else {
-			std::cout << "Failed loading models @drawModels";
-		}
-	}
+	loadModel("Sans/Pre-Posed/Sans_Figure_Pose.obj");
 	glPushMatrix();
-	glTranslatef(-10.0, 11.0, -6.0);
+	glTranslatef(-12.0, 11.0, -6.0);
 	glRotatef(90.0, 0.0, 1.0, 0.0);
-	glScalef(0.7,0.7,0.7);
-	drawmodel(sans);
+	//drawmodel("Sans/Pre-Posed/Sans_Figure_Pose.obj");
 	glPopMatrix();
-
-	glPushMatrix();
-	glTranslatef(-10.0, 11.0, -8.0);
-	glRotatef(90.0, 0.0, 1.0, 0.0);
-	glScalef(0.5, 0.7, 0.7);
-	drawmodel(papyrus);
-	glPopMatrix();
+	//drawmodel("Papyrus/Pre-Posed/Papyrus_Figure_Pose.obj");
+	
 }
 
 void drawFog(GLfloat distance, GLfloat density) {

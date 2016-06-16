@@ -1,4 +1,4 @@
-# Blender MTL File: 'Sans Rig.blend'
+# Blender MTL File: 'Papyrus Rig.blend'
 # Material Count: 9
 
 newmtl GOLD
@@ -12,7 +12,7 @@ illum 2
 map_Kd Smash Bros Model/gold ref.png
 refl Smash Bros Model/gold ref.png
 
-newmtl Material.001
+newmtl Material.002
 Ns 96.078431
 Ka 0.000000 0.000000 0.000000
 Kd 0.640000 0.640000 0.640000
@@ -20,9 +20,9 @@ Ks 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 0
-map_Kd Sans Tex.png
+map_Kd Papyrus Tex.png
 
-newmtl Material.001_Sans_Tex.png
+newmtl Material.002_Papyrus_Tex.png.002
 Ns 96.078431
 Ka 0.000000 0.000000 0.000000
 Kd 0.640000 0.640000 0.640000
@@ -30,9 +30,9 @@ Ks 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 0
-map_Kd Sans Tex.png
+map_Kd Papyrus Tex.png
 
-newmtl Material.001_Sans_Tex.png.001
+newmtl Material.002_Papyrus_Tex.png.003
 Ns 96.078431
 Ka 0.000000 0.000000 0.000000
 Kd 0.640000 0.640000 0.640000
@@ -40,9 +40,9 @@ Ks 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 0
-map_Kd Sans Tex.png
+map_Kd Papyrus Tex.png
 
-newmtl Material.001_Sans_Tex.png.002
+newmtl Material.002_Papyrus_Tex.png.004
 Ns 96.078431
 Ka 0.000000 0.000000 0.000000
 Kd 0.640000 0.640000 0.640000
@@ -50,9 +50,9 @@ Ks 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 0
-map_Kd Sans Tex.png
+map_Kd Papyrus Tex.png
 
-newmtl Material.001_Sans_Tex.png.005
+newmtl Material.002_Papyrus_Tex.png.005
 Ns 96.078431
 Ka 0.000000 0.000000 0.000000
 Kd 0.640000 0.640000 0.640000
@@ -60,9 +60,9 @@ Ks 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 0
-map_Kd Sans Tex.png
+map_Kd Papyrus Tex.png
 
-newmtl Material.001_Sans_Tex.png.006
+newmtl Material.002_Papyrus_Tex.png.006
 Ns 96.078431
 Ka 0.000000 0.000000 0.000000
 Kd 0.640000 0.640000 0.640000
@@ -70,9 +70,9 @@ Ks 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 0
-map_Kd Sans Tex.png
+map_Kd Papyrus Tex.png
 
-newmtl Material.001_Sans_Tex.png.007
+newmtl Material.002_Papyrus_Tex.png.007
 Ns 96.078431
 Ka 0.000000 0.000000 0.000000
 Kd 0.640000 0.640000 0.640000
@@ -80,7 +80,7 @@ Ks 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 0
-map_Kd Sans Tex.png
+map_Kd Papyrus Tex.png
 
 newmtl black
 Ns 92.156863

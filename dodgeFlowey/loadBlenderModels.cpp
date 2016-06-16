@@ -6,22 +6,23 @@
 #include "assimp/scene.h"
 
 
-const struct aiScene* scene = NULL;
-GLuint scene_list = 0;
 std::map<std::string, GLuint*> textureIdMap;	// map image filenames to textureIds
 
 // Create an instance of the Importer class
-Assimp::Importer importer;
+Assimp::Importer importer[10];
+GLint importerId = 0;
 
 #define aisgl_min(x,y) (x<y?x:y)
 #define aisgl_max(x,y) (y>x?y:x)
 
 
-int loadasset(const char* path){
+const struct aiScene* loadasset(const char* path){
+	const struct aiScene* scene;
 	// we are taking one of the postprocessing presets to avoid
 	// spelling out 20+ single postprocessing flags here.
-	scene = importer.ReadFile(path, aiProcessPreset_TargetRealtime_Quality);
-	return 1;
+	scene = importer[importerId].ReadFile(path, aiProcessPreset_TargetRealtime_Quality);
+	importerId++;
+	return scene;
 }
 
 void set_float4(float f[4], float a, float b, float c, float d)
@@ -58,13 +59,14 @@ void apply_material(const aiMaterial *mtl)
 	int texIndex = 0;
 	aiString texPath;	//contains filename of texture
 
-	if (AI_SUCCESS == mtl->GetTexture(aiTextureType_DIFFUSE, texIndex, &texPath))
+	unsigned int numTextures = mtl->GetTextureCount(aiTextureType_DIFFUSE);
+	/*if (numTextures > 0 && AI_SUCCESS == mtl->GetTexture(aiTextureType_DIFFUSE, texIndex, &texPath))
 	{
 		//bind texture
-		unsigned int texId = *textureIdMap[texPath.data];
+ 		unsigned int texId = *textureIdMap[texPath.data];
 		glBindTexture(GL_TEXTURE_2D, texId);
 	}
-
+	*/
 	set_float4(c, 0.8f, 0.8f, 0.8f, 1.0f);
 	if (AI_SUCCESS == aiGetMaterialColor(mtl, AI_MATKEY_COLOR_DIFFUSE, &diffuse))
 		color4_to_float4(&diffuse, c);
@@ -123,9 +125,9 @@ void renderModel(const struct aiScene *sc, const struct aiNode* nd) {
 
 	// draw all meshes assigned to this node
 	for (; n < nd->mNumMeshes; ++n) {
-		const struct aiMesh* mesh = scene->mMeshes[nd->mMeshes[n]];
+		const struct aiMesh* mesh = sc->mMeshes[nd->mMeshes[n]];
 
-		//apply_material(sc->mMaterials[mesh->mMaterialIndex]);
+		apply_material(sc->mMaterials[mesh->mMaterialIndex]);
 
 		if (mesh->mNormals == NULL) {
 			glDisable(GL_LIGHTING);
@@ -183,12 +185,22 @@ void renderModel(const struct aiScene *sc, const struct aiNode* nd) {
 	glPopMatrix();
 }
 
-void drawmodel(void){
-	loadasset("resources/models/Sans/Pre-Posed/Sans_Figure_Pose.obj");
+const struct aiScene* loadModel(std::string name) {
+	std::string objLocation = "resources/models/" + name;
+	const char * ol = objLocation.c_str();
+	const struct aiScene* scene = loadasset(ol);
 	if (!scene) {
 		printf("\nCAN'T LOAD OBJ\n");
 		exit(0);
 	}
+	return scene;
+}
 
-	renderModel(scene, scene->mRootNode);
+void drawmodel(const struct aiScene* scene){
+	if(scene != NULL){
+		std::cout << "There were two,  the one in the middle fell.\n";
+		renderModel(scene, scene->mRootNode);
+	}else{
+		std::cout << "Warning, received a null scene to draw! Ignoring.\n";
+	}
 }
