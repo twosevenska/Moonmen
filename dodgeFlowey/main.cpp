@@ -7,7 +7,7 @@
 #include "ballz.h"
 
 //Dev flags
-GLboolean god = true;
+GLboolean god = false;
 GLboolean drawAxis = true;
 
 //Coordinate system variables
@@ -23,12 +23,15 @@ GLfloat  obsP[] = { 0, 5, 18};
 GLfloat  incy = 1;
 GLfloat  inca = 1;
 
-GLfloat  lookP[] = { 0, 0 , 0};
+GLfloat  lookP[] = { 0, 0, 0};
 GLfloat  rayVision = 45;
 GLfloat  limitsLookP[] = { -rayVision, rayVision };
 
 GLfloat  posLimit = 6.5;
 GLfloat  limitsWalkP[] = { -posLimit + 1, posLimit - 1 };
+
+//Ball Movement
+GLboolean ballMoving = false;
 
 //Time is a woobly thing
 GLint    repete = 2;
@@ -39,7 +42,6 @@ GLint    msec = 100;					//.. definicao do timer (actualizacao)
 
 										// Sounds 
 irrklang::ISoundEngine *SoundEngine = irrklang::createIrrKlangDevice();
-
 
 void init(void) {
 	if(god){
@@ -74,7 +76,7 @@ void drawScene() {
 
 	reloadLightPos();
 
-	//drawBall(obsP, lookP);
+	ballMoving = drawBall(obsP, lookP, ballMoving);
 	drawLevel();
 
 	if (drawAxis) {
@@ -189,7 +191,9 @@ void keyboard(unsigned char key, int x, int y) {
 			god = !god;
 		}
 		break;
-
+	case ' ':
+		ballMoving = !ballMoving;
+		break;
 		//--------------------------- Textura no papel de parede
 	case 't':
 	case 'T':
@@ -307,7 +311,6 @@ void createWindow() {
 	glutInitWindowPosition(200, 50);
 	int window = glutCreateWindow("Moonmen");
 }
-
 
 int main(int argc, char** argv) {
 	//Start the background music
