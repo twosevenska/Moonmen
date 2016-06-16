@@ -6,29 +6,17 @@ GLuint texture;
 GLboolean textureLoaded = false;
 RgbImage img;
 
-GLfloat ball_radius = 1.0;
-GLfloat ballx = 1.0;
-GLfloat bally = 4.0;
-GLfloat ballz = 16.0;
+GLfloat ball_radius = 0.3;
+GLfloat ballSpeed = 0.1;
 
-GLfloat xSpeed = 0.2f;
-GLfloat ySpeed = 0.07f;
+GLboolean moving = false;
+GLboolean initialMove = false;
+
+GLboolean calc_ball_look = false;
+GLfloat vector_ball_look[3];
 
 GLfloat distance_from_obs = 0.1f;/*in %*/
 GLfloat line[3], ballP[3];
-
-void animate() {
-	if (ballx > 0.0001)
-		ballx += xSpeed;
-	else
-		xSpeed = -xSpeed;
-
-	if (bally > 0.0001)
-		bally += ySpeed;
-	else
-		ySpeed = -ySpeed;
-
-}
 
 void load(std::string name) {
 	glGenTextures(1, &texture);
@@ -48,13 +36,10 @@ void load(std::string name) {
 		img.ImageData());
 }
 
-void getBallInitialP(GLfloat *obs, GLfloat *lookAt) {
+void getBallP(GLfloat *obs, GLfloat *lookAt) {
 	GLfloat dist_look_orig = sqrt(lookAt[0] * lookAt[0] + lookAt[1] * lookAt[1] + lookAt[2] * lookAt[2]);
 
-	if (dist_look_orig > 0.00000001)
-		distance_from_obs = 0.1 - 0.05*log10(dist_look_orig);
-	else
-		distance_from_obs = 0.1;
+	distance_from_obs = 0.1 - 0.05*(log10(dist_look_orig + 5));
 
 	printf("look-orig %f\n", dist_look_orig);
 	printf("dist_obs %f\n", distance_from_obs);
@@ -70,23 +55,53 @@ void getBallInitialP(GLfloat *obs, GLfloat *lookAt) {
 	
 	ballP[0] += 1;
 	ballP[1] += -1;
-
 }
 
-void drawBall(GLfloat *obs, GLfloat *lookAt) {
+void initMovement(GLfloat *lookAt) {
+	vector_ball_look[0] = lookAt[0] - ballP[0];
+	vector_ball_look[1] = lookAt[1] - ballP[1];
+	vector_ball_look[2] = lookAt[2] - ballP[2];
+}
+
+void getBallMovement(GLfloat *lookAt) {
+	GLfloat dist_ball_look;
+
+	dist_ball_look = sqrt(vector_ball_look[0] * vector_ball_look[0]
+		+ vector_ball_look[1] * vector_ball_look[1]
+		+ vector_ball_look[2] * vector_ball_look[2]);
+
+	ballP[0] = ballP[0] + (ballSpeed * vector_ball_look[0]);
+	ballP[1] = ballP[1] + (ballSpeed * vector_ball_look[1]);
+	ballP[2] = ballP[2] + (ballSpeed * vector_ball_look[2]);
+	
+}
+
+GLboolean drawBall(GLfloat *obs, GLfloat *lookAt, GLboolean moving) {
 	/*
 	if (!textureLoaded) {
 		load("ballTexture.bmp");
 		textureLoaded = true;
+	}*/
+	
+	if (!moving) {
+		getBallP(obs, lookAt);
+		initialMove = false;
+	}else {
+		if (!initialMove) {
+			initMovement(lookAt);
+			getBallMovement(lookAt);
+			initialMove = !initialMove;
+		}
+		else {
+			getBallMovement(lookAt);
+		}
 	}
-	*/
-	getBallInitialP(obs, lookAt);
-	glDisable(GL_TEXTURE_2D);
-	glBindTexture(GL_TEXTURE_2D, texture);
+	//glEnable(GL_TEXTURE_2D);
+	//glBindTexture(GL_TEXTURE_2D, texture);
 	glPushMatrix();
 	glTranslatef(ballP[0], ballP[1], ballP[2]);
-	glutSolidSphere(0.2, 250, 250);
+	glutSolidSphere(ball_radius, 250, 250);
 	glPopMatrix();
-	glDisable(GL_TEXTURE_2D);
-	
+	//glDisable(GL_TEXTURE_2D);
+	return moving;
 }

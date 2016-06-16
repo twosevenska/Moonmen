@@ -1,2 +1,2 @@
 #pragma once
-void drawBall(GLfloat *obs, GLfloat *lookAt);
+GLboolean drawBall(GLfloat *obs, GLfloat *lookAt, GLboolean moving);
