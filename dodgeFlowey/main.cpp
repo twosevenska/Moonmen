@@ -56,7 +56,7 @@ void init(void) {
 	glCullFace(GL_BACK);
 
 	//Don't mind Nelly Furtado, this keeps the lights on
-	//lightinit();
+	lightinit();
 }
 
 

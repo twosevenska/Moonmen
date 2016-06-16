@@ -8,7 +8,7 @@ RgbImage imag;
 
 void make_plane(GLfloat width, GLfloat height, GLfloat densityValue) {
 	//Draw a Plane
-	glColor3f(1.0f, 1.0f, 1.0f);
+	//glColor3f(1.0f, 1.0f, 1.0f);
 	glBegin(GL_TRIANGLE_STRIP);
 	GLint col = 0.0;
 	for (GLfloat w = 0.0; w < width; w += densityValue) {
