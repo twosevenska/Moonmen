@@ -1,7 +1,8 @@
+#include <math.h>
 #include "Header.h"
 #include "level.h"
 
-GLuint textures[128];
+GLuint texture;
 GLboolean textureLoaded = false;
 RgbImage img;
 
@@ -12,6 +13,9 @@ GLfloat ballz = 16.0;
 
 GLfloat xSpeed = 0.2f;
 GLfloat ySpeed = 0.07f;
+
+GLfloat distance_from_obs = 0.1f;/*in %*/
+GLfloat line[3], ballP[3];
 
 void animate() {
 	if (ballx > 0.0001)
@@ -26,9 +30,9 @@ void animate() {
 
 }
 
-void load(std::string name, GLint texId) {
-	glGenTextures(1, &textures[texId]);
-	glBindTexture(GL_TEXTURE_2D, textures[texId]);
+void load(std::string name) {
+	glGenTextures(1, &texture);
+	glBindTexture(GL_TEXTURE_2D, texture);
 	//glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
@@ -44,17 +48,45 @@ void load(std::string name, GLint texId) {
 		img.ImageData());
 }
 
-void drawBall() {
+void getBallInitialP(GLfloat *obs, GLfloat *lookAt) {
+	GLfloat dist_look_orig = sqrt(lookAt[0] * lookAt[0] + lookAt[1] * lookAt[1] + lookAt[2] * lookAt[2]);
+
+	if (dist_look_orig > 0.00000001)
+		distance_from_obs = 0.1 - 0.05*log10(dist_look_orig);
+	else
+		distance_from_obs = 0.1;
+
+	printf("look-orig %f\n", dist_look_orig);
+	printf("dist_obs %f\n", distance_from_obs);
+	
+	line[0] = lookAt[0] - obs[0];
+	line[1] = lookAt[1] - obs[1];
+	line[2] = lookAt[2] - obs[2];
+
+	ballP[0] = obs[0] + (distance_from_obs * line[0]);
+	ballP[1] = obs[1] + (distance_from_obs * line[1]);
+	ballP[2] = obs[2] + (distance_from_obs * line[2]);
+
+	
+	ballP[0] += 1;
+	ballP[1] += -1;
+
+}
+
+void drawBall(GLfloat *obs, GLfloat *lookAt) {
+	/*
 	if (!textureLoaded) {
-		load("ballTexture.bmp", 0);
+		load("ballTexture.bmp");
 		textureLoaded = true;
 	}
-
+	*/
+	getBallInitialP(obs, lookAt);
 	glDisable(GL_TEXTURE_2D);
-	glBindTexture(GL_TEXTURE_2D, textures[6]);
+	glBindTexture(GL_TEXTURE_2D, texture);
 	glPushMatrix();
-	glTranslatef(ballx, bally, ballz);
+	glTranslatef(ballP[0], ballP[1], ballP[2]);
 	glutSolidSphere(0.2, 250, 250);
 	glPopMatrix();
 	glDisable(GL_TEXTURE_2D);
+	
 }
