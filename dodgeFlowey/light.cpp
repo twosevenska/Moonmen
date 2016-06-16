@@ -57,9 +57,10 @@ void createSpectatorLights() {
 	glLightfv(lights[nLights], GL_DIFFUSE, LightDiffuse);
 	glLightfv(lights[nLights], GL_SPECULAR, LightSpecular);
 	glLightfv(lights[nLights], GL_SPOT_DIRECTION, LightDirection);
-	glLightf(lights[nLights], GL_CONSTANT_ATTENUATION, localAttCon);
-	glLightf(lights[nLights], GL_LINEAR_ATTENUATION, localAttLin);
-	glLightf(lights[nLights], GL_QUADRATIC_ATTENUATION, localAttQua);
+	//glLightf(lights[nLights], GL_CONSTANT_ATTENUATION, localAttCon);
+	//glLightf(lights[nLights], GL_LINEAR_ATTENUATION, localAttLin);
+	//glLightf(lights[nLights], GL_QUADRATIC_ATTENUATION, localAttQua);
+	glLightf(GL_LIGHT1, GL_SPOT_CUTOFF, 15.f);
 	glEnable(lights[nLights]);
 	nLights++;
 
@@ -69,9 +70,10 @@ void createSpectatorLights() {
 	glLightfv(lights[nLights], GL_DIFFUSE, LightDiffuse);
 	glLightfv(lights[nLights], GL_SPECULAR, LightSpecular);
 	glLightfv(lights[nLights], GL_SPOT_DIRECTION, LightDirection);
-	glLightf(lights[nLights], GL_CONSTANT_ATTENUATION, localAttCon);
-	glLightf(lights[nLights], GL_LINEAR_ATTENUATION, localAttLin);
-	glLightf(lights[nLights], GL_QUADRATIC_ATTENUATION, localAttQua);
+	//glLightf(lights[nLights], GL_CONSTANT_ATTENUATION, localAttCon);
+	//glLightf(lights[nLights], GL_LINEAR_ATTENUATION, localAttLin);
+	//glLightf(lights[nLights], GL_QUADRATIC_ATTENUATION, localAttQua);
+	glLightf(GL_LIGHT1, GL_SPOT_CUTOFF, 15.f);
 	glEnable(lights[nLights]);
 	nLights++;
 }

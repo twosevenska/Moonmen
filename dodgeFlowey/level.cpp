@@ -295,11 +295,14 @@ void drawTrapFloor(GLfloat x, GLfloat y, GLfloat z, GLfloat slide) {
 }
 
 void drawModels(GLfloat x, GLfloat y, GLfloat z) {
+	loadModel("Sans/Pre-Posed/Sans_Figure_Pose.obj");
 	glPushMatrix();
 	glTranslatef(-12.0, 11.0, -6.0);
 	glRotatef(90.0, 0.0, 1.0, 0.0);
-	drawmodel();
+	//drawmodel("Sans/Pre-Posed/Sans_Figure_Pose.obj");
 	glPopMatrix();
+	//drawmodel("Papyrus/Pre-Posed/Papyrus_Figure_Pose.obj");
+	
 }
 
 void drawFog(GLfloat distance, GLfloat density) {
@@ -334,7 +337,7 @@ void drawLevel() {
 	}
 	bool lockWindow = false;
 	GLfloat glassHeight = 16.0 - 12.0;
-	//drawModels(16.0, 16.0, 20.0);
+	drawModels(16.0, 16.0, 20.0);
 	drawWalls(16.0, 16.0, 20.0);
 	//
 	drawSpectator(16.0, 12.0, 20.0);

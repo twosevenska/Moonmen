@@ -1,2 +1,3 @@
 #pragma once
-void drawmodel();
+void loadModel(std::string name);
+void drawmodel(std::string name);
