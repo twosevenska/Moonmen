@@ -6,14 +6,18 @@ GLuint texture;
 GLboolean textureLoaded = false;
 RgbImage img;
 
-GLfloat ball_radius = 0.3;
-GLfloat ballSpeed = 0.1;
+GLfloat ball_radius = 0.3f;
+GLfloat ballSpeed = 0.08f;
+GLfloat delta = 0.1f;
 
 GLboolean moving = false;
 GLboolean initialMove = false;
 
 GLboolean calc_ball_look = false;
 GLfloat vector_ball_look[3];
+GLfloat midP_ball_look[3];
+GLfloat arch_y_inc = 0.1f;
+
 
 GLfloat distance_from_obs = 0.1f;/*in %*/
 GLfloat line[3], ballP[3];
@@ -40,9 +44,6 @@ void getBallP(GLfloat *obs, GLfloat *lookAt) {
 	GLfloat dist_look_orig = sqrt(lookAt[0] * lookAt[0] + lookAt[1] * lookAt[1] + lookAt[2] * lookAt[2]);
 
 	distance_from_obs = 0.1 - 0.05*(log10(dist_look_orig + 5));
-
-	printf("look-orig %f\n", dist_look_orig);
-	printf("dist_obs %f\n", distance_from_obs);
 	
 	line[0] = lookAt[0] - obs[0];
 	line[1] = lookAt[1] - obs[1];
@@ -61,27 +62,55 @@ void initMovement(GLfloat *lookAt) {
 	vector_ball_look[0] = lookAt[0] - ballP[0];
 	vector_ball_look[1] = lookAt[1] - ballP[1];
 	vector_ball_look[2] = lookAt[2] - ballP[2];
+
+	midP_ball_look[0] = ballP[0] + 0.5*vector_ball_look[0];
+	midP_ball_look[1] = ballP[1] + 0.5*vector_ball_look[1];
+	midP_ball_look[2] = ballP[2] + 0.5*vector_ball_look[2];
+
+	ballSpeed = abs(ballSpeed);
+	delta = 0.0;
 }
 
 void getBallMovement(GLfloat *lookAt) {
 	GLfloat dist_ball_look;
 
+	delta += 0.05;
+
 	dist_ball_look = sqrt(vector_ball_look[0] * vector_ball_look[0]
 		+ vector_ball_look[1] * vector_ball_look[1]
 		+ vector_ball_look[2] * vector_ball_look[2]);
 
-	ballP[0] = ballP[0] + (ballSpeed * vector_ball_look[0]);
-	ballP[1] = ballP[1] + (ballSpeed * vector_ball_look[1]);
-	ballP[2] = ballP[2] + (ballSpeed * vector_ball_look[2]);
-	
+	ballP[0] += (ballSpeed * vector_ball_look[0]);
+	ballP[1] += (ballSpeed * vector_ball_look[1]) - delta;
+	ballP[2] += (ballSpeed * vector_ball_look[2]);
+
+	printf("y %.3f\n", ballP[1]);
+	printf("dist %.3f\n", dist_ball_look);
+
+	//arch
+
+
+	if (ballP[2] < -20.0) {
+		ballP[2] = -20.0;
+		ballSpeed *= -1;
+		delta *= -1;
+	}
+
+	if (ballP[1] < 0.0) {
+		ballP[1] = 0.0;
+		delta *= -1;
+	}
+
+	printf("y %.3f\n", ballP[1]);
+	printf("dist %.3f\n", dist_ball_look);
 }
 
 GLboolean drawBall(GLfloat *obs, GLfloat *lookAt, GLboolean moving) {
-	/*
+	
 	if (!textureLoaded) {
 		load("ballTexture.bmp");
 		textureLoaded = true;
-	}*/
+	}
 	
 	if (!moving) {
 		getBallP(obs, lookAt);
@@ -96,12 +125,23 @@ GLboolean drawBall(GLfloat *obs, GLfloat *lookAt, GLboolean moving) {
 			getBallMovement(lookAt);
 		}
 	}
-	//glEnable(GL_TEXTURE_2D);
-	//glBindTexture(GL_TEXTURE_2D, texture);
+
+	glEnable(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D, texture);
 	glPushMatrix();
+	GLUquadricObj* s = gluNewQuadric();
+	gluQuadricDrawStyle(s, GLU_FILL);
+	gluQuadricNormals(s, GLU_SMOOTH);
+	gluQuadricTexture(s, GL_TRUE);
 	glTranslatef(ballP[0], ballP[1], ballP[2]);
-	glutSolidSphere(ball_radius, 250, 250);
+	gluSphere(s, ball_radius, 250, 250);
+	gluDeleteQuadric(s);
 	glPopMatrix();
-	//glDisable(GL_TEXTURE_2D);
+	glDisable(GL_TEXTURE_2D);
+
+	/*glPushMatrix();
+	glTranslatef(lookAt[0], lookAt[1], lookAt[2]);
+	glutSolidSphere(ball_radius, 250, 250);
+	glPopMatrix();*/
 	return moving;
 }
