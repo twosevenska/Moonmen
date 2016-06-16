@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <iostream>
 #include <string>
+#include <vector>
 #include <time.h>
 #include <Windows.h>
 #include <GL/glut.h>

@@ -22,7 +22,7 @@ GLfloat  obsP[] = { 0, 5, 18};
 GLfloat  incy = 1;
 GLfloat  inca = 1;
 
-GLfloat  lookP[] = { 0, 0 };
+GLfloat  lookP[] = { 0, 0 , 0};
 GLfloat  rayVision = 45;
 GLfloat  limitsLookP[] = { -rayVision, rayVision };
 
@@ -71,6 +71,8 @@ void resizeWindow(GLsizei w, GLsizei h) {
 
 void drawScene() {
 
+	reloadLightPos();
+
 	drawLevel();
 
 	if (drawAxis) {
@@ -105,18 +107,18 @@ void display(void) {
 	glViewport(0, 0, wScreen, hScreen);
 
 	//Allow changing perspective in-game
+	glEnable(GL_NORMALIZE);
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	switch (defineProj) {
-	case 1: gluPerspective(88.0, wScreen / hScreen, 0.1, zC); break;
+	case 1: gluPerspective(90.0, wScreen / hScreen, 0.1, zC); break;
 	default: glOrtho(-xC, xC, -yC, yC, -zC, zC);
 		break;
 	}
-
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 	gluLookAt(obsP[0], obsP[1], obsP[2], lookP[0], lookP[1], lookP[2], 0, 1, 0);
-
+	glDisable(GL_NORMALIZE);
 	drawScene();
 	glutSwapBuffers();
 }

@@ -9,6 +9,7 @@ RgbImage imag;
 void make_plane(GLfloat width, GLfloat height, GLfloat densityValue) {
 	//Draw a Plane
 	//glColor3f(1.0f, 1.0f, 1.0f);
+	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	glBegin(GL_TRIANGLE_STRIP);
 	GLint col = 0.0;
 	for (GLfloat w = 0.0; w < width; w += densityValue) {
@@ -31,15 +32,19 @@ void make_plane(GLfloat width, GLfloat height, GLfloat densityValue) {
 				else
 					glTexCoord2f(1.0f, 1.0f);
 				glVertex3f(w + densityValue, h, 0);
+
 				textureHalf++;
 			}
 		}else{
 			for (GLfloat h = height; h >= 0.0; h -= densityValue) {
+				glNormal3f(0.0f, 0.0f, 1.0f);
 				if (textureHalf % 2 == 0)
 					glTexCoord2f(1.0f, 0.0f);
 				else
 					glTexCoord2f(1.0f, 1.0f);
 				glVertex3f(w + densityValue, h, 0);
+
+				glNormal3f(0.0f, 0.0f, 1.0f);
 				if (textureHalf % 2 == 0) {
 					glTexCoord2f(0.0f, 0.0f);
 				}
@@ -119,16 +124,15 @@ void drawBlock(GLfloat x, GLfloat y, GLfloat z) {
 }
 
 void drawWalls(GLfloat x, GLfloat y, GLfloat z) {
-	GLfloat meshDensity = 4.00;
+	GLfloat meshDensity = 2.00;
 
 	//Ceiling
 	glEnable(GL_TEXTURE_2D);
 	glBindTexture(GL_TEXTURE_2D, texture[0]);
 	glPushMatrix();
-	glTranslatef(x / 2.0, y, -z);
+	glTranslatef(-x, y, -z);
 	glRotatef(90.0, 1.0, 0.0, 0.0);
-	glRotatef(90.0, 0.0, 0.0, 1.0);
-	make_plane(z * 2, x*2, meshDensity);
+	make_plane(x+8.0, z * 2, meshDensity);
 	glPopMatrix();
 
 	//Floor
@@ -314,6 +318,15 @@ void drawFog(GLfloat distance, GLfloat density) {
 	glEnable(GL_FOG);									
 }
 
+void drawLightPos(GLfloat x, GLfloat y, GLfloat z) {
+	//glDisable(GL_LIGHTING);
+	glPushMatrix();
+	glTranslatef(x, y, z);
+	glutSolidSphere(1.0, 250, 250);
+	glPopMatrix();
+	//glEnable(GL_LIGHTING);
+}
+
 void drawLevel() {
 	if (!texturesLoaded) {
 		load_all_level_textures();
@@ -323,6 +336,7 @@ void drawLevel() {
 	GLfloat glassHeight = 16.0 - 12.0;
 	//drawModels(16.0, 16.0, 20.0);
 	drawWalls(16.0, 16.0, 20.0);
+	//
 	drawSpectator(16.0, 12.0, 20.0);
 	//drawFog(5.0, 0.01);
 	drawCover(16.0, 16.0, 20.0);
