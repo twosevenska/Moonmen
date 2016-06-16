@@ -59,13 +59,14 @@ void apply_material(const aiMaterial *mtl)
 	int texIndex = 0;
 	aiString texPath;	//contains filename of texture
 
-	if (AI_SUCCESS == mtl->GetTexture(aiTextureType_DIFFUSE, texIndex, &texPath))
+	unsigned int numTextures = mtl->GetTextureCount(aiTextureType_DIFFUSE);
+	/*if (numTextures > 0 && AI_SUCCESS == mtl->GetTexture(aiTextureType_DIFFUSE, texIndex, &texPath))
 	{
 		//bind texture
-		unsigned int texId = *textureIdMap[texPath.data];
+ 		unsigned int texId = *textureIdMap[texPath.data];
 		glBindTexture(GL_TEXTURE_2D, texId);
 	}
-
+	*/
 	set_float4(c, 0.8f, 0.8f, 0.8f, 1.0f);
 	if (AI_SUCCESS == aiGetMaterialColor(mtl, AI_MATKEY_COLOR_DIFFUSE, &diffuse))
 		color4_to_float4(&diffuse, c);

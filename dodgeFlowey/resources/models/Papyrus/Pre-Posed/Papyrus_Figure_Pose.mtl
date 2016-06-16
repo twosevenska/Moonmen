@@ -20,7 +20,7 @@ Ks 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 0
-map_Kd Nibroc's MODELS/Papyrus Tex.png
+map_Kd Papyrus Tex.png
 
 newmtl Material.002_Papyrus_Tex.png.002
 Ns 96.078431
@@ -30,7 +30,7 @@ Ks 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 0
-map_Kd Nibroc's MODELS/Papyrus Tex.png
+map_Kd Papyrus Tex.png
 
 newmtl Material.002_Papyrus_Tex.png.003
 Ns 96.078431
@@ -40,7 +40,7 @@ Ks 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 0
-map_Kd Nibroc's MODELS/Papyrus Tex.png
+map_Kd Papyrus Tex.png
 
 newmtl Material.002_Papyrus_Tex.png.004
 Ns 96.078431
@@ -50,7 +50,7 @@ Ks 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 0
-map_Kd Nibroc's MODELS/Papyrus Tex.png
+map_Kd Papyrus Tex.png
 
 newmtl Material.002_Papyrus_Tex.png.005
 Ns 96.078431
@@ -60,7 +60,7 @@ Ks 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 0
-map_Kd Nibroc's MODELS/Papyrus Tex.png
+map_Kd Papyrus Tex.png
 
 newmtl Material.002_Papyrus_Tex.png.006
 Ns 96.078431
@@ -70,7 +70,7 @@ Ks 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 0
-map_Kd Nibroc's MODELS/Papyrus Tex.png
+map_Kd Papyrus Tex.png
 
 newmtl Material.002_Papyrus_Tex.png.007
 Ns 96.078431
@@ -80,7 +80,7 @@ Ks 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 0
-map_Kd Nibroc's MODELS/Papyrus Tex.png
+map_Kd Papyrus Tex.png
 
 newmtl black
 Ns 92.156863
