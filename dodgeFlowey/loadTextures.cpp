@@ -34,7 +34,7 @@ GLuint getTexture(std::string name) {
 	return texture[textureIdMap[name]];
 }
 
-void createMaskedTextureObject(std::string maskName, std::string textureName, GLfloat x, GLfloat y, GLfloat z, GLfloat rot) {
+void createMaskedTextureObjectOLD(std::string maskName, std::string textureName, GLfloat x, GLfloat y, GLfloat z, GLfloat rot) {
 	if (lights_on)
 		glDisable(GL_LIGHTING);
 	glEnable(GL_BLEND);									// Enable Blending
