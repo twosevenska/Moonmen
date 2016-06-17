@@ -220,7 +220,7 @@ void drawCover(GLfloat x, GLfloat y, GLfloat z) {
 	glPopMatrix();
 	glDisable(GL_TEXTURE_2D);
 
-	//First Target Block
+	//First Target Block -6,0,10
 	glEnable(GL_TEXTURE_2D);
 	glBindTexture(GL_TEXTURE_2D, getTexture("BlueblockTexture.bmp"));
 	glPushMatrix();
@@ -229,13 +229,13 @@ void drawCover(GLfloat x, GLfloat y, GLfloat z) {
 	glPopMatrix();
 	glDisable(GL_TEXTURE_2D);
 
-	//Second Target Block
+	//Second Target Block 0,0,0
 	glEnable(GL_TEXTURE_2D);
 	glBindTexture(GL_TEXTURE_2D, getTexture("OrangeblockTexture.bmp"));
 	drawBlock(x / 2.0 , 2.0, 1.6);
 	glDisable(GL_TEXTURE_2D);
 
-	//Third Target Block
+	//Third Target Block 
 	glEnable(GL_TEXTURE_2D);
 	glBindTexture(GL_TEXTURE_2D, getTexture("BlueblockTexture.bmp"));
 	glPushMatrix();
@@ -313,8 +313,6 @@ void drawModels(GLfloat x, GLfloat y, GLfloat z) {
 	glPopMatrix();
 }
 
-
-
 void drawFog(GLfloat distance, GLfloat density) {
 	GLfloat	fogColor[4] = { 0.0f, 1.0f, 0.0f, 1.0f };
 	glFogi(GL_FOG_MODE, GL_EXP2);
@@ -374,12 +372,12 @@ void drawLevel() {
 	}
 	bool lockWindow = false;
 	GLfloat glassHeight = y - 12.0;
-	drawModels(x, y, z);
+	//drawModels(x, y, z);
 	drawWalls(x, y, z);
 	drawSpectator(x, y - 4.0, z);
 	//drawFog(5.0, 0.01);
 	drawCover(x, y, z);
 	drawTargets(x, z, 3.0);
-	drawCoverGlass(x, glassHeight, z);
+	//drawCoverGlass(x, glassHeight, z);
 	drawTrapFloor(x, y, z, 0.0);
 }
