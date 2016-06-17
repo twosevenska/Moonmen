@@ -84,57 +84,67 @@ GLint getBallMovement(GLfloat *lookAt, GLboolean *targets) {
 
 	//Collisions
 	//1st target frontface
-	if (ballP[0] - ballRadius > -5.0	&&ballP[0] - ballRadius < -7.0 &&
-		ballP[1] + ballRadius > 2.0		&& ballP[1] - ballRadius < 5.0 &&
-		ballP[2] - ballRadius > 9.5		&& ballP[2] - ballRadius < 10.1) {
+	if (targets[0] &&
+		ballP[0] - ballRadius > -7.0	&&ballP[0] - ballRadius < -5.0 &&
+		ballP[1] + ballRadius > 2.2		&& ballP[1] + ballRadius < 5.0 &&
+		ballP[2] - ballRadius > 9.4		&& ballP[2] - ballRadius < 10.0) {
 		targets[0] = false;
+		printf("1 frente");
 		return false;
 	}
 	//1st target backface
-	if (ballP[0] - ballRadius > -5.0	&&ballP[0] - ballRadius < -7.0 &&
-		ballP[1] + ballRadius > 0.0		&& ballP[1] - ballRadius < 5.2 &&
-		ballP[2] + ballRadius > 9.5		&& ballP[2] + ballRadius < 10.1) {
+	if (targets[0] && 
+		ballP[0] - ballRadius > -7.0	&&ballP[0] - ballRadius < -5.0 &&
+		ballP[1] + ballRadius > 2.2		&& ballP[1] + ballRadius < 5.0 &&
+		ballP[2] + ballRadius > 9.4		&& ballP[2] + ballRadius < 10.0) {
 		targets[0] = false;
+		printf("1 trás");
 		return false;
 	}
 	//2nd target frontface
-	if (ballP[0] - ballRadius > -3.0	&&ballP[0] - ballRadius < -1.0 &&
-		ballP[1] + ballRadius > 0.0		&& ballP[1] - ballRadius < 5.0 &&
+	if (targets[1] && 
+		ballP[0] - ballRadius > -3.0	&&ballP[0] - ballRadius < -1.0 &&
+		ballP[1] - ballRadius > 2.2		&& ballP[1] + ballRadius < 5.0 &&
 		ballP[2] - ballRadius > 9.5		&& ballP[2] - ballRadius < 10.1) {
 		targets[1] = false;
 		return false;
 	}
 	//2nd target backface
-	if (ballP[0] - ballRadius > -3.0	&&ballP[0] - ballRadius < -1.0 &&
-		ballP[1] + ballRadius > 0.0		&& ballP[1] - ballRadius < 5.0 &&
+	if (targets[1] &&
+		ballP[0] - ballRadius > -3.0	&&ballP[0] - ballRadius < -1.0 &&
+		ballP[1] - ballRadius > 2.2		&& ballP[1] + ballRadius < 5.0 &&
 		ballP[2] + ballRadius > 9.5		&& ballP[2] + ballRadius < 10.1) {
 		targets[1] = false;
 		return false;
 	}
 	//3rd target frontface
-	if (ballP[0] + ballRadius > 1.0		&& ballP[0] - ballRadius < 3.0 &&
-		ballP[1] + ballRadius > 0.0		&& ballP[1] - ballRadius < 5.0 &&
+	if (targets[2] &&
+		ballP[0] + ballRadius > 1.0		&& ballP[0] - ballRadius < 3.0 &&
+		ballP[1] - ballRadius > 2.2		&& ballP[1] + ballRadius < 5.0 &&
 		ballP[2] - ballRadius > -16.2	&& ballP[2] - ballRadius < -15.4) {
 		targets[2] = false;
 		return false;
 	}
 	//3rd target backface
-	if (ballP[0] + ballRadius > 1.0		&& ballP[0] - ballRadius < 3.0 &&
-		ballP[1] - ballRadius > 0.0		&& ballP[1] - ballRadius < 5.0 &&
+	if (targets[2] &&
+		ballP[0] + ballRadius > 1.0		&& ballP[0] - ballRadius < 3.0 &&
+		ballP[1] - ballRadius > 2.2		&& ballP[1] + ballRadius < 5.0 &&
 		ballP[2] + ballRadius > -16.2	&& ballP[2] + ballRadius < -15.4) {
 		targets[2] = false;
 		return false;
 	}
 	//4th target frontface
-	if (ballP[0] + ballRadius > 5.0		&& ballP[0] + ballRadius < 7.0 &&
-		ballP[1] + ballRadius > 0.0		&& ballP[1] - ballRadius < 5.0 &&
+	if (targets[3] &&
+		ballP[0] + ballRadius > 5.0		&& ballP[0] + ballRadius < 7.0 &&
+		ballP[1] - ballRadius > 2.2		&& ballP[1] + ballRadius < 5.0 &&
 		ballP[2] - ballRadius > -16.2	&& ballP[2] - ballRadius < -15.4) {
 		targets[3] = false;
 		return false;
 	}
 	//4th target backface
-	if (ballP[0] + ballRadius > 5.0		&& ballP[0] + ballRadius < 7.0 &&
-		ballP[1] + ballRadius > 0.0		&& ballP[1] - ballRadius < 5.0 &&
+	if (targets[3] &&
+		ballP[0] + ballRadius > 5.0		&& ballP[0] + ballRadius < 7.0 &&
+		ballP[1] - ballRadius > 2.2		&& ballP[1] + ballRadius < 5.0 &&
 		ballP[2] + ballRadius > -16.2	&& ballP[2] + ballRadius < -15.4) {
 		targets[3] = false;
 		return false;
@@ -223,7 +233,7 @@ GLint getBallMovement(GLfloat *lookAt, GLboolean *targets) {
 		ballP[1], ballRadius, ballP[1] + ballRadius,
 		ballP[2], ballRadius, ballP[2] + ballRadius);
 	*/
-	if (ballP[0] > 8.0 || ballP[0] < -8.0)
+	if (ballP[0] + ballRadius > 8.0 || ballP[0] - ballRadius < -8.0)
 		return false;
 
 	ydelta += ydelta_inc;
