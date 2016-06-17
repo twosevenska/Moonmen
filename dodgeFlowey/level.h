@@ -1,2 +1,2 @@
 #pragma once
-void drawLevel();
+void drawLevel(GLboolean *activeTargets);
