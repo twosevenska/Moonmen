@@ -127,7 +127,7 @@ void renderModel(const struct aiScene *sc, const struct aiNode* nd) {
 	for (; n < nd->mNumMeshes; ++n) {
 		const struct aiMesh* mesh = sc->mMeshes[nd->mMeshes[n]];
 
-		apply_material(sc->mMaterials[mesh->mMaterialIndex]);
+		//apply_material(sc->mMaterials[mesh->mMaterialIndex]);
 
 		if (mesh->mNormals == NULL) {
 			glDisable(GL_LIGHTING);
@@ -136,14 +136,14 @@ void renderModel(const struct aiScene *sc, const struct aiNode* nd) {
 			glEnable(GL_LIGHTING);
 		}
 
-		if (mesh->mColors[0] != NULL)
+		/*if (mesh->mColors[0] != NULL)
 		{
 			glEnable(GL_COLOR_MATERIAL);
 		}
 		else
 		{
 			glDisable(GL_COLOR_MATERIAL);
-		}
+		}*/
 
 		for (t = 0; t < mesh->mNumFaces; ++t) {
 			const struct aiFace* face = &mesh->mFaces[t];
@@ -164,10 +164,10 @@ void renderModel(const struct aiScene *sc, const struct aiNode* nd) {
 				if (mesh->mColors[0] != NULL)
 					glColor4fv((GLfloat*)&mesh->mColors[0][index]);
 				if (mesh->mNormals != NULL)
-					if (mesh->HasTextureCoords(0))		//HasTextureCoords(texture_coordinates_set)
+					/*if (mesh->HasTextureCoords(0))		//HasTextureCoords(texture_coordinates_set)
 					{
 						glTexCoord2f(mesh->mTextureCoords[0][index].x, 1 - mesh->mTextureCoords[0][index].y); //mTextureCoords[channel][vertex]
-					}
+					}*/
 					glNormal3fv(&mesh->mNormals[index].x);
 					glVertex3fv(&mesh->mVertices[index].x);
 			}
@@ -198,9 +198,9 @@ const struct aiScene* loadModel(std::string name) {
 
 void drawmodel(const struct aiScene* scene){
 	if(scene != NULL){
-		std::cout << "There were two,  the one in the middle fell.\n";
+		//std::cout << "There were two,  the one in the middle fell.\n";
 		renderModel(scene, scene->mRootNode);
 	}else{
-		std::cout << "Warning, received a null scene to draw! Ignoring.\n";
+		//std::cout << "Warning, received a null scene to draw! Ignoring.\n";
 	}
 }

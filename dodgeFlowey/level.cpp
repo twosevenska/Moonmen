@@ -93,38 +93,39 @@ void load_all_level_textures() {
 }
 
 void drawBlock(GLfloat x, GLfloat y, GLfloat z) {
+	GLfloat density = 0.4;
 	//Top
 	glPushMatrix();
 	glTranslatef(-x / 2.0, y, 0.0);
 	glRotatef(-90.0, 1.0, 0.0, 0.0);
-	make_plane(x, z, 0.05);
+	make_plane(x, z, 0.02);
 	glPopMatrix();
 
 	//Back
 	glPushMatrix();
 	glTranslatef(x / 2.0, 0.0, -z);
 	glRotatef(180.0, 0.0, 1.0, 0.0);
-	make_plane(x, y, 0.05);
+	make_plane(x, y, density);
 	glPopMatrix();
 
 	//Front
 	glPushMatrix();
 	glTranslatef(-x / 2.0, 0.0, 0.0);
-	make_plane(x, y, 0.05);
+	make_plane(x, y, density);
 	glPopMatrix();
 
 	//LeftSide
 	glPushMatrix();
 	glTranslatef(-x / 2.0, 0.0, -z);
 	glRotatef(-90.0, 0.0, 1.0, 0.0);
-	make_plane(z, y, 0.05);
+	make_plane(z, y, density);
 	glPopMatrix();
 
 	//RightSide
 	glPushMatrix();
 	glTranslatef(x / 2.0, 0.0, 0.0);
 	glRotatef(90.0, 0.0, 1.0, 0.0);
-	make_plane(z, y, 0.05);
+	make_plane(z, y, density);
 	glPopMatrix();
 }
 
@@ -318,7 +319,7 @@ void drawModels(GLfloat x, GLfloat y, GLfloat z) {
 	glPopMatrix();
 
 	glPushMatrix();
-	glTranslatef(-10.0, 11.0, -8.0);
+	glTranslatef(-11.0, 11.0, -10.0);
 	glRotatef(90.0, 0.0, 1.0, 0.0);
 	glScalef(0.5, 0.7, 0.7);
 	drawmodel(papyrus);
@@ -359,7 +360,6 @@ void drawLevel() {
 	GLfloat glassHeight = 16.0 - 12.0;
 	drawModels(16.0, 16.0, 20.0);
 	drawWalls(16.0, 16.0, 20.0);
-	//
 	drawSpectator(16.0, 12.0, 20.0);
 	//drawFog(5.0, 0.01);
 	drawCover(16.0, 16.0, 20.0);

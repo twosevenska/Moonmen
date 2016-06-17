@@ -22,32 +22,10 @@ void reloadLightPos() {
 	}
 }
 
-void createStupidSimpleLightBulb() {
-
-
-	GLfloat LightAmbient[] = { 0.0f, 0.0f, 0.0f, 1.0f };
-	GLfloat LightDiffuse[] = { 0.5f, 0.5f, 0.5f, 1.0f };
-	GLfloat LightSpecular[] = { 0.0f, 0.0f, 0.0f, 1.0f };
-	GLfloat LightDirection[] = { 0.0f, -1.0f, 0.0f };
-	GLfloat LightPosition[] = { 0.0f, 10.0f, 0.0f, 0.0f };
-
-	//Ceiling
-	glLightfv(lights[nLights], GL_AMBIENT, LightAmbient);
-	glLightfv(lights[nLights], GL_DIFFUSE, LightDiffuse);
-	glLightfv(lights[nLights], GL_SPECULAR, LightSpecular);
-	glLightfv(lights[nLights], GL_POSITION, LightPosition);
-	glLightfv(lights[nLights], GL_SPOT_DIRECTION, LightDirection);
-	//glLightf(lights[nLights], GL_CONSTANT_ATTENUATION, localAttCon);
-	//glLightf(lights[nLights], GL_LINEAR_ATTENUATION, localAttLin);
-	//glLightf(lights[nLights], GL_QUADRATIC_ATTENUATION, localAttQua);
-	glEnable(lights[nLights]);
-	nLights++;
-}
-
 void createSpectatorLights() {
 	GLfloat LightAmbient[] = { 0.5f, 0.5f, 0.5f, 1.0f };
 	GLfloat LightDiffuse[] = { 0.5f, 0.5f, 0.5f, 1.0f };
-	GLfloat LightDirection[] = { 1.0f, -1.0f, 0.0f };
+	GLfloat LightDirection[] = { 1.0f, -1.0f, 0.0f, 0.0f};
 	GLfloat LightSpecular[] = { 0.4f, 0.4f, 0.4f, 1.0f };
 
 	GLfloat LightPosition[] = { -18.0f, 15.0f, 10.0f, 0.0f };
@@ -57,10 +35,10 @@ void createSpectatorLights() {
 	glLightfv(lights[nLights], GL_DIFFUSE, LightDiffuse);
 	glLightfv(lights[nLights], GL_SPECULAR, LightSpecular);
 	glLightfv(lights[nLights], GL_SPOT_DIRECTION, LightDirection);
-	//glLightf(lights[nLights], GL_CONSTANT_ATTENUATION, localAttCon);
-	//glLightf(lights[nLights], GL_LINEAR_ATTENUATION, localAttLin);
-	//glLightf(lights[nLights], GL_QUADRATIC_ATTENUATION, localAttQua);
-	glLightf(GL_LIGHT1, GL_SPOT_CUTOFF, 15.f);
+	glLightf(lights[nLights], GL_CONSTANT_ATTENUATION, localAttCon);
+	glLightf(lights[nLights], GL_LINEAR_ATTENUATION, localAttLin);
+	glLightf(lights[nLights], GL_QUADRATIC_ATTENUATION, localAttQua);
+	glLightf(GL_LIGHT1, GL_SPOT_CUTOFF, 10.f);
 	glEnable(lights[nLights]);
 	nLights++;
 
@@ -70,20 +48,20 @@ void createSpectatorLights() {
 	glLightfv(lights[nLights], GL_DIFFUSE, LightDiffuse);
 	glLightfv(lights[nLights], GL_SPECULAR, LightSpecular);
 	glLightfv(lights[nLights], GL_SPOT_DIRECTION, LightDirection);
-	//glLightf(lights[nLights], GL_CONSTANT_ATTENUATION, localAttCon);
-	//glLightf(lights[nLights], GL_LINEAR_ATTENUATION, localAttLin);
-	//glLightf(lights[nLights], GL_QUADRATIC_ATTENUATION, localAttQua);
-	glLightf(GL_LIGHT1, GL_SPOT_CUTOFF, 15.f);
+	glLightf(lights[nLights], GL_CONSTANT_ATTENUATION, localAttCon);
+	glLightf(lights[nLights], GL_LINEAR_ATTENUATION, localAttLin);
+	glLightf(lights[nLights], GL_QUADRATIC_ATTENUATION, localAttQua);
+	glLightf(GL_LIGHT1, GL_SPOT_CUTOFF, 10.f);
 	glEnable(lights[nLights]);
 	nLights++;
 }
 
 
 void createCeilingLights() {
-	GLfloat LightAmbient[] = { 0.1f, 0.1f, 0.1f, 1.0f };
-	GLfloat LightDiffuse[] = { 1.0f, 1.0f, 1.0f, 1.0f };
+	GLfloat LightAmbient[] = { 0.5f, 0.5f, 0.5f, 1.0f };
+	GLfloat LightDiffuse[] = { 0.5f, 0.5f, 0.5f, 1.0f };
 	GLfloat LightSpecular[] = { 1.0f, 1.0f, 1.0f, 1.0f };
-	GLfloat LightDirection[] = { 0.0f, -1.0f, 0.0f };
+	GLfloat LightDirection[] = { 0.0f, -1.0f, 0.0f, 0.0f };
 
 	for (int c = 0; c < 2; c++) {
 		for (int r = 0; r < 2; r++){
@@ -98,7 +76,7 @@ void createCeilingLights() {
 			glLightfv(lights[nLights], GL_AMBIENT, LightAmbient);
 			glLightfv(lights[nLights], GL_DIFFUSE, LightDiffuse);
 			glLightfv(lights[nLights], GL_SPECULAR, LightSpecular);
-			//glLightfv(lights[nLights], GL_SPOT_DIRECTION, LightDirection);
+			glLightfv(lights[nLights], GL_SPOT_DIRECTION, LightDirection);
 			glLightf(lights[nLights], GL_CONSTANT_ATTENUATION, localAttCon);
 			glLightf(lights[nLights], GL_LINEAR_ATTENUATION, localAttLin);
 			glLightf(lights[nLights], GL_QUADRATIC_ATTENUATION, localAttQua);
@@ -119,11 +97,8 @@ void lightinit() {
 	//glLightModeli(GL_LIGHT_MODEL_LOCAL_VIEWER, GL_TRUE);
 
 	//Ambient
-	glLightModelfv(GL_LIGHT_MODEL_AMBIENT, GlobalLightAmbient);
+	//glLightModelfv(GL_LIGHT_MODEL_AMBIENT, GlobalLightAmbient);
 	//Create remaining lights
-	//createCeilingLights();
+	createCeilingLights();
 	createSpectatorLights();
-
-	//Our Experimental light
-	//createStupidSimpleLightBulb();
 }
