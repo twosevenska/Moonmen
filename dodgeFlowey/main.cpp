@@ -33,6 +33,9 @@ GLfloat  limitsWalkP[] = { -posLimit + 1, posLimit - 1 };
 //Ball Movement
 GLboolean ballMoving = false;
 
+//Targeting
+GLboolean activeTargets[5] = { true,true,true,true,true };
+
 //Time is a woobly thing
 GLint    repete = 2;
 GLfloat  rr = 1;
@@ -76,8 +79,8 @@ void drawScene() {
 
 	reloadLightPos();
 
-	ballMoving = drawBall(obsP, lookP, ballMoving);
-	drawLevel();
+	ballMoving = drawBall(obsP, lookP, ballMoving, activeTargets);
+	drawLevel(activeTargets);
 
 	if (drawAxis) {
 		//Basic axis
@@ -124,6 +127,7 @@ void display(void) {
 	gluLookAt(obsP[0], obsP[1], obsP[2], lookP[0], lookP[1], lookP[2], 0, 1, 0);
 	glDisable(GL_NORMALIZE);
 	drawScene();
+
 	glutSwapBuffers();
 }
 
@@ -180,6 +184,14 @@ void keysNotAscii(int key, int x, int y) {
 void keyboard(unsigned char key, int x, int y) {
 	int flag_movement = 0;
 	switch (key) {
+	case 'r':
+	case 'R':
+		activeTargets[0] = true;
+		activeTargets[1] = true;
+		activeTargets[2] = true;
+		activeTargets[3] = true;
+		activeTargets[4] = true;
+		break;
 	case 'g':
 	case 'G':
 		if (god) {
