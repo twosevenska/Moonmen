@@ -362,18 +362,22 @@ void drawSmallTarget(GLfloat x, GLfloat y, GLfloat z, GLfloat rot) {
 		glEnable(GL_LIGHTING);
 }
 
-void drawTargets(GLfloat x, GLfloat z, GLfloat alt) {
+void drawTargets(GLfloat x, GLfloat z, GLfloat alt, GLboolean *activeTargets) {
 
 	//First block targets
-	drawSmallTarget(-x / 2.0 + 2.0 , alt, z - 10.2, 0.0);
-	drawSmallTarget(-x / 2.0 + 6.0, alt, z - 10.2, 0.0);
+	if(activeTargets[0])
+		drawSmallTarget(-x / 2.0 + 2.0 , alt, z - 10.2, 0.0);
+	if (activeTargets[1])
+		drawSmallTarget(-x / 2.0 + 6.0, alt, z - 10.2, 0.0);
 
 	//Last block targets
-	drawSmallTarget(x / 2.0 - 2.0, alt, -z + 4.2, 0.0);
-	drawSmallTarget(x / 2.0 - 6.0, alt, -z + 4.2, 0.0);
+	if (activeTargets[2])
+		drawSmallTarget(x / 2.0 - 6.0, alt, -z + 4.2, 0.0);
+	if (activeTargets[3])
+		drawSmallTarget(x / 2.0 - 2.0, alt, -z + 4.2, 0.0);
 }
 
-void drawLevel() {
+void drawLevel(GLboolean *activeTargets) {
 	GLfloat x = 16.0;
 	GLfloat y = 16.0;
 	GLfloat z = 20.0;
@@ -389,7 +393,7 @@ void drawLevel() {
 	drawSpectator(x, y - 4.0, z);
 	//drawFog(5.0, 0.01);
 	drawCover(x, y, z);
-	drawTargets(x, z, 3.0);
+	drawTargets(x, z, 3.5, activeTargets);
 	//drawCoverGlass(x, glassHeight, z);
 	drawTrapFloor(x, y, z, 0.0);
 }
