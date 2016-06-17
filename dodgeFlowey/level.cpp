@@ -4,7 +4,14 @@
 
 GLuint texture[128];
 GLboolean texturesLoaded = false;
+GLboolean modelsLoaded = false;
 RgbImage imag;
+
+GLfloat meshDensity = 2.00;
+
+//Models
+const struct aiScene* sans = NULL;
+const struct aiScene* papyrus = NULL;
 
 void make_plane(GLfloat width, GLfloat height, GLfloat densityValue) {
 	//Draw a Plane
@@ -88,43 +95,43 @@ void load_all_level_textures() {
 }
 
 void drawBlock(GLfloat x, GLfloat y, GLfloat z) {
+	GLfloat density = 0.4;
 	//Top
 	glPushMatrix();
 	glTranslatef(-x / 2.0, y, 0.0);
 	glRotatef(-90.0, 1.0, 0.0, 0.0);
-	make_plane(x, z, 0.05);
+	make_plane(x, z, 0.02);
 	glPopMatrix();
 
 	//Back
 	glPushMatrix();
 	glTranslatef(x / 2.0, 0.0, -z);
 	glRotatef(180.0, 0.0, 1.0, 0.0);
-	make_plane(x, y, 0.05);
+	make_plane(x, y, density);
 	glPopMatrix();
 
 	//Front
 	glPushMatrix();
 	glTranslatef(-x / 2.0, 0.0, 0.0);
-	make_plane(x, y, 0.05);
+	make_plane(x, y, density);
 	glPopMatrix();
 
 	//LeftSide
 	glPushMatrix();
 	glTranslatef(-x / 2.0, 0.0, -z);
 	glRotatef(-90.0, 0.0, 1.0, 0.0);
-	make_plane(z, y, 0.05);
+	make_plane(z, y, density);
 	glPopMatrix();
 
 	//RightSide
 	glPushMatrix();
 	glTranslatef(x / 2.0, 0.0, 0.0);
 	glRotatef(90.0, 0.0, 1.0, 0.0);
-	make_plane(z, y, 0.05);
+	make_plane(z, y, density);
 	glPopMatrix();
 }
 
 void drawWalls(GLfloat x, GLfloat y, GLfloat z) {
-	GLfloat meshDensity = 2.00;
 
 	//Ceiling
 	glEnable(GL_TEXTURE_2D);
@@ -185,7 +192,7 @@ void drawSpectator(GLfloat x, GLfloat y, GLfloat z) {
 	glBindTexture(GL_TEXTURE_2D, texture[1]);
 	glPushMatrix();
 	glTranslatef(-x, y - x / 4.0, -z);
-	make_plane(x / 2.0, x / 2.0, 4.0);
+	make_plane(x / 2.0, x / 2.0, meshDensity);
 	glPopMatrix();
 	glDisable(GL_TEXTURE_2D);
 
@@ -195,7 +202,7 @@ void drawSpectator(GLfloat x, GLfloat y, GLfloat z) {
 	glPushMatrix();
 	glTranslatef(-x, y, z);
 	glRotatef(90.0, 0.0, 1.0, 0.0);
-	make_plane(z*2.0, 4.0, 4.0);
+	make_plane(z*2.0, 4.0, meshDensity);
 	glPopMatrix();
 	glDisable(GL_TEXTURE_2D);
 
@@ -209,7 +216,7 @@ void drawSpectator(GLfloat x, GLfloat y, GLfloat z) {
 	glPushMatrix();
 	glTranslatef(-x / 2.0, y, z);
 	glRotatef(90.0, 0.0, 1.0, 0.0);
-	make_plane(z*2.0, 4.0, 4.0);
+	make_plane(z*2.0, 4.0, meshDensity);
 	glPopMatrix();
 	glDisable(GL_BLEND);
 	
@@ -278,7 +285,7 @@ void drawTrapFloor(GLfloat x, GLfloat y, GLfloat z, GLfloat slide) {
 	glTranslatef(-x / 2.0 - slide, 0, z - 4.0);
 	glRotatef(-90.0, 1.0, 0.0, 0.0);
 	glRotatef(-90.0, 0.0, 0.0, 1.0);
-	make_plane(4.0, x / 2.0, 4.0);
+	make_plane(4.0, x / 2.0, meshDensity);
 	glPopMatrix();
 	glDisable(GL_TEXTURE_2D);
 
@@ -289,18 +296,38 @@ void drawTrapFloor(GLfloat x, GLfloat y, GLfloat z, GLfloat slide) {
 	glTranslatef(x / 2.0 + slide, 0.0, z);
 	glRotatef(90.0, 0.0, 1.0, 0.0);
 	glRotatef(-90.0, 1.0, 0.0, 0.0);
-	make_plane(4.0, x / 2.0, 4.0);
+	make_plane(4.0, x / 2.0, meshDensity);
 	glPopMatrix();
 	glDisable(GL_TEXTURE_2D);
 }
 
 void drawModels(GLfloat x, GLfloat y, GLfloat z) {
+	if (!modelsLoaded) {
+		sans = loadModel("Sans/Pre-Posed/Sans_Figure_Pose.obj");
+		papyrus = loadModel("Papyrus/Pre-posed/Papyrus_Figure_Pose.obj");
+		
+		if(sans != NULL)
+			modelsLoaded = true;
+		else {
+			std::cout << "Failed loading models @drawModels";
+		}
+	}
 	glPushMatrix();
-	glTranslatef(-12.0, 11.0, -6.0);
+	glTranslatef(-10.0, 11.0, -6.0);
 	glRotatef(90.0, 0.0, 1.0, 0.0);
-	drawmodel();
+	glScalef(0.7,0.7,0.7);
+	drawmodel(sans);
+	glPopMatrix();
+
+	glPushMatrix();
+	glTranslatef(-11.0, 11.0, -10.0);
+	glRotatef(90.0, 0.0, 1.0, 0.0);
+	glScalef(0.5, 0.7, 0.7);
+	drawmodel(papyrus);
 	glPopMatrix();
 }
+
+
 
 void drawFog(GLfloat distance, GLfloat density) {
 	GLfloat	fogColor[4] = { 0.0f, 1.0f, 0.0f, 1.0f };
@@ -318,28 +345,53 @@ void drawFog(GLfloat distance, GLfloat density) {
 	glEnable(GL_FOG);									
 }
 
-void drawLightPos(GLfloat x, GLfloat y, GLfloat z) {
-	//glDisable(GL_LIGHTING);
+void drawSmallTarget(GLfloat x, GLfloat y, GLfloat z, GLfloat rot) {
+	if (lights_on)
+		glDisable(GL_LIGHTING);
+
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE);
+	glEnable(GL_BLEND);
+	glColor4f(CGLASS);
 	glPushMatrix();
 	glTranslatef(x, y, z);
-	glutSolidSphere(1.0, 250, 250);
+	glRotatef(rot, 0.0, 0.0, 1.0);
+	glTranslatef(-1.0,-1.0,0.0);
+	make_plane(2.0, 2.0, 0.4);
 	glPopMatrix();
-	//glEnable(GL_LIGHTING);
+	glDisable(GL_BLEND);
+
+	if (lights_on)
+		glEnable(GL_LIGHTING);
+}
+
+void drawTargets(GLfloat x, GLfloat z, GLfloat alt) {
+
+	//First block targets
+	drawSmallTarget(-x / 2.0 + 2.0 , alt, z - 10.2, 0.0);
+	drawSmallTarget(-x / 2.0 + 6.0, alt, z - 10.2, 0.0);
+
+	//Last block targets
+	drawSmallTarget(x / 2.0 - 2.0, alt, -z + 4.2, 0.0);
+	drawSmallTarget(x / 2.0 - 6.0, alt, -z + 4.2, 0.0);
 }
 
 void drawLevel() {
+	GLfloat x = 16.0;
+	GLfloat y = 16.0;
+	GLfloat z = 20.0;
+
 	if (!texturesLoaded) {
 		load_all_level_textures();
 		texturesLoaded = true;
 	}
 	bool lockWindow = false;
-	GLfloat glassHeight = 16.0 - 12.0;
-	//drawModels(16.0, 16.0, 20.0);
-	drawWalls(16.0, 16.0, 20.0);
-	//
-	drawSpectator(16.0, 12.0, 20.0);
+	GLfloat glassHeight = y - 12.0;
+	drawModels(x, y, z);
+	drawWalls(x, y, z);
+	drawSpectator(x, y - 4.0, z);
 	//drawFog(5.0, 0.01);
-	drawCover(16.0, 16.0, 20.0);
-	drawCoverGlass(16.0, glassHeight, 20.0);
-	drawTrapFloor(16.0, 16.0, 20.0, 0.0);
+	drawCover(x, y, z);
+	drawTargets(x, z, 3.0);
+	drawCoverGlass(x, glassHeight, z);
+	drawTrapFloor(x, y, z, 0.0);
 }
