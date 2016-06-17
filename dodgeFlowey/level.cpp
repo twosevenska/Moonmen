@@ -76,6 +76,8 @@ void load_all_level_textures() {
 	load_texture("blockTexture.bmp");
 	load_texture("BlueblockTexture.bmp");
 	load_texture("OrangeblockTexture.bmp");
+	load_texture("targetOrange.bmp");
+	load_texture("targetMask.bmp");
 }
 
 void drawBlock(GLfloat x, GLfloat y, GLfloat z) {
