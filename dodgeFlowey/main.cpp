@@ -318,7 +318,7 @@ void keyboard(unsigned char key, int x, int y) {
 }
 
 void createWindow() {
-	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH | GLUT_MULTISAMPLE);
+	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH | GLUT_MULTISAMPLE | GLUT_STENCIL);
 	glutInitWindowSize(wScreen, hScreen);
 	glutInitWindowPosition(200, 50);
 	int window = glutCreateWindow("Moonmen");
