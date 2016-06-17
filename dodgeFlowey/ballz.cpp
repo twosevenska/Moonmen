@@ -71,7 +71,7 @@ void initMovement(GLfloat *lookAt) {
 	ydelta_inc = 0.05f;
 }
 
-GLint getBallMovement(GLfloat *lookAt) {
+GLint getBallMovement(GLfloat *lookAt, GLboolean *targets) {
 	GLfloat dist_ball_look;
 	
 	dist_ball_look = sqrt(vector_ball_look[0] * vector_ball_look[0]
@@ -82,42 +82,95 @@ GLint getBallMovement(GLfloat *lookAt) {
 	ballP[1] += (ballSpeed * vector_ball_look[1]) - ydelta;
 	ballP[2] += (ballSpeed * vector_ball_look[2]);
 
-
-
 	//Collisions
-	
-	
+	//1st target frontface
+	if (ballP[0] - ballRadius > -5.0	&&ballP[0] - ballRadius < -7.0 &&
+		ballP[1] + ballRadius > 2.0		&& ballP[1] - ballRadius < 5.0 &&
+		ballP[2] - ballRadius > 9.5		&& ballP[2] - ballRadius < 10.1) {
+		targets[0] = false;
+		return false;
+	}
+	//1st target backface
+	if (ballP[0] - ballRadius > -5.0	&&ballP[0] - ballRadius < -7.0 &&
+		ballP[1] + ballRadius > 0.0		&& ballP[1] - ballRadius < 5.2 &&
+		ballP[2] + ballRadius > 9.5		&& ballP[2] + ballRadius < 10.1) {
+		targets[0] = false;
+		return false;
+	}
+	//2nd target frontface
+	if (ballP[0] - ballRadius > -3.0	&&ballP[0] - ballRadius < -1.0 &&
+		ballP[1] + ballRadius > 0.0		&& ballP[1] - ballRadius < 5.0 &&
+		ballP[2] - ballRadius > 9.5		&& ballP[2] - ballRadius < 10.1) {
+		targets[1] = false;
+		return false;
+	}
+	//2nd target backface
+	if (ballP[0] - ballRadius > -3.0	&&ballP[0] - ballRadius < -1.0 &&
+		ballP[1] + ballRadius > 0.0		&& ballP[1] - ballRadius < 5.0 &&
+		ballP[2] + ballRadius > 9.5		&& ballP[2] + ballRadius < 10.1) {
+		targets[1] = false;
+		return false;
+	}
+	//3rd target frontface
+	if (ballP[0] + ballRadius > 1.0		&& ballP[0] - ballRadius < 3.0 &&
+		ballP[1] + ballRadius > 0.0		&& ballP[1] - ballRadius < 5.0 &&
+		ballP[2] - ballRadius > -16.2	&& ballP[2] - ballRadius < -15.4) {
+		targets[2] = false;
+		return false;
+	}
+	//3rd target backface
+	if (ballP[0] + ballRadius > 1.0		&& ballP[0] - ballRadius < 3.0 &&
+		ballP[1] - ballRadius > 0.0		&& ballP[1] - ballRadius < 5.0 &&
+		ballP[2] + ballRadius > -16.2	&& ballP[2] + ballRadius < -15.4) {
+		targets[2] = false;
+		return false;
+	}
+	//4th target frontface
+	if (ballP[0] + ballRadius > 5.0		&& ballP[0] + ballRadius < 7.0 &&
+		ballP[1] + ballRadius > 0.0		&& ballP[1] - ballRadius < 5.0 &&
+		ballP[2] - ballRadius > -16.2	&& ballP[2] - ballRadius < -15.4) {
+		targets[3] = false;
+		return false;
+	}
+	//4th target backface
+	if (ballP[0] + ballRadius > 5.0		&& ballP[0] + ballRadius < 7.0 &&
+		ballP[1] + ballRadius > 0.0		&& ballP[1] - ballRadius < 5.0 &&
+		ballP[2] + ballRadius > -16.2	&& ballP[2] + ballRadius < -15.4) {
+		targets[3] = false;
+		return false;
+	}
+
 	//First black border
 	if (ballP[1] - ballRadius < 2.0 &&
-		(ballP[2] - ballRadius < 14.5 && ballP[2] - ballRadius > 13.5 ||
-			ballP[2] + ballRadius < 14.5 && ballP[2] + ballRadius > 13.5) ||
+		(ballP[2] - ballRadius < 14.5	&& ballP[2] - ballRadius > 13.5 ||
+		ballP[2] + ballRadius < 14.5	&& ballP[2] + ballRadius > 13.5) ||
 		//Nearest block front
-		(ballP[0] - ballRadius > -8.0 && ballP[0] - ballRadius < 0.0 &&
-			ballP[1] - ballRadius < 2.0 &&
-			ballP[2] - ballRadius > 9.1 && ballP[2] - ballRadius < 10.9) ||
+		(ballP[0] - ballRadius > -8.0	&& ballP[0] - ballRadius < 0.0 &&
+		ballP[1] - ballRadius < 2.0		&&
+		ballP[2] - ballRadius > 9.1		&& ballP[2] - ballRadius < 10.9) ||
 		//Nearest block back
-		(ballP[0] - ballRadius > -8.0 && ballP[0] - ballRadius < 0.0 &&
-			ballP[1] - ballRadius < 2.0 &&
-			ballP[2] + ballRadius > 9.1 && ballP[2] + ballRadius < 10.9) ||
+		(ballP[0] - ballRadius > -8.0	&& ballP[0] - ballRadius < 0.0 &&
+		ballP[1] - ballRadius < 2.0		&&
+		ballP[2] + ballRadius > 9.1		&& ballP[2] + ballRadius < 10.9) ||
 		
 		//Middle block front
-		(ballP[0] - ballRadius > -4.0 && ballP[0] - ballRadius < 4.0 &&
-			ballP[1] - ballRadius < 2.0 &&
-			ballP[2] - ballRadius > -0.9 && ballP[2] - ballRadius < 0.9) ||
+		(ballP[0] - ballRadius > -4.0	&& ballP[0] - ballRadius < 4.0 &&
+		ballP[1] - ballRadius < 2.0		&&
+		ballP[2] - ballRadius > -0.9	&& ballP[2] - ballRadius < 0.9) ||
 		//Middle block back
-		(ballP[0] - ballRadius > -4.0 &&ballP[0] - ballRadius < 4.0 &&
-			ballP[1] - ballRadius < 2.0 &&
-			ballP[2] + ballRadius > -0.9 && ballP[2] + ballRadius < 0.9) ||
+		(ballP[0] - ballRadius > -4.0	&& ballP[0] - ballRadius < 4.0 &&
+		ballP[1] - ballRadius < 2.0		&&
+		ballP[2] + ballRadius > -0.9	&& ballP[2] + ballRadius < 0.9) ||
 
 		//Farest block front
-		(ballP[0] + ballRadius > 0.0 && ballP[0] + ballRadius < 8.0 &&
-			ballP[1] - ballRadius < 2.0 &&
-			ballP[2] - ballRadius < -15.1 && ballP[2] - ballRadius > -16.9) ||
+		(ballP[0] + ballRadius > 0.0	&& ballP[0] + ballRadius < 8.0 &&
+		ballP[1] - ballRadius < 2.0		&&
+		ballP[2] - ballRadius < -15.1	&& ballP[2] - ballRadius > -16.9) ||
 		//Farest block back
-		(ballP[0] + ballRadius > 0.0 && ballP[0] + ballRadius < 8.0 &&
-			ballP[1] - ballRadius < 2.0 &&
-			ballP[2] + ballRadius < -15.1 && ballP[2] + ballRadius > -16.9)
-		)return false;
+		(ballP[0] + ballRadius > 0.0	&& ballP[0] + ballRadius < 8.0 &&
+		ballP[1] - ballRadius < 2.0		&&
+		ballP[2] + ballRadius < -15.1	&& ballP[2] + ballRadius > -16.9)
+		) return false;
 
 	//bounce
 	//back wall
@@ -170,13 +223,14 @@ GLint getBallMovement(GLfloat *lookAt) {
 		ballP[1], ballRadius, ballP[1] + ballRadius,
 		ballP[2], ballRadius, ballP[2] + ballRadius);
 	*/
-		
+	if (ballP[0] > 8.0 || ballP[0] < -8.0)
+		return false;
 
 	ydelta += ydelta_inc;
 	return true;
 }
 
-GLboolean drawBall(GLfloat *obs, GLfloat *lookAt, GLboolean moving) {
+GLboolean drawBall(GLfloat *obs, GLfloat *lookAt, GLboolean moving, GLboolean *targets) {
 	
 	if (!textureLoaded) {
 		load("ballTexture.bmp");
@@ -189,11 +243,11 @@ GLboolean drawBall(GLfloat *obs, GLfloat *lookAt, GLboolean moving) {
 	}else {
 		if (!initialMove) {
 			initMovement(lookAt);
-			moving = getBallMovement(lookAt);
+			moving = getBallMovement(lookAt, targets);
 			initialMove = !initialMove;
 		}
 		else {
-			moving = getBallMovement(lookAt);
+			moving = getBallMovement(lookAt, targets);
 		}
 	}
 
