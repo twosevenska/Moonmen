@@ -1,3 +1,3 @@
 #pragma once
-void drawLevel();
+void drawLevel(GLboolean *activeTargets);
 void make_plane(GLfloat width, GLfloat height, GLfloat densityValue);
