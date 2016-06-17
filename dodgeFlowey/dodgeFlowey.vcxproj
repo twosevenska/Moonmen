@@ -134,6 +134,7 @@
     <ClCompile Include="level.cpp" />
     <ClCompile Include="light.cpp" />
     <ClCompile Include="loadBlenderModels.cpp" />
+    <ClCompile Include="loadTextures.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="RgbImage.cpp" />
   </ItemGroup>
@@ -143,6 +144,7 @@
     <ClInclude Include="level.h" />
     <ClInclude Include="light.h" />
     <ClInclude Include="loadBlenderModels.h" />
+    <ClInclude Include="loadTextures.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="RgbImage.h" />
   </ItemGroup>
