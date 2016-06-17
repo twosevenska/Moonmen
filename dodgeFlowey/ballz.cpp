@@ -6,9 +6,10 @@ GLuint texture;
 GLboolean textureLoaded = false;
 RgbImage img;
 
-GLfloat ball_radius = 0.3f;
+GLfloat ball_radius = 0.5f;
 GLfloat ballSpeed = 0.08f;
-GLfloat delta = 0.1f;
+GLfloat delta;
+GLfloat delta_inc;
 
 GLboolean moving = false;
 GLboolean initialMove = false;
@@ -68,41 +69,48 @@ void initMovement(GLfloat *lookAt) {
 	midP_ball_look[2] = ballP[2] + 0.5*vector_ball_look[2];
 
 	ballSpeed = abs(ballSpeed);
-	delta = 0.0;
+	delta = 0.1f;
+	delta_inc = 0.05f;
 }
 
 void getBallMovement(GLfloat *lookAt) {
 	GLfloat dist_ball_look;
 
-	delta += 0.05;
-
+	/*
 	dist_ball_look = sqrt(vector_ball_look[0] * vector_ball_look[0]
 		+ vector_ball_look[1] * vector_ball_look[1]
 		+ vector_ball_look[2] * vector_ball_look[2]);
+	*/
 
 	ballP[0] += (ballSpeed * vector_ball_look[0]);
 	ballP[1] += (ballSpeed * vector_ball_look[1]) - delta;
 	ballP[2] += (ballSpeed * vector_ball_look[2]);
 
-	printf("y %.3f\n", ballP[1]);
-	printf("dist %.3f\n", dist_ball_look);
-
-	//arch
-
-
+	//bounce
 	if (ballP[2] < -20.0) {
 		ballP[2] = -20.0;
 		ballSpeed *= -1;
-		delta *= -1;
+		if (delta_inc < 0) {
+			delta = 0.1;
+			delta_inc *= -1;
+		}
 	}
 
 	if (ballP[1] < 0.0) {
 		ballP[1] = 0.0;
 		delta *= -1;
+		if (vector_ball_look[1] < 0) {
+			
+			if(delta_inc > 0)
+				delta_inc *= -1;
+		}
 	}
 
+
+	delta += delta_inc;
+
 	printf("y %.3f\n", ballP[1]);
-	printf("dist %.3f\n", dist_ball_look);
+	printf("vec ball look %.3f\n", vector_ball_look[1]);
 }
 
 GLboolean drawBall(GLfloat *obs, GLfloat *lookAt, GLboolean moving) {
