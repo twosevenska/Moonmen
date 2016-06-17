@@ -1,5 +1,6 @@
 #include "Header.h"
 #include "light.h"
+#include "level.h"
 #include <iostream>
 #include <map>
 
@@ -31,4 +32,40 @@ void load_texture(std::string name) {
 
 GLuint getTexture(std::string name) {
 	return texture[textureIdMap[name]];
+}
+
+void createMaskedTextureObject(std::string maskName, std::string textureName, GLfloat x, GLfloat y, GLfloat z, GLfloat rot) {
+	if (lights_on)
+		glDisable(GL_LIGHTING);
+	glEnable(GL_BLEND);									// Enable Blending
+	glDisable(GL_DEPTH_TEST);							// Disable Depth Testing
+	glBlendFunc(GL_DST_COLOR, GL_ZERO);				// Blend Screen Color With Zero (Black)
+	glEnable(GL_TEXTURE_2D);
+
+	glPushMatrix();
+	glTranslatef(x, y, z);
+	glRotatef(rot, 0.0, 0.0, 1.0);
+	//glTranslatef(0.0, 5.0, 15.0);
+	glTranslatef(-1.0, -1.0, 0.0);
+	glBindTexture(GL_TEXTURE_2D, getTexture(maskName));
+	make_plane(2.0, 2.0, 2.0);
+	glPopMatrix();
+
+	glBlendFunc(GL_ONE, GL_ONE);					// Copy Image 2 Color To The Screen
+
+	glBindTexture(GL_TEXTURE_2D, getTexture(textureName));
+	glPushMatrix();
+	glTranslatef(x, y, z);
+	glRotatef(rot, 0.0, 0.0, 1.0);
+	//glTranslatef(0.0, 5.0, 15.0);
+	glTranslatef(-1.0, -1.0, 0.0);
+	make_plane(2.0, 2.0, 2.0);
+	glPopMatrix();
+
+	glEnable(GL_DEPTH_TEST);							// Enable Depth Testing
+	glDisable(GL_BLEND);								// Disable Blending
+	glDisable(GL_TEXTURE_2D);
+
+	if (lights_on)
+		glEnable(GL_LIGHTING);
 }

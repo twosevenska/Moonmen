@@ -346,56 +346,21 @@ void drawSmallTarget(GLfloat x, GLfloat y, GLfloat z, GLfloat rot) {
 	glPopMatrix();
 	glDisable(GL_BLEND);
 
-	glEnable(GL_BLEND);									// Enable Blending
-	glDisable(GL_DEPTH_TEST);							// Disable Depth Testing
-	glBlendFunc(GL_DST_COLOR, GL_ZERO);				// Blend Screen Color With Zero (Black)
-	glEnable(GL_TEXTURE_2D);
-
-	glPushMatrix();
-	//glTranslatef(x, y, z);
-	glRotatef(rot, 0.0, 0.0, 1.0);
-	glTranslatef(0.0, 5.0, 15.0);
-	glBindTexture(GL_TEXTURE_2D, getTexture("targetMask.bmp"));
-	glBegin(GL_QUADS);							// Start Drawing A Textured Quad
-		glTexCoord2f(0.0f, 0.0f); glVertex3f(-1.1f, -1.1f, 0.0f);	// Bottom Left
-		glTexCoord2f(1.0f, 0.0f); glVertex3f(1.1f, -1.1f, 0.0f);	// Bottom Right
-		glTexCoord2f(1.0f, 1.0f); glVertex3f(1.1f, 1.1f, 0.0f);	// Top Right
-		glTexCoord2f(0.0f, 1.0f); glVertex3f(-1.1f, 1.1f, 0.0f);	// Top Left
-	glEnd();									// Done Drawing The Quad
-	glPopMatrix();
-
-	glBlendFunc(GL_ONE, GL_ONE);					// Copy Image 2 Color To The Screen
-
-	glBindTexture(GL_TEXTURE_2D, getTexture("targetOrange.bmp"));
-	glPushMatrix();
-	//glTranslatef(x, y, z);
-	glRotatef(rot, 0.0, 0.0, 1.0);
-	glTranslatef(0.0, 5.0, 15.0);
-	glBegin(GL_QUADS);								// Start Drawing A Textured Quad
-		glTexCoord2f(0.0f, 0.0f); glVertex3f(-1.1f, -1.1f, 0.0f);	// Bottom Left
-		glTexCoord2f(1.0f, 0.0f); glVertex3f(1.1f, -1.1f, 0.0f);	// Bottom Right
-		glTexCoord2f(1.0f, 1.0f); glVertex3f(1.1f, 1.1f, 0.0f);	// Top Right
-		glTexCoord2f(0.0f, 1.0f); glVertex3f(-1.1f, 1.1f, 0.0f);	// Top Left
-		glEnd();
-	glPopMatrix();
-
-	glEnable(GL_DEPTH_TEST);							// Enable Depth Testing
-	glDisable(GL_BLEND);								// Disable Blending
-
-	glDisable(GL_TEXTURE_2D);
 	if (lights_on)
 		glEnable(GL_LIGHTING);
+
+	createMaskedTextureObject("targetMask.bmp", "targetOrange.bmp",  x,  y,  z,  rot);
 }
 
 void drawTargets(GLfloat x, GLfloat z, GLfloat alt) {
 
 	//First block targets
 	drawSmallTarget(-x / 2.0 + 2.0 , alt, z - 10.2, 0.0);
-	//drawSmallTarget(-x / 2.0 + 6.0, alt, z - 10.2, 0.0);
+	drawSmallTarget(-x / 2.0 + 6.0, alt, z - 10.2, 0.0);
 
 	//Last block targets
-	//drawSmallTarget(x / 2.0 - 2.0, alt, -z + 4.2, 0.0);
-	//drawSmallTarget(x / 2.0 - 6.0, alt, -z + 4.2, 0.0);
+	drawSmallTarget(x / 2.0 - 2.0, alt, -z + 4.2, 0.0);
+	drawSmallTarget(x / 2.0 - 6.0, alt, -z + 4.2, 0.0);
 }
 
 void drawLevel() {
