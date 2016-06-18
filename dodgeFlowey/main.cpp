@@ -117,7 +117,7 @@ void drawScene() {
 	
 	glDisable(GL_STENCIL_TEST); //Desactiva a utilização do stencil buffer
 
-	drawLevel(activeTargets, actions);
+	drawLevel(activeTargets);
 }
 
 void display(void) {

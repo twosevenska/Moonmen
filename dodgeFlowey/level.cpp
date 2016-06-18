@@ -7,8 +7,7 @@
 
 GLboolean texturesLoaded = false;
 GLboolean modelsLoaded = false;
-GLfloat glassHeight = 16.0;
-GLfloat glassHeightDec = 0.0;
+
 
 GLfloat meshDensity = 2.00;
 
@@ -26,7 +25,7 @@ void make_plane(GLfloat width, GLfloat height, GLfloat densityValue) {
 		GLint textureHalf = 0;
 		if (col % 2 == 0) {
 			for (GLfloat h = 0.0; h <= height; h += densityValue) {
-				
+
 				glNormal3f(0.0f, 0.0f, 1.0f);
 				if (textureHalf % 2 == 0) {
 					glTexCoord2f(0.0f, 0.0f);
@@ -45,7 +44,8 @@ void make_plane(GLfloat width, GLfloat height, GLfloat densityValue) {
 
 				textureHalf++;
 			}
-		}else{
+		}
+		else {
 			for (GLfloat h = height; h >= 0.0; h -= densityValue) {
 				glNormal3f(0.0f, 0.0f, 1.0f);
 				if (textureHalf % 2 == 0)
@@ -126,7 +126,7 @@ void drawWalls(GLfloat x, GLfloat y, GLfloat z) {
 	glPushMatrix();
 	glTranslatef(-x, y, -z);
 	glRotatef(90.0, 1.0, 0.0, 0.0);
-	make_plane(x+8.0, z * 2, meshDensity);
+	make_plane(x + 8.0, z * 2, meshDensity);
 	glPopMatrix();
 
 	//Floor
@@ -139,7 +139,7 @@ void drawWalls(GLfloat x, GLfloat y, GLfloat z) {
 	make_plane((z * 2) - 4.0, x, meshDensity);
 	glPopMatrix();
 	glDisable(GL_BLEND);
-	
+
 	//Left Wall
 	glBindTexture(GL_TEXTURE_2D, getTexture("wallTile.bmp"));
 	glPushMatrix();
@@ -159,14 +159,14 @@ void drawWalls(GLfloat x, GLfloat y, GLfloat z) {
 	//Back Wall
 	glBindTexture(GL_TEXTURE_2D, getTexture("wallTile.bmp"));
 	glPushMatrix();
-	glTranslatef(-x/2.0, 0, -z);
-	make_plane(x * 1.0 , y, meshDensity);
+	glTranslatef(-x / 2.0, 0, -z);
+	make_plane(x * 1.0, y, meshDensity);
 	glPopMatrix();
 
 	//Wall Behind
 	glBindTexture(GL_TEXTURE_2D, getTexture("wallTile.bmp"));
 	glPushMatrix();
-	glTranslatef(x/2.0, 0, z);
+	glTranslatef(x / 2.0, 0, z);
 	glRotatef(180.0, 0.0, 1.0, 0.0);
 	make_plane(x, y, meshDensity);
 	glPopMatrix();
@@ -208,7 +208,7 @@ void drawSpectator(GLfloat x, GLfloat y, GLfloat z) {
 	make_plane(z*2.0, 4.0, meshDensity);
 	glPopMatrix();
 	glDisable(GL_BLEND);
-	
+
 	if (lights_on)
 		glEnable(GL_LIGHTING);
 }
@@ -229,7 +229,7 @@ void drawCover(GLfloat x, GLfloat y, GLfloat z) {
 	glEnable(GL_TEXTURE_2D);
 	glBindTexture(GL_TEXTURE_2D, getTexture("blockTexture.bmp"));
 	glPushMatrix();
-	glTranslatef( 0.0, 0.0, z - 6.0);
+	glTranslatef(0.0, 0.0, z - 6.0);
 	drawBlock(x, 2.0, 0.2);
 	glPopMatrix();
 	glDisable(GL_TEXTURE_2D);
@@ -246,7 +246,7 @@ void drawCover(GLfloat x, GLfloat y, GLfloat z) {
 	//Second Target Block 0,0,0
 	glEnable(GL_TEXTURE_2D);
 	glBindTexture(GL_TEXTURE_2D, getTexture("OrangeblockTexture.bmp"));
-	drawBlock(x / 2.0 , 2.0, 1.6);
+	drawBlock(x / 2.0, 2.0, 1.6);
 	glDisable(GL_TEXTURE_2D);
 
 	//Third Target Block 
@@ -263,16 +263,16 @@ void drawCoverGlass(GLfloat x, GLfloat y, GLfloat z) {
 	//Glass
 	if (lights_on)
 		glDisable(GL_LIGHTING);
-	
+
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE);
 	glEnable(GL_BLEND);
 	glColor4f(CGLASS);
 	glPushMatrix();
-	glTranslatef(-x / 2.0, y, z - 6.1);
-	make_plane(x, 16.0, 4.0);
+	glTranslatef(-x / 2.0, 0.0, z - 6.1);
+	make_plane(x, y, 4.0);
 	glPopMatrix();
 	glDisable(GL_BLEND);
-	
+
 	if (lights_on)
 		glEnable(GL_LIGHTING);
 }
@@ -305,8 +305,8 @@ void drawModels(GLfloat x, GLfloat y, GLfloat z) {
 	if (!modelsLoaded) {
 		sans = loadModel("Sans/Pre-Posed/Sans_Figure_Pose.obj");
 		papyrus = loadModel("Papyrus/Pre-posed/Papyrus_Figure_Pose.obj");
-		
-		if(sans != NULL)
+
+		if (sans != NULL)
 			modelsLoaded = true;
 		else {
 			std::cout << "Failed loading models @drawModels";
@@ -315,7 +315,7 @@ void drawModels(GLfloat x, GLfloat y, GLfloat z) {
 	glPushMatrix();
 	glTranslatef(-10.0, 11.0, -6.0);
 	glRotatef(90.0, 0.0, 1.0, 0.0);
-	glScalef(0.7,0.7,0.7);
+	glScalef(0.7, 0.7, 0.7);
 	drawmodel(sans);
 	glPopMatrix();
 
@@ -333,14 +333,14 @@ void drawFog(GLfloat distance, GLfloat density) {
 	glFogfv(GL_FOG_COLOR, fogColor);
 	glFogf(GL_FOG_DENSITY, density);
 	/*
-		gl_dont_care - Lets opengl choose the kind of fog (per vertex of per pixel) and an unknown formula.
-		gl_nicest - Makes the fog per pixel (look good)
-		glfastest - Makes the fog per vertex (faster, but less nice)
+	gl_dont_care - Lets opengl choose the kind of fog (per vertex of per pixel) and an unknown formula.
+	gl_nicest - Makes the fog per pixel (look good)
+	glfastest - Makes the fog per vertex (faster, but less nice)
 	*/
 	glHint(GL_FOG_HINT, GL_NICEST);
 	glFogf(GL_FOG_START, distance);
-	glFogf(GL_FOG_END, 16.0f);							
-	glEnable(GL_FOG);									
+	glFogf(GL_FOG_END, 16.0f);
+	glEnable(GL_FOG);
 }
 
 void drawSmallTarget(GLfloat x, GLfloat y, GLfloat z, GLfloat rot) {
@@ -353,7 +353,7 @@ void drawSmallTarget(GLfloat x, GLfloat y, GLfloat z, GLfloat rot) {
 	glPushMatrix();
 	glTranslatef(x, y, z);
 	glRotatef(rot, 0.0, 0.0, 1.0);
-	glTranslatef(-1.0,-1.0,0.0);
+	glTranslatef(-1.0, -1.0, 0.0);
 	make_plane(2.0, 2.0, 0.4);
 	glPopMatrix();
 	glDisable(GL_BLEND);
@@ -361,34 +361,14 @@ void drawSmallTarget(GLfloat x, GLfloat y, GLfloat z, GLfloat rot) {
 	if (lights_on)
 		glEnable(GL_LIGHTING);
 
-	createMaskedTextureObject("targetMask.bmp", "targetOrange.bmp",  x,  y,  z,  rot);
-}
-
-void drawBigTarget(GLfloat rot) {
-	if (lights_on)
-		glDisable(GL_LIGHTING);
-
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE);
-	glEnable(GL_BLEND);
-	glColor4f(CGLASS);
-	glPushMatrix();
-	glRotatef(rot, 1.0, 0.0, 0.0);
-	glTranslatef(-2.0, 2.0, 0.0);
-	make_plane(4.0, 6.0, 0.2);
-	glPopMatrix();
-	glDisable(GL_BLEND);
-
-	if (lights_on)
-		glEnable(GL_LIGHTING);
-
-	//createMaskedTextureObject("targetMask.bmp", "targetOrange.bmp", x, y, z, rot);
+	createMaskedTextureObject("targetMask.bmp", "targetOrange.bmp", x, y, z, rot);
 }
 
 void drawTargets(GLfloat x, GLfloat z, GLfloat alt, GLboolean *activeTargets) {
 
 	//First block targets
-	if(activeTargets[0])
-		drawSmallTarget(-x / 2.0 + 2.0 , alt, z - 10.2, 0.0);
+	if (activeTargets[0])
+		drawSmallTarget(-x / 2.0 + 2.0, alt, z - 10.2, 0.0);
 	if (activeTargets[1])
 		drawSmallTarget(-x / 2.0 + 6.0, alt, z - 10.2, 0.0);
 
@@ -397,12 +377,9 @@ void drawTargets(GLfloat x, GLfloat z, GLfloat alt, GLboolean *activeTargets) {
 		drawSmallTarget(x / 2.0 - 6.0, alt, -z + 4.2, 0.0);
 	if (activeTargets[3])
 		drawSmallTarget(x / 2.0 - 2.0, alt, -z + 4.2, 0.0);
-
-	if (activeTargets[4])
-		drawBigTarget(0.0f);
 }
 
-void drawLevel(GLboolean *activeTargets, GLint *actions) {
+void drawLevel(GLboolean *activeTargets) {
 	GLfloat x = 16.0;
 	GLfloat y = 16.0;
 	GLfloat z = 20.0;
@@ -412,24 +389,13 @@ void drawLevel(GLboolean *activeTargets, GLint *actions) {
 		texturesLoaded = true;
 	}
 	bool lockWindow = false;
-	
-	//Always rendered
+	GLfloat glassHeight = y - 12.0;
 	//drawModels(x, y, z);
 	drawWalls(x, y, z);
 	drawSpectator(x, y - 4.0, z);
-	
 	//drawFog(5.0, 0.01);
 	drawCover(x, y, z);
-
-	if(actions[3] == 2)
-		drawTargets(x, z, 3.5, activeTargets);
-	
-
-	if (glassHeightDec <= -16.0) actions[1] = 0;
-	if (glassHeightDec > -16.0 && actions[1] == 1) {
-		drawCoverGlass(x, glassHeightDec, z);
-		glassHeightDec -= 0.2;
-	}
+	drawTargets(x, z, 3.5, activeTargets);
+	//drawCoverGlass(x, glassHeight, z);
 	drawTrapFloor(x, y, z, 0.0);
-
 }
