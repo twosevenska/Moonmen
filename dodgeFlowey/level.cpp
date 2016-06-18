@@ -383,6 +383,8 @@ void drawBigTarget(GLfloat rot) {
 	if (lights_on)
 		glEnable(GL_LIGHTING);
 
+	createMaskedTextureObject("eggmanMask.bmp", "eggman.bmp", -2.0, 2.0, 0.0, rot);
+
 }
 
 void drawTargets(GLfloat x, GLfloat z, GLfloat alt, GLboolean *activeTargets) {
