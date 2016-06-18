@@ -5,6 +5,7 @@
 #include "level.h"
 #include "light.h"
 #include "ballz.h"
+#include "script.h"
 
 //Dev flags
 GLboolean god = false;
@@ -34,7 +35,11 @@ GLfloat  limitsWalkP[] = { -posLimit + 1, posLimit - 1 };
 GLboolean ballMoving = false;
 
 //Targeting
-GLboolean activeTargets[5] = { true,true,true,true,true };
+GLboolean activeTargets[5] = { true, true, true, true, true};
+
+//Scripting
+//Scientists, Glass, Ball, Small Targets, Big Target, Fog, EndLevel 
+GLint actions[7] = { 0, 0, 0, 0, 0, 0, 0 };
 
 //Time is a woobly thing
 GLint    repete = 2;
@@ -78,9 +83,9 @@ void resizeWindow(GLsizei w, GLsizei h) {
 void drawScene() {
 
 	reloadLightPos();
-
-	ballMoving = drawBall(obsP, lookP, ballMoving, activeTargets);
-	drawLevel(activeTargets);
+	if(actions[2])
+		ballMoving = drawBall(obsP, lookP, ballMoving, activeTargets);
+	drawLevel(activeTargets, actions);
 
 	if (drawAxis) {
 		//Basic axis
@@ -109,6 +114,23 @@ void drawScene() {
 }
 
 void display(void) {
+
+	scripting(actions);
+
+	printf("actions: SC %d, Gl %d, Ball %d, Star %d, Gtar %d, Fog %d, End %d\n",
+		actions[0], //Scientists speeches
+		actions[1], //Glass animation
+		actions[2], //Ball drawing
+		actions[3], //Small targets drawing
+		actions[4], //Big Target drawing
+		actions[5], //Fog visible
+		actions[6]  //EndLevel Diferenciator
+		);
+
+	if (actions[6] == 2) {
+		MessageBox(0, "Pity", NULL, MB_OK | MB_ICONSTOP);
+		exit(0);
+	}
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glViewport(0, 0, wScreen, hScreen);
