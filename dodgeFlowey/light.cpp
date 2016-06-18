@@ -133,9 +133,6 @@ void lightinit() {
 	lights_on = true;
 
 	GLfloat GlobalLightAmbient[] = { 0.8f, 0.8f, 0.8f, 1.0f };
-	GLfloat mat_specular[] = { 1.0, 1.0, 1.0, 1.0 };
-	GLfloat mat_dif[] = { 0.5f, 0.5f, 0.5f, 0.5f };
-	GLfloat mat_shininess[] = { 50.0 };
 	
 	glEnable(GL_LIGHTING);
 	//Change to local viewer
@@ -148,12 +145,4 @@ void lightinit() {
 	createCeilingLights();
 	createSpectatorLights();
 	createGroundLights();
-
-	//Color Materials
-	glEnable(GL_COLOR_MATERIAL);
-	glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular);
-	glMaterialfv(GL_FRONT, GL_SHININESS, mat_shininess);
-	glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, mat_dif);
-
-
 }

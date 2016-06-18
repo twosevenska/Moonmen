@@ -17,10 +17,24 @@ GLfloat meshDensity = 2.00;
 const struct aiScene* sans = NULL;
 const struct aiScene* papyrus = NULL;
 
+//Materials
+
+GLfloat mat_specular[] = { 1.0, 1.0, 1.0, 1.0 };
+GLfloat mat_dif[] = { 0.5f, 0.5f, 0.5f, 0.5f };
+GLfloat mat_shininess[] = { 50.0 };
+
 void make_plane(GLfloat width, GLfloat height, GLfloat densityValue) {
 	//Draw a Plane
 	//glColor3f(1.0f, 1.0f, 1.0f);
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+
+	//Color Materials
+	glEnable(GL_COLOR_MATERIAL);
+	glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular);
+	glMaterialfv(GL_FRONT, GL_SHININESS, mat_shininess);
+	glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, mat_dif);
+
+
 	glBegin(GL_TRIANGLE_STRIP);
 	GLint col = 0.0;
 	for (GLfloat w = 0.0; w < width; w += densityValue) {
@@ -70,6 +84,7 @@ void make_plane(GLfloat width, GLfloat height, GLfloat densityValue) {
 		col++;
 	}
 	glEnd();
+	glDisable(GL_COLOR_MATERIAL);
 }
 
 
