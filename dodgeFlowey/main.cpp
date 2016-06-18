@@ -63,7 +63,7 @@ void init(void) {
 	glCullFace(GL_BACK);
 
 	//Don't mind Nelly Furtado, this keeps the lights on
-	lightinit();
+	//lightinit();
 }
 
 
@@ -76,36 +76,10 @@ void resizeWindow(GLsizei w, GLsizei h) {
 }
 
 void drawScene() {
-
-	reloadLightPos();
-
+	//reloadLightPos();
+	
 	ballMoving = drawBall(obsP, lookP, ballMoving, activeTargets);
 	drawLevel(activeTargets);
-
-	if (drawAxis) {
-		//Basic axis
-		if (lights_on)
-			glDisable(GL_LIGHTING);
-
-		glColor4f(PURPLE);
-		glBegin(GL_LINES);
-		glVertex3i(0, 0, 0);
-		glVertex3i(10, 0, 0);
-		glEnd();
-		glColor4f(ORANGE);
-		glBegin(GL_LINES);
-		glVertex3i(0, 0, 0);
-		glVertex3i(0, 10, 0);
-		glEnd();
-		glColor4f(BLUE);
-		glBegin(GL_LINES);
-		glVertex3i(0, 0, 0);
-		glVertex3i(0, 0, 10);
-		glEnd();
-
-		if (lights_on)
-			glEnable(GL_LIGHTING);
-	}
 }
 
 void display(void) {
@@ -126,8 +100,8 @@ void display(void) {
 	glLoadIdentity();
 	gluLookAt(obsP[0], obsP[1], obsP[2], lookP[0], lookP[1], lookP[2], 0, 1, 0);
 	glDisable(GL_NORMALIZE);
+	lightinit();
 	drawScene();
-
 	glutSwapBuffers();
 }
 

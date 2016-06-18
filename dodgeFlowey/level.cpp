@@ -197,7 +197,7 @@ void drawSpectator(GLfloat x, GLfloat y, GLfloat z) {
 
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glEnable(GL_BLEND);
-	//glColor4f(HGLASS);
+	glColor4f(HGLASS);
 	glPushMatrix();
 	glTranslatef(-x / 2.0, y, z);
 	glRotatef(90.0, 0.0, 1.0, 0.0);
@@ -211,13 +211,12 @@ void drawSpectator(GLfloat x, GLfloat y, GLfloat z) {
 
 void drawCover(GLfloat x, GLfloat y, GLfloat z) {
 	//Main Cover
-	glColorMaterial(GL_FRONT, GL_DIFFUSE);
-	glEnable(GL_COLOR_MATERIAL);
 	glPushMatrix();
 	glTranslatef( 0.0, 0.0, z - 6.0);
+	//glColor3f(1.0, 1.0, 1.0);
 	drawBlock(x, 2.0, 0.2);
 	glPopMatrix();
-	glDisable(GL_COLOR_MATERIAL);
+	//glDisable(GL_COLOR_MATERIAL);
 
 	//First Target Block -6,0,10
 	glEnable(GL_TEXTURE_2D);
@@ -251,7 +250,7 @@ void drawCoverGlass(GLfloat x, GLfloat y, GLfloat z) {
 	
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE);
 	glEnable(GL_BLEND);
-	//glColor4f(CGLASS);
+	glColor4f(CGLASS);
 	glPushMatrix();
 	glTranslatef(-x / 2.0, 0.0, z - 6.1);
 	make_plane(x, y, 4.0);
@@ -334,7 +333,7 @@ void drawSmallTarget(GLfloat x, GLfloat y, GLfloat z, GLfloat rot) {
 
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE);
 	glEnable(GL_BLEND);
-	//glColor4f(CGLASS);
+	glColor4f(CGLASS);
 	glPushMatrix();
 	glTranslatef(x, y, z);
 	glRotatef(rot, 0.0, 0.0, 1.0);
