@@ -155,7 +155,24 @@ GLint getBallMovement(GLfloat *lookAt, GLboolean *targets) {
 		targets[3] = false;
 		return false;
 	}
-
+	//middle target frontface
+	if (targets[4] &&
+		((ballP[0] - ballRadius > -2.3	&& ballP[0] - ballRadius < 2.3) ||
+		(ballP[0] + ballRadius > -2.3	&& ballP[0] + ballRadius < 2.3)) &&
+		ballP[1] - ballRadius > 2.0		&& ballP[1] - ballRadius < 8.2 &&
+		ballP[2] - ballRadius > -0.5	&& ballP[2] - ballRadius < 0.5) {
+		targets[4] = false;
+		return false;
+	}
+	//middle target backface
+	if (targets[4] &&
+		((ballP[0] - ballRadius > -2.3	&& ballP[0] - ballRadius < 2.3) ||
+		(ballP[0] + ballRadius > -2.3	&& ballP[0] + ballRadius < 2.3)) &&
+		ballP[1] - ballRadius > 2.0		&& ballP[1] - ballRadius < 8.2 &&
+		ballP[2] - ballRadius > -0.5	&& ballP[2] - ballRadius < 0.5) {
+		targets[4] = false;
+		return false;
+	}
 
 	ballP[0] += (ballSpeed * vector_ball_look[0]);
 	ballP[1] += (ballSpeed * vector_ball_look[1]) - ydelta;
