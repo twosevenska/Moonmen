@@ -36,7 +36,7 @@ GLfloat  limitsWalkP[] = { -posLimit + 1, posLimit - 1 };
 GLboolean ballMoving = false;
 
 //Targeting
-GLboolean activeTargets[5] = { true,true,true,true,true };
+GLboolean activeTargets[5] = { true, true, true, true, false};
 
 //Scripting		
 //Scientists, Glass, Ball, Small Targets, Big Target, Fog, EndLevel 		
@@ -117,7 +117,7 @@ void drawScene() {
 	
 	glDisable(GL_STENCIL_TEST); //Desactiva a utilização do stencil buffer
 
-	drawLevel(activeTargets);
+	drawLevel(activeTargets, actions);
 }
 
 void display(void) {
@@ -226,7 +226,7 @@ void keyboard(unsigned char key, int x, int y) {
 		activeTargets[1] = true;
 		activeTargets[2] = true;
 		activeTargets[3] = true;
-		activeTargets[4] = true;
+		activeTargets[4] = false;
 		break;
 	case 'g':
 	case 'G':
