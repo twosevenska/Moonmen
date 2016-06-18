@@ -135,6 +135,7 @@ void display(void) {
 	}
 	else {
 		actions[4] = 1;
+		activeTargets[4] = true;
 	}
 
 	printf("actions: SC %d, Gl %d, Ball %d, Star %d, Gtar %d, Fog %d, End %d\n", 

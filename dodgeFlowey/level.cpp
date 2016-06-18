@@ -430,5 +430,8 @@ void drawLevel(GLboolean *activeTargets, GLint *actions) {
 		drawCoverGlass(x, glassHeightDec, z);
 		glassHeightDec -= 0.2;
 	}
+	if (actions[4] == 1 && activeTargets[4])
+		drawBigTarget(0.0);
+
 	drawTrapFloor(x, y, z, 0.0);
 }
