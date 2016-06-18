@@ -351,6 +351,26 @@ void drawSmallTarget(GLfloat x, GLfloat y, GLfloat z, GLfloat rot) {
 	createMaskedTextureObject("targetMask.bmp", "targetOrange.bmp",  x,  y,  z,  rot);
 }
 
+void drawBigTarget(GLfloat rot) {
+	if (lights_on)
+		glDisable(GL_LIGHTING);
+
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE);
+	glEnable(GL_BLEND);
+	glColor4f(CGLASS);
+	glPushMatrix();
+	glRotatef(rot, 1.0, 0.0, 0.0);
+	glTranslatef(-2.0, 2.0, 0.0);
+	make_plane(4.0, 6.0, 0.2);
+	glPopMatrix();
+	glDisable(GL_BLEND);
+
+	if (lights_on)
+		glEnable(GL_LIGHTING);
+
+	//createMaskedTextureObject("targetMask.bmp", "targetOrange.bmp", x, y, z, rot);
+}
+
 void drawTargets(GLfloat x, GLfloat z, GLfloat alt, GLboolean *activeTargets) {
 
 	//First block targets
@@ -364,6 +384,9 @@ void drawTargets(GLfloat x, GLfloat z, GLfloat alt, GLboolean *activeTargets) {
 		drawSmallTarget(x / 2.0 - 6.0, alt, -z + 4.2, 0.0);
 	if (activeTargets[3])
 		drawSmallTarget(x / 2.0 - 2.0, alt, -z + 4.2, 0.0);
+
+	if (activeTargets[4])
+		drawBigTarget(0.0f);
 }
 
 void drawLevel(GLboolean *activeTargets, GLint *actions) {

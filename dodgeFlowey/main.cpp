@@ -9,7 +9,7 @@
 
 //Dev flags
 GLboolean god = false;
-GLboolean drawAxis = true;
+GLboolean drawAxis = false;
 
 //Coordinate system variables
 GLfloat   xC = 70.0, yC = 70.0, zC = 70.0;
