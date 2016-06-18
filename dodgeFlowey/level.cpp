@@ -11,6 +11,8 @@ GLboolean modelsLoaded = false;
 GLfloat glassHeight = 16.0;
 GLfloat glassHeightDec = 0.0;
 
+GLfloat poisonDensity = 0.0;
+
 GLfloat meshDensity = 2.00;
 
 //Models
@@ -383,7 +385,7 @@ void drawBigTarget(GLfloat rot) {
 	if (lights_on)
 		glEnable(GL_LIGHTING);
 
-	createMaskedTextureObject("eggmanMask.bmp", "eggman.bmp", -2.0, 2.0, 0.0, rot);
+	//createMaskedTextureObject("eggmanMask.bmp", "eggman.bmp", -2.0, 2.0, 0.0, rot);
 
 }
 
@@ -400,9 +402,6 @@ void drawTargets(GLfloat x, GLfloat z, GLfloat alt, GLboolean *activeTargets) {
 		drawSmallTarget(x / 2.0 - 6.0, alt, -z + 4.2, 0.0);
 	if (activeTargets[3])
 		drawSmallTarget(x / 2.0 - 2.0, alt, -z + 4.2, 0.0);
-
-	if (activeTargets[4])
-		drawBigTarget(0.0);
 }
 
 void drawLevel(GLboolean *activeTargets, GLint *actions) {
@@ -419,8 +418,9 @@ void drawLevel(GLboolean *activeTargets, GLint *actions) {
 	//drawModels(x, y, z);
 	drawWalls(x, y, z);
 	drawSpectator(x, y - 4.0, z);
-	//drawFog(5.0, 0.01);
+
 	drawCover(x, y, z);
+
 
 	if(actions[3] == 2)
 		drawTargets(x, z, 3.5, activeTargets);
@@ -430,8 +430,15 @@ void drawLevel(GLboolean *activeTargets, GLint *actions) {
 		drawCoverGlass(x, glassHeightDec, z);
 		glassHeightDec -= 0.2;
 	}
-	if (actions[4] == 1 && activeTargets[4])
+	if (activeTargets[4] && actions[4] == 1)
 		drawBigTarget(0.0);
 
+	if (actions[5] == 1) {
+		drawFog(5.0, poisonDensity);
+		poisonDensity += 0.005;
+	}
+	if (poisonDensity > 0.2) {
+		actions[5] = 2;
+	}
 	drawTrapFloor(x, y, z, 0.0);
 }
