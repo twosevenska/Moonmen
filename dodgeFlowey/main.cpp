@@ -5,10 +5,16 @@
 #include "level.h"
 #include "light.h"
 #include "ballz.h"
+#include "script.h"
+#include "text.h"
+
+char *text[] = { "HELLO.", "FOLLOW", "WAIT!","HIT!","PLEASE", "TRUST ME!", "DON'T" };
+int timer[] = { 0,0,0,0,0,0,0 };
+
 
 //Dev flags
 GLboolean god = false;
-GLboolean drawAxis = true;
+GLboolean drawAxis = false;
 
 //Coordinate system variables
 GLfloat   xC = 70.0, yC = 70.0, zC = 70.0;
@@ -32,6 +38,13 @@ GLfloat  limitsWalkP[] = { -posLimit + 1, posLimit - 1 };
 
 //Ball Movement
 GLboolean ballMoving = false;
+
+//Targeting
+GLboolean activeTargets[5] = { true, true, true, true, true};
+
+//Scripting
+//Scientists, Glass, Ball, Small Targets, Big Target, Fog, EndLevel 
+GLint actions[7] = { 0, 0, 0, 0, 0, 0, 0 };
 
 //Time is a woobly thing
 GLint    repete = 2;
@@ -75,9 +88,9 @@ void resizeWindow(GLsizei w, GLsizei h) {
 void drawScene() {
 
 	reloadLightPos();
-
-	ballMoving = drawBall(obsP, lookP, ballMoving);
-	drawLevel();
+	if(actions[2])
+		ballMoving = drawBall(obsP, lookP, ballMoving, activeTargets);
+	drawLevel(activeTargets, actions);
 
 	if (drawAxis) {
 		//Basic axis
@@ -107,6 +120,23 @@ void drawScene() {
 
 void display(void) {
 
+	scripting(actions);
+
+	printf("actions: SC %d, Gl %d, Ball %d, Star %d, Gtar %d, Fog %d, End %d\n",
+		actions[0], //Scientists speeches
+		actions[1], //Glass animation
+		actions[2], //Ball drawing
+		actions[3], //Small targets drawing
+		actions[4], //Big Target drawing
+		actions[5], //Fog visible
+		actions[6]  //EndLevel Diferenciator
+		);
+
+	if (actions[6] == 2) {
+		MessageBox(0, "Pity", NULL, MB_OK | MB_ICONSTOP);
+		exit(0);
+	}
+
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glViewport(0, 0, wScreen, hScreen);
 
@@ -124,6 +154,20 @@ void display(void) {
 	gluLookAt(obsP[0], obsP[1], obsP[2], lookP[0], lookP[1], lookP[2], 0, 1, 0);
 	glDisable(GL_NORMALIZE);
 	drawScene();
+	//2d
+	glMatrixMode(GL_PROJECTION);				// Load Projection Matrix
+	glPushMatrix();								// Push Projection
+	glLoadIdentity();							// Reset Projection Matrix
+	gluOrtho2D(0.0, wScreen, 0.0, hScreen);		// Set Paralel Projection
+	glMatrixMode(GL_MODELVIEW);					// Load ModelView Matrix
+	glPushMatrix();		// Push ModelView
+	glLoadIdentity();							// Reset ModelView Matrix
+												//2d code
+	load_text(wScreen, hScreen, text, timer);
+	changetimer(HELLO, 10, timer);
+	
+	//
+	glPopMatrix();
 	glutSwapBuffers();
 }
 
@@ -180,6 +224,14 @@ void keysNotAscii(int key, int x, int y) {
 void keyboard(unsigned char key, int x, int y) {
 	int flag_movement = 0;
 	switch (key) {
+	case 'r':
+	case 'R':
+		activeTargets[0] = true;
+		activeTargets[1] = true;
+		activeTargets[2] = true;
+		activeTargets[3] = true;
+		activeTargets[4] = true;
+		break;
 	case 'g':
 	case 'G':
 		if (god) {
@@ -306,7 +358,7 @@ void keyboard(unsigned char key, int x, int y) {
 }
 
 void createWindow() {
-	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH | GLUT_MULTISAMPLE);
+	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH | GLUT_MULTISAMPLE | GLUT_STENCIL);
 	glutInitWindowSize(wScreen, hScreen);
 	glutInitWindowPosition(200, 50);
 	int window = glutCreateWindow("Moonmen");
