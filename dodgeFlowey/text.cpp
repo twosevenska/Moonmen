@@ -12,19 +12,11 @@ void load_text(int wScreen, int hScreen, char ** text, int * timer)
 	{
 		if (timer[narray]>0)
 		{
-			glColor3f(0.0, 1.0, 0.0);
-			glBegin(GL_POLYGON);
-			glVertex3f(200, 200, -0.1);
-			glVertex3f(600, 200, -0.1);
-			glVertex3f(600, 400, -0.1);
-			glVertex3f(200, 400, -0.1);
-			glEnd();
 			glTranslatef(wScreen / 2 - 200, hScreen / 2 + 50, 0);
 			glScalef(0.3, 0.3, 3);
 			glColor3f(1, 1, 1);
 			int x = 0;
 			int theNcount = 0;
-			glBegin(GL_POLYGON);
 			for (int i = 0; i < strlen(text[narray]); i++)
 			{
 				x += glutStrokeWidth(GLUT_STROKE_ROMAN, text[narray][i]);
@@ -47,6 +39,7 @@ void load_text(int wScreen, int hScreen, char ** text, int * timer)
 					x = 0;
 				}
 			}
+			glEnd();
 			timer[narray]--;
 		}
 	}

@@ -8,8 +8,8 @@
 #include "script.h"
 #include "text.h"
 
-char *text[] = { "HELLO.", "FOLLOW", "WAIT!","HIT!","PLEASE", "TRUST ME!", "DON'T" };
-int timer[] = { 0,0,0,0,0,0,0 };
+char *text[] = { "","HELLO.", "FOLLOW", "WAIT!","HIT!","PLEASE", "TRUST ME!", "DON'T" };
+int timer[] = { 0,0,0,0,0,0,0,0 };
 
 
 //Dev flags
@@ -19,6 +19,8 @@ GLboolean drawAxis = false;
 //Coordinate system variables
 GLfloat   xC = 70.0, yC = 70.0, zC = 70.0;
 GLint     wScreen = 800, hScreen = 600;
+
+
 
 //Observer Stuff
 GLint    defineView = 0;
@@ -57,6 +59,7 @@ GLint    msec = 100;					//.. definicao do timer (actualizacao)
 irrklang::ISoundEngine *SoundEngine = irrklang::createIrrKlangDevice();
 
 void init(void) {
+	actions[0] = HELLO;
 	if(god){
 		incy = 0.5;
 		inca = 0.03;
@@ -86,11 +89,24 @@ void resizeWindow(GLsizei w, GLsizei h) {
 }
 
 void drawScene() {
-
+	int i;
 	reloadLightPos();
+	GLboolean backupTargets[5];
+	for (i = 0; i < 5; i++)
+	{
+		backupTargets[i] = activeTargets[i];
+	}
 	if(actions[2])
 		ballMoving = drawBall(obsP, lookP, ballMoving, activeTargets);
 	drawLevel(activeTargets, actions);
+
+	for (i = 0; i < 5; i++)
+	{
+		if (backupTargets[i] != activeTargets[i])
+		{
+			changetimer(HIT, 10, timer);
+		}
+	}
 
 	if (drawAxis) {
 		//Basic axis
@@ -164,8 +180,12 @@ void display(void) {
 	glLoadIdentity();							// Reset ModelView Matrix
 												//2d code
 	load_text(wScreen, hScreen, text, timer);
-	changetimer(HELLO, 10, timer);
 	
+	if (actions[0] != 0)
+	{
+		changetimer(actions[0], 30, timer);
+		actions[0] = 0;
+	}
 	//
 	glPopMatrix();
 	glutSwapBuffers();
