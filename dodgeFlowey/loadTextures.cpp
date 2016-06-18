@@ -51,7 +51,15 @@ void createMaskedTextureObject(std::string maskName, std::string textureName, GL
 	//glTranslatef(0.0, 5.0, 15.0);
 	glTranslatef(-1.0, -1.0, 0.0);
 	glBindTexture(GL_TEXTURE_2D, getTexture(maskName));
-	make_plane(dim[0], dim[1], dim[2]);
+
+	glBegin(GL_QUADS);
+	glTexCoord2f(0.0f, 0.0f); glVertex3f(0.0f, 0.0f, 0.0f);
+	glTexCoord2f(1.0f, 0.0f); glVertex3f(dim[0], 0.0f, 0.0f);
+	glTexCoord2f(1.0f, 1.0f); glVertex3f(dim[0], dim[1], 0.0f);
+	glTexCoord2f(0.0f, 1.0f); glVertex3f(0.0f, dim[1], 0.0f);
+	glEnd();
+
+	//make_plane(dim[0], dim[1], dim[2]);
 	glPopMatrix();
 
 	if(boss)
@@ -65,7 +73,15 @@ void createMaskedTextureObject(std::string maskName, std::string textureName, GL
 	glRotatef(rot, 0.0, 0.0, 1.0);
 	//glTranslatef(0.0, 5.0, 15.0);
 	glTranslatef(-1.0, -1.0, 0.0);
-	make_plane(dim[0], dim[1], dim[2]);
+	
+	glBegin(GL_QUADS);
+	glTexCoord2f(0.0f, 0.0f); glVertex3f(0.0f, 0.0f, 0.0f);
+	glTexCoord2f(1.0f, 0.0f); glVertex3f(dim[0], 0.0f, 0.0f);
+	glTexCoord2f(1.0f, 1.0f); glVertex3f(dim[0], dim[1], 0.0f);
+	glTexCoord2f(0.0f, 1.0f); glVertex3f(0.0f, dim[1], 0.0f);
+	glEnd();
+	
+	//make_plane(dim[0], dim[1], dim[2]);
 	glPopMatrix();
 
 	//glEnable(GL_DEPTH_TEST);							// Enable Depth Testing

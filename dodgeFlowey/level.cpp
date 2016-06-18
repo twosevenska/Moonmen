@@ -89,8 +89,8 @@ void load_all_level_textures() {
 	load_texture("OrangeblockTexture.bmp");
 	load_texture("targetOrange.bmp");
 	load_texture("targetMask.bmp");
-	load_texture("eggman2.bmp");
-	load_texture("eggmanMask2.bmp");
+	load_texture("eggman.bmp");
+	load_texture("eggmanMask.bmp");
 	load_texture("winnieMask.bmp");
 	load_texture("winnie.bmp");
 	load_texture("blockTexture.bmp");
@@ -380,7 +380,7 @@ void drawSmallTarget(GLfloat x, GLfloat y, GLfloat z, GLfloat rot) {
 	GLfloat dim[3] = {2.0,2.0,2.0};
 
 	glPushMatrix();
-	glTranslatef(-1.0, -1.0, 0.0);
+	glTranslatef(0.0, -0.5, 0.0);
 	createMaskedTextureObject("targetMask.bmp", "targetOrange.bmp", pos, dim, rot,false);
 	glPopMatrix();
 }
@@ -390,9 +390,9 @@ void drawBigTarget(GLfloat rot, GLboolean bad) {
 	GLfloat dim[3] = { 6.0, 6.0, 6.0 };
 
 	glPushMatrix();
-	glTranslatef(-2.0, 2.0, 0.0);
-	if(!bad)
-		createMaskedTextureObject("eggmanMask2.bmp", "eggman2.bmp", pos, dim, rot,true);
+	glTranslatef(-2.0, 3.0, 0.0);
+	if(bad)
+		createMaskedTextureObject("eggmanMask.bmp", "eggman.bmp", pos, dim, rot,true);
 	else
 		createMaskedTextureObject("winnieMask.bmp", "winnie.bmp", pos, dim, rot,true);
 	glPopMatrix();
