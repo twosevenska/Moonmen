@@ -42,13 +42,13 @@ void createSpectatorLights() {
 	GLfloat LightAmbient[] = { 1.0f, 1.0f, 1.0f, 1.0f };
 	GLfloat LightDiffuse[] = { 1.0f, 1.0f, 1.0f, 1.0f };
 	GLfloat LightSpecular[] = { 1.0f, 1.0f, 1.0f, 1.0f };
-	GLfloat LightDirection[] = { 1.0f, 0.0f, 0.0f };
+	GLfloat LightDirection[] = { 1.0f, -0.1f, 0.0f };
 	GLfloat cutoffv = 90.0f;
 	GLfloat expv = 30.0f;
 	
 	
 	//Spectator STRONG Ceiling lights
-	GLfloat LightPosition[] = { -10.0f, 10.0f, 10.0f, 1.0f };
+	GLfloat LightPosition[] = { -9.0f, 13.0f, 10.0f, 1.0f };
 	glLightfv(lights[nLights], GL_POSITION, LightPosition);
 	glLightfv(lights[nLights], GL_AMBIENT, LightAmbient);
 	glLightfv(lights[nLights], GL_DIFFUSE, LightDiffuse);
@@ -62,7 +62,7 @@ void createSpectatorLights() {
 	glEnable(lights[nLights]);
 	nLights++;
 
-	GLfloat LightPosition2[] = { -10.0f, 10.0f, 0.0f, 1.0f };
+	GLfloat LightPosition2[] = { -9.0f, 13.0f, 0.0f, 1.0f };
 	glLightfv(lights[nLights], GL_POSITION, LightPosition2);
 	glLightfv(lights[nLights], GL_AMBIENT, LightAmbient);
 	glLightfv(lights[nLights], GL_DIFFUSE, LightDiffuse);
@@ -76,7 +76,7 @@ void createSpectatorLights() {
 	glEnable(lights[nLights]);
 	nLights++;
 
-	GLfloat LightPosition3[] = { -10.0f, 10.0f, -10.0f, 1.0f };
+	GLfloat LightPosition3[] = { -9.0f, 13.0f, -10.0f, 1.0f };
 	glLightfv(lights[nLights], GL_POSITION, LightPosition3);
 	glLightfv(lights[nLights], GL_AMBIENT, LightAmbient);
 	glLightfv(lights[nLights], GL_DIFFUSE, LightDiffuse);
