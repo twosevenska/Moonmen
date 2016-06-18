@@ -80,6 +80,10 @@ void load_all_level_textures() {
 	load_texture("OrangeblockTexture.bmp");
 	load_texture("targetOrange.bmp");
 	load_texture("targetMask.bmp");
+	load_texture("eggman.bmp");
+	load_texture("eggmanMask.bmp");
+	load_texture("winnieMask.bmp");
+	load_texture("winnie.bmp");
 	load_texture("blockTexture.bmp");
 }
 
@@ -366,7 +370,7 @@ void drawSmallTarget(GLfloat x, GLfloat y, GLfloat z, GLfloat rot) {
 	createMaskedTextureObject("targetMask.bmp", "targetOrange.bmp", x, y, z, rot);
 }
 
-void drawBigTarget(GLfloat rot) {
+void drawBigTarget(GLfloat rot, GLboolean bad) {
 	if (lights_on)
 		glDisable(GL_LIGHTING);
 
@@ -383,8 +387,10 @@ void drawBigTarget(GLfloat rot) {
 	if (lights_on)
 		glEnable(GL_LIGHTING);
 
-	createMaskedTextureObject("eggmanMask.bmp", "eggman.bmp", -2.0, 2.0, 0.0, rot);
-
+	if(bad)
+		createMaskedTextureObject("eggmanMask.bmp", "eggman.bmp", -2.0, 2.0, 0.0, rot);
+	else
+		createMaskedTextureObject("winnieMask.bmp", "winnie.bmp", -2.0, 2.0, 0.0, rot);
 }
 
 void drawTargets(GLfloat x, GLfloat z, GLfloat alt, GLboolean *activeTargets) {
@@ -402,7 +408,7 @@ void drawTargets(GLfloat x, GLfloat z, GLfloat alt, GLboolean *activeTargets) {
 		drawSmallTarget(x / 2.0 - 2.0, alt, -z + 4.2, 0.0);
 
 	if (activeTargets[4])
-		drawBigTarget(0.0);
+		drawBigTarget(0.0, true);
 }
 
 void drawLevel(GLboolean *activeTargets, GLint *actions) {
@@ -431,7 +437,7 @@ void drawLevel(GLboolean *activeTargets, GLint *actions) {
 		glassHeightDec -= 0.2;
 	}
 	if (actions[4] == 1 && activeTargets[4])
-		drawBigTarget(0.0);
+		drawBigTarget(0.0, true);
 
 	drawTrapFloor(x, y, z, 0.0);
 }
