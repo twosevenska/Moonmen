@@ -21,6 +21,10 @@ GLfloat midP_ball_look[3];
 GLfloat distance_from_obs = 0.1f;/*in %*/
 GLfloat line[3], ballP[3];
 
+GLfloat * getBallPosition() {
+	return ballP;
+}
+
 void load(std::string name) {
 	glGenTextures(1, &texture);
 	glBindTexture(GL_TEXTURE_2D, texture);

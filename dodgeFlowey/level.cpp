@@ -74,11 +74,11 @@ void make_plane(GLfloat width, GLfloat height, GLfloat densityValue) {
 void load_all_level_textures() {
 	load_texture("floorTile.bmp");
 	load_texture("wallTile.bmp");
-	load_texture("blockTexture.bmp");
 	load_texture("BlueblockTexture.bmp");
 	load_texture("OrangeblockTexture.bmp");
 	load_texture("targetOrange.bmp");
 	load_texture("targetMask.bmp");
+	load_texture("blockTexture.bmp");
 }
 
 void drawBlock(GLfloat x, GLfloat y, GLfloat z) {
@@ -130,6 +130,7 @@ void drawWalls(GLfloat x, GLfloat y, GLfloat z) {
 	glPopMatrix();
 
 	//Floor
+	glEnable(GL_BLEND);
 	glBindTexture(GL_TEXTURE_2D, getTexture("floorTile.bmp"));
 	glPushMatrix();
 	glTranslatef(x / 2.0, 0, z - 4.0);
@@ -137,7 +138,8 @@ void drawWalls(GLfloat x, GLfloat y, GLfloat z) {
 	glRotatef(90.0, 0.0, 1.0, 0.0);
 	make_plane((z * 2) - 4.0, x, meshDensity);
 	glPopMatrix();
-
+	glDisable(GL_BLEND);
+	
 	//Left Wall
 	glBindTexture(GL_TEXTURE_2D, getTexture("wallTile.bmp"));
 	glPushMatrix();
@@ -209,6 +211,17 @@ void drawSpectator(GLfloat x, GLfloat y, GLfloat z) {
 	
 	if (lights_on)
 		glEnable(GL_LIGHTING);
+}
+
+void drawMirrorPlate() {
+	//Floor
+	glBindTexture(GL_TEXTURE_2D, getTexture("floorTile.bmp"));
+	glPushMatrix();
+	glTranslatef(8.0, 0, 16.0);
+	glRotatef(90.0, 0.0, 0.0, 1.0);
+	glRotatef(90.0, 0.0, 1.0, 0.0);
+	make_plane((20 * 2) - 4.0, 16, meshDensity);
+	glPopMatrix();
 }
 
 void drawCover(GLfloat x, GLfloat y, GLfloat z) {

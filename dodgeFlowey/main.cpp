@@ -5,12 +5,6 @@
 #include "level.h"
 #include "light.h"
 #include "ballz.h"
-#include "script.h"
-#include "text.h"
-
-char *text[] = { "","HELLO.", "FOLLOW", "WAIT!","HIT!","PLEASE", "TRUST ME!", "DON'T" };
-int timer[] = { 0,0,0,0,0,0,0,0 };
-
 
 //Dev flags
 GLboolean god = false;
@@ -19,8 +13,6 @@ GLboolean drawAxis = false;
 //Coordinate system variables
 GLfloat   xC = 70.0, yC = 70.0, zC = 70.0;
 GLint     wScreen = 800, hScreen = 600;
-
-
 
 //Observer Stuff
 GLint    defineView = 0;
@@ -42,25 +34,19 @@ GLfloat  limitsWalkP[] = { -posLimit + 1, posLimit - 1 };
 GLboolean ballMoving = false;
 
 //Targeting
-
-GLboolean activeTargets[5] = { true, true, true, true, false};
-
-//Scripting
-//Scientists, Glass, Ball, Small Targets, Big Target, Fog, EndLevel 
-GLint actions[7] = { 0, 0, 0, 0, 0, 0, 0 };
+GLboolean activeTargets[5] = { true,true,true,true,true };
 
 //Time is a woobly thing
 GLint    repete = 2;
 GLfloat  rr = 1;
 GLint    maxR = 20;
 GLint    numFrames = 60;              //numero de imagens a colocar em loop na tela
-GLint    msec = 40;					//.. definicao do timer (actualizacao)
+GLint    msec = 80;					//.. definicao do timer (actualizacao)
 
 										// Sounds 
 irrklang::ISoundEngine *SoundEngine = irrklang::createIrrKlangDevice();
 
 void init(void) {
-	actions[0] = HELLO;
 	if(god){
 		incy = 0.5;
 		inca = 0.03;
@@ -77,16 +63,9 @@ void init(void) {
 	glCullFace(GL_BACK);
 
 	//Don't mind Nelly Furtado, this keeps the lights on
-	lightinit();
+	//lightinit();
 }
 
-GLboolean checkTargets() {
-	for (int i = 0; i < 4; i++) {
-		if (activeTargets[i])
-			return true;
-	}
-	return false;
-}
 
 void resizeWindow(GLsizei w, GLsizei h) {
 	wScreen = w;
@@ -97,73 +76,38 @@ void resizeWindow(GLsizei w, GLsizei h) {
 }
 
 void drawScene() {
-	int i;
-	reloadLightPos();
-	GLboolean backupTargets[5];
-	for (i = 0; i < 5; i++)
-	{
-		backupTargets[i] = activeTargets[i];
-	}
-	if(actions[2])
-		ballMoving = drawBall(obsP, lookP, ballMoving, activeTargets);
-	drawLevel(activeTargets, actions);
+	//reloadLightPos();
+	
 
-	for (i = 0; i < 5; i++)
-	{
-		if (backupTargets[i] != activeTargets[i])
-		{
-			changetimer(HIT, 10, timer);
-		}
-	}
-	if (drawAxis) {
-		//Basic axis
-		if (lights_on)
-			glDisable(GL_LIGHTING);
+	ballMoving = drawBall(obsP, lookP, ballMoving, activeTargets);
 
-		glColor4f(PURPLE);
-		glBegin(GL_LINES);
-		glVertex3i(0, 0, 0);
-		glVertex3i(10, 0, 0);
-		glEnd();
-		glColor4f(ORANGE);
-		glBegin(GL_LINES);
-		glVertex3i(0, 0, 0);
-		glVertex3i(0, 10, 0);
-		glEnd();
-		glColor4f(BLUE);
-		glBegin(GL_LINES);
-		glVertex3i(0, 0, 0);
-		glVertex3i(0, 0, 10);
-		glEnd();
+	//REFLEXÃO 
+	glEnable(GL_STENCIL_TEST); //Activa o uso do stencil buffer
+	glColorMask(0, 0, 0, 0); //Nao escreve no color buffer
+	glDisable(GL_DEPTH_TEST); //Torna inactivo o teste de profundidade
+	glStencilFunc(GL_ALWAYS, 1, 1); //O
+	glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE); //
 
-		if (lights_on)
-			glEnable(GL_LIGHTING);
-	}
+	drawMetalPlate();
+
+	glColorMask(1, 1, 1, 1); //Activa a escrita de cor
+	glEnable(GL_DEPTH_TEST); //Activa o teste de profundidade
+
+	glStencilFunc(GL_EQUAL, 1, 1);//O stencil test passa apenas quando o pixel tem o valor 1 no stencil buffer
+	glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP); //Stencil buffer read-only
+
+	//if (getBallPosition()[2] > 0) {
+	glPushMatrix();
+	glScalef(1, -1, 1);
+	drawBall(obsP, lookP, ballMoving, activeTargets);
+	glPopMatrix();
+	
+	glDisable(GL_STENCIL_TEST); //Desactiva a utilização do stencil buffer
+
+	drawLevel(activeTargets);
 }
 
 void display(void) {
-	if (checkTargets())
-		actions[3] = 1;
-	else if (activeTargets[4]) {
-		actions[3] = 0;
-		actions[4] = 1;
-	}
-	scripting(actions);
-
-	printf("actions: SC %d, Gl %d, Ball %d, Star %d, Gtar %d, Fog %d, End %d\n",
-		actions[0], //Scientists speeches
-		actions[1], //Glass animation
-		actions[2], //Ball drawing
-		actions[3], //Small targets drawing
-		actions[4], //Big Target drawing
-		actions[5], //Fog visible
-		actions[6]  //EndLevel Diferenciator
-		);
-
-	if (actions[6] == 2) {
-		MessageBox(0, "Pity", NULL, MB_OK | MB_ICONSTOP);
-		exit(0);
-	}
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glViewport(0, 0, wScreen, hScreen);
@@ -182,26 +126,9 @@ void display(void) {
 	gluLookAt(obsP[0], obsP[1], obsP[2], lookP[0], lookP[1], lookP[2], 0, 1, 0);
 	glDisable(GL_NORMALIZE);
 	drawScene();
-	//2d
-	glMatrixMode(GL_PROJECTION);				// Load Projection Matrix
-	glPushMatrix();								// Push Projection
-	glLoadIdentity();							// Reset Projection Matrix
-	gluOrtho2D(0.0, wScreen, 0.0, hScreen);		// Set Paralel Projection
-	glMatrixMode(GL_MODELVIEW);					// Load ModelView Matrix
-	glPushMatrix();		// Push ModelView
-	glLoadIdentity();							// Reset ModelView Matrix
-												//2d code
-	load_text(wScreen, hScreen, text, timer);
-	
-	if (actions[0] != 0)
-	{
-		changetimer(actions[0], 30, timer);
-		actions[0] = 0;
-	}
-	//
-	glPopMatrix();
 	glutSwapBuffers();
 }
+
 
 void Timer(int value) {
 	glutPostRedisplay();
