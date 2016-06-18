@@ -23,6 +23,14 @@ void make_plane(GLfloat width, GLfloat height, GLfloat densityValue) {
 	//Draw a Plane
 	//glColor3f(1.0f, 1.0f, 1.0f);
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+
+	//Color Materials
+	glEnable(GL_COLOR_MATERIAL);
+	glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular);
+	glMaterialfv(GL_FRONT, GL_SHININESS, mat_shininess);
+	glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, mat_dif);
+
+
 	glBegin(GL_TRIANGLE_STRIP);
 	GLint col = 0.0;
 	for (GLfloat w = 0.0; w < width; w += densityValue) {
@@ -72,6 +80,7 @@ void make_plane(GLfloat width, GLfloat height, GLfloat densityValue) {
 		col++;
 	}
 	glEnd();
+	glDisable(GL_COLOR_MATERIAL);
 }
 
 
@@ -82,6 +91,10 @@ void load_all_level_textures() {
 	load_texture("OrangeblockTexture.bmp");
 	load_texture("targetOrange.bmp");
 	load_texture("targetMask.bmp");
+	load_texture("eggman.bmp");
+	load_texture("eggmanMask.bmp");
+	load_texture("winnieMask.bmp");
+	load_texture("winnie.bmp");
 	load_texture("blockTexture.bmp");
 }
 
@@ -368,7 +381,7 @@ void drawSmallTarget(GLfloat x, GLfloat y, GLfloat z, GLfloat rot) {
 	createMaskedTextureObject("targetMask.bmp", "targetOrange.bmp", x, y, z, rot);
 }
 
-void drawBigTarget(GLfloat rot) {
+void drawBigTarget(GLfloat rot, GLboolean bad) {
 	if (lights_on)
 		glDisable(GL_LIGHTING);
 
@@ -385,8 +398,10 @@ void drawBigTarget(GLfloat rot) {
 	if (lights_on)
 		glEnable(GL_LIGHTING);
 
-	//createMaskedTextureObject("eggmanMask.bmp", "eggman.bmp", -2.0, 2.0, 0.0, rot);
-
+	if(bad)
+		createMaskedTextureObject("eggmanMask.bmp", "eggman.bmp", -2.0, 2.0, 0.0, rot);
+	else
+		createMaskedTextureObject("winnieMask.bmp", "winnie.bmp", -2.0, 2.0, 0.0, rot);
 }
 
 void drawTargets(GLfloat x, GLfloat z, GLfloat alt, GLboolean *activeTargets) {
@@ -402,6 +417,9 @@ void drawTargets(GLfloat x, GLfloat z, GLfloat alt, GLboolean *activeTargets) {
 		drawSmallTarget(x / 2.0 - 6.0, alt, -z + 4.2, 0.0);
 	if (activeTargets[3])
 		drawSmallTarget(x / 2.0 - 2.0, alt, -z + 4.2, 0.0);
+
+	if (activeTargets[4])
+		drawBigTarget(0.0, true);
 }
 
 void drawLevel(GLboolean *activeTargets, GLint *actions) {
@@ -430,8 +448,8 @@ void drawLevel(GLboolean *activeTargets, GLint *actions) {
 		drawCoverGlass(x, glassHeightDec, z);
 		glassHeightDec -= 0.2;
 	}
-	if (activeTargets[4] && actions[4] == 1)
-		drawBigTarget(0.0);
+	if (actions[4] == 1 && activeTargets[4])
+		drawBigTarget(0.0, true);
 
 	if (actions[5] == 1) {
 		drawFog(5.0, poisonDensity);
