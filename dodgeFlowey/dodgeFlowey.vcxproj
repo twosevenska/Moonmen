@@ -138,6 +138,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="RgbImage.cpp" />
     <ClCompile Include="script.cpp" />
+    <ClCompile Include="text.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ballz.h" />
@@ -149,6 +150,7 @@
     <ClInclude Include="resource.h" />
     <ClInclude Include="RgbImage.h" />
     <ClInclude Include="script.h" />
+    <ClInclude Include="text.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
