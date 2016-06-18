@@ -137,16 +137,20 @@
     <ClCompile Include="loadTextures.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="RgbImage.cpp" />
+    <ClCompile Include="script.cpp" />
+    <ClCompile Include="text.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ballz.h" />
     <ClInclude Include="Header.h" />
+    <ClInclude Include="text.h" />
     <ClInclude Include="level.h" />
     <ClInclude Include="light.h" />
     <ClInclude Include="loadBlenderModels.h" />
     <ClInclude Include="loadTextures.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="RgbImage.h" />
+    <ClInclude Include="script.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

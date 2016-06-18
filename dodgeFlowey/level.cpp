@@ -1,11 +1,14 @@
 #include "Header.h"
 #include "light.h"
 #include "loadBlenderModels.h"
+#include "loadTextures.h"
 
-GLuint texture[128];
+
+
 GLboolean texturesLoaded = false;
 GLboolean modelsLoaded = false;
-RgbImage imag;
+GLfloat glassHeight = 16.0;
+GLfloat glassHeightDec = 0.0;
 
 GLfloat meshDensity = 2.00;
 
@@ -67,31 +70,15 @@ void make_plane(GLfloat width, GLfloat height, GLfloat densityValue) {
 	glEnd();
 }
 
-void load_texture(std::string name, GLint texId) {
-	glGenTextures(1, &texture[texId]);
-	glBindTexture(GL_TEXTURE_2D, texture[texId]);
-	if(!lights_on)
-		glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-	std::string textureLocation = "resources/textures/" + name;
-	const char * tl = textureLocation.c_str();
-	imag.LoadBmpFile(tl);
-	gluBuild2DMipmaps(GL_TEXTURE_2D, 3, imag.GetNumCols(), imag.GetNumRows(), GL_RGB, GL_UNSIGNED_BYTE, imag.ImageData());
-	glTexImage2D(GL_TEXTURE_2D, 0, 3,
-		imag.GetNumCols(),
-		imag.GetNumRows(), 0, GL_RGB, GL_UNSIGNED_BYTE,
-		imag.ImageData());
-}
 
 void load_all_level_textures() {
-	load_texture("floorTile.bmp", 0);
-	load_texture("wallTile.bmp", 1);
-	load_texture("blockTexture.bmp", 2);
-	load_texture("BlueblockTexture.bmp", 3);
-	load_texture("OrangeblockTexture.bmp", 4);
+	load_texture("floorTile.bmp");
+	load_texture("wallTile.bmp");
+	load_texture("blockTexture.bmp");
+	load_texture("BlueblockTexture.bmp");
+	load_texture("OrangeblockTexture.bmp");
+	load_texture("targetOrange.bmp");
+	load_texture("targetMask.bmp");
 }
 
 void drawBlock(GLfloat x, GLfloat y, GLfloat z) {
@@ -135,7 +122,7 @@ void drawWalls(GLfloat x, GLfloat y, GLfloat z) {
 
 	//Ceiling
 	glEnable(GL_TEXTURE_2D);
-	glBindTexture(GL_TEXTURE_2D, texture[0]);
+	glBindTexture(GL_TEXTURE_2D, getTexture("floorTile.bmp"));
 	glPushMatrix();
 	glTranslatef(-x, y, -z);
 	glRotatef(90.0, 1.0, 0.0, 0.0);
@@ -143,7 +130,7 @@ void drawWalls(GLfloat x, GLfloat y, GLfloat z) {
 	glPopMatrix();
 
 	//Floor
-	glBindTexture(GL_TEXTURE_2D, texture[0]);
+	glBindTexture(GL_TEXTURE_2D, getTexture("floorTile.bmp"));
 	glPushMatrix();
 	glTranslatef(x / 2.0, 0, z - 4.0);
 	glRotatef(90.0, 0.0, 0.0, 1.0);
@@ -152,7 +139,7 @@ void drawWalls(GLfloat x, GLfloat y, GLfloat z) {
 	glPopMatrix();
 
 	//Left Wall
-	glBindTexture(GL_TEXTURE_2D, texture[1]);
+	glBindTexture(GL_TEXTURE_2D, getTexture("wallTile.bmp"));
 	glPushMatrix();
 	glTranslatef(-x / 2.0, 0, z);
 	glRotatef(90.0, 0.0, 1.0, 0.0);
@@ -160,7 +147,7 @@ void drawWalls(GLfloat x, GLfloat y, GLfloat z) {
 	glPopMatrix();
 
 	//Right Wall
-	glBindTexture(GL_TEXTURE_2D, texture[1]);
+	glBindTexture(GL_TEXTURE_2D, getTexture("wallTile.bmp"));
 	glPushMatrix();
 	glTranslatef((x / 2.0) + 0.0, 0, -z);
 	glRotatef(-90.0, 0.0, 1.0, 0.0);
@@ -168,14 +155,14 @@ void drawWalls(GLfloat x, GLfloat y, GLfloat z) {
 	glPopMatrix();
 
 	//Back Wall
-	glBindTexture(GL_TEXTURE_2D, texture[1]);
+	glBindTexture(GL_TEXTURE_2D, getTexture("wallTile.bmp"));
 	glPushMatrix();
 	glTranslatef(-x/2.0, 0, -z);
 	make_plane(x * 1.0 , y, meshDensity);
 	glPopMatrix();
 
 	//Wall Behind
-	glBindTexture(GL_TEXTURE_2D, texture[1]);
+	glBindTexture(GL_TEXTURE_2D, getTexture("wallTile.bmp"));
 	glPushMatrix();
 	glTranslatef(x/2.0, 0, z);
 	glRotatef(180.0, 0.0, 1.0, 0.0);
@@ -189,7 +176,7 @@ void drawSpectator(GLfloat x, GLfloat y, GLfloat z) {
 
 	//Back Wall
 	glEnable(GL_TEXTURE_2D);
-	glBindTexture(GL_TEXTURE_2D, texture[1]);
+	glBindTexture(GL_TEXTURE_2D, getTexture("wallTile.bmp"));
 	glPushMatrix();
 	glTranslatef(-x, y - x / 4.0, -z);
 	make_plane(x / 2.0, x / 2.0, meshDensity);
@@ -198,7 +185,7 @@ void drawSpectator(GLfloat x, GLfloat y, GLfloat z) {
 
 	//Left Wall
 	glEnable(GL_TEXTURE_2D);
-	glBindTexture(GL_TEXTURE_2D, texture[1]);
+	glBindTexture(GL_TEXTURE_2D, getTexture("wallTile.bmp"));
 	glPushMatrix();
 	glTranslatef(-x, y, z);
 	glRotatef(90.0, 0.0, 1.0, 0.0);
@@ -227,31 +214,31 @@ void drawSpectator(GLfloat x, GLfloat y, GLfloat z) {
 void drawCover(GLfloat x, GLfloat y, GLfloat z) {
 	//Main Cover
 	glEnable(GL_TEXTURE_2D);
-	glBindTexture(GL_TEXTURE_2D, texture[2]);
+	glBindTexture(GL_TEXTURE_2D, getTexture("blockTexture.bmp"));
 	glPushMatrix();
 	glTranslatef( 0.0, 0.0, z - 6.0);
 	drawBlock(x, 2.0, 0.2);
 	glPopMatrix();
 	glDisable(GL_TEXTURE_2D);
 
-	//First Target Block
+	//First Target Block -6,0,10
 	glEnable(GL_TEXTURE_2D);
-	glBindTexture(GL_TEXTURE_2D, texture[3]);
+	glBindTexture(GL_TEXTURE_2D, getTexture("BlueblockTexture.bmp"));
 	glPushMatrix();
 	glTranslatef(-x / 2.0 + x / 4.0, 0.0, z - 10.0);
 	drawBlock(x / 2.0, 2.0, 1.6);
 	glPopMatrix();
 	glDisable(GL_TEXTURE_2D);
 
-	//Second Target Block
+	//Second Target Block 0,0,0
 	glEnable(GL_TEXTURE_2D);
-	glBindTexture(GL_TEXTURE_2D, texture[4]);
+	glBindTexture(GL_TEXTURE_2D, getTexture("OrangeblockTexture.bmp"));
 	drawBlock(x / 2.0 , 2.0, 1.6);
 	glDisable(GL_TEXTURE_2D);
 
-	//Third Target Block
+	//Third Target Block 
 	glEnable(GL_TEXTURE_2D);
-	glBindTexture(GL_TEXTURE_2D, texture[3]);
+	glBindTexture(GL_TEXTURE_2D, getTexture("BlueblockTexture.bmp"));
 	glPushMatrix();
 	glTranslatef(x / 2.0 - x / 4.0, 0.0, -z + 4.0);
 	drawBlock(x / 2.0, 2.0, 1.6);
@@ -268,8 +255,8 @@ void drawCoverGlass(GLfloat x, GLfloat y, GLfloat z) {
 	glEnable(GL_BLEND);
 	glColor4f(CGLASS);
 	glPushMatrix();
-	glTranslatef(-x / 2.0, 0.0, z - 6.1);
-	make_plane(x, y, 4.0);
+	glTranslatef(-x / 2.0, y, z - 6.1);
+	make_plane(x, 16.0, 4.0);
 	glPopMatrix();
 	glDisable(GL_BLEND);
 	
@@ -280,7 +267,7 @@ void drawCoverGlass(GLfloat x, GLfloat y, GLfloat z) {
 void drawTrapFloor(GLfloat x, GLfloat y, GLfloat z, GLfloat slide) {
 	//Left Segment
 	glEnable(GL_TEXTURE_2D);
-	glBindTexture(GL_TEXTURE_2D, texture[0]);
+	glBindTexture(GL_TEXTURE_2D, getTexture("floorTile.bmp"));
 	glPushMatrix();
 	glTranslatef(-x / 2.0 - slide, 0, z - 4.0);
 	glRotatef(-90.0, 1.0, 0.0, 0.0);
@@ -291,7 +278,7 @@ void drawTrapFloor(GLfloat x, GLfloat y, GLfloat z, GLfloat slide) {
 
 	//Right Segment
 	glEnable(GL_TEXTURE_2D);
-	glBindTexture(GL_TEXTURE_2D, texture[0]);
+	glBindTexture(GL_TEXTURE_2D, getTexture("floorTile.bmp"));
 	glPushMatrix();
 	glTranslatef(x / 2.0 + slide, 0.0, z);
 	glRotatef(90.0, 0.0, 1.0, 0.0);
@@ -327,8 +314,6 @@ void drawModels(GLfloat x, GLfloat y, GLfloat z) {
 	glPopMatrix();
 }
 
-
-
 void drawFog(GLfloat distance, GLfloat density) {
 	GLfloat	fogColor[4] = { 0.0f, 1.0f, 0.0f, 1.0f };
 	glFogi(GL_FOG_MODE, GL_EXP2);
@@ -362,20 +347,49 @@ void drawSmallTarget(GLfloat x, GLfloat y, GLfloat z, GLfloat rot) {
 
 	if (lights_on)
 		glEnable(GL_LIGHTING);
+
+	createMaskedTextureObject("targetMask.bmp", "targetOrange.bmp",  x,  y,  z,  rot);
 }
 
-void drawTargets(GLfloat x, GLfloat z, GLfloat alt) {
+void drawBigTarget(GLfloat rot) {
+	if (lights_on)
+		glDisable(GL_LIGHTING);
+
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE);
+	glEnable(GL_BLEND);
+	glColor4f(CGLASS);
+	glPushMatrix();
+	glRotatef(rot, 1.0, 0.0, 0.0);
+	glTranslatef(-2.0, 2.0, 0.0);
+	make_plane(4.0, 6.0, 0.2);
+	glPopMatrix();
+	glDisable(GL_BLEND);
+
+	if (lights_on)
+		glEnable(GL_LIGHTING);
+
+	//createMaskedTextureObject("targetMask.bmp", "targetOrange.bmp", x, y, z, rot);
+}
+
+void drawTargets(GLfloat x, GLfloat z, GLfloat alt, GLboolean *activeTargets) {
 
 	//First block targets
-	drawSmallTarget(-x / 2.0 + 2.0 , alt, z - 10.2, 0.0);
-	drawSmallTarget(-x / 2.0 + 6.0, alt, z - 10.2, 0.0);
+	if(activeTargets[0])
+		drawSmallTarget(-x / 2.0 + 2.0 , alt, z - 10.2, 0.0);
+	if (activeTargets[1])
+		drawSmallTarget(-x / 2.0 + 6.0, alt, z - 10.2, 0.0);
 
 	//Last block targets
-	drawSmallTarget(x / 2.0 - 2.0, alt, -z + 4.2, 0.0);
-	drawSmallTarget(x / 2.0 - 6.0, alt, -z + 4.2, 0.0);
+	if (activeTargets[2])
+		drawSmallTarget(x / 2.0 - 6.0, alt, -z + 4.2, 0.0);
+	if (activeTargets[3])
+		drawSmallTarget(x / 2.0 - 2.0, alt, -z + 4.2, 0.0);
+
+	if (activeTargets[4])
+		drawBigTarget(0.0f);
 }
 
-void drawLevel() {
+void drawLevel(GLboolean *activeTargets, GLint *actions) {
 	GLfloat x = 16.0;
 	GLfloat y = 16.0;
 	GLfloat z = 20.0;
@@ -385,13 +399,24 @@ void drawLevel() {
 		texturesLoaded = true;
 	}
 	bool lockWindow = false;
-	GLfloat glassHeight = y - 12.0;
-	drawModels(x, y, z);
+	
+	//Always rendered
+	//drawModels(x, y, z);
 	drawWalls(x, y, z);
 	drawSpectator(x, y - 4.0, z);
+	
 	//drawFog(5.0, 0.01);
 	drawCover(x, y, z);
-	drawTargets(x, z, 3.0);
-	drawCoverGlass(x, glassHeight, z);
+
+	if(actions[3] == 1)
+		drawTargets(x, z, 3.5, activeTargets);
+	
+
+	if (glassHeightDec <= -16.0) actions[1] = 0;
+	if (glassHeightDec > -16.0 && actions[1] == 1) {
+		drawCoverGlass(x, glassHeightDec, z);
+		glassHeightDec -= 0.2;
+	}
 	drawTrapFloor(x, y, z, 0.0);
+
 }
