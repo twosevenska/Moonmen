@@ -138,12 +138,10 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="RgbImage.cpp" />
     <ClCompile Include="script.cpp" />
-    <ClCompile Include="text.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ballz.h" />
     <ClInclude Include="Header.h" />
-    <ClInclude Include="text.h" />
     <ClInclude Include="level.h" />
     <ClInclude Include="light.h" />
     <ClInclude Include="loadBlenderModels.h" />
