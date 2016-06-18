@@ -408,7 +408,7 @@ void drawLevel(GLboolean *activeTargets, GLint *actions) {
 	//drawFog(5.0, 0.01);
 	drawCover(x, y, z);
 
-	if(actions[3] == 1)
+	if(actions[3] == 2)
 		drawTargets(x, z, 3.5, activeTargets);
 	
 

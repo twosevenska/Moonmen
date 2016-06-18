@@ -42,7 +42,8 @@ GLfloat  limitsWalkP[] = { -posLimit + 1, posLimit - 1 };
 GLboolean ballMoving = false;
 
 //Targeting
-GLboolean activeTargets[5] = { true, true, true, true, true};
+
+GLboolean activeTargets[5] = { true, true, true, true, false};
 
 //Scripting
 //Scientists, Glass, Ball, Small Targets, Big Target, Fog, EndLevel 
@@ -53,7 +54,7 @@ GLint    repete = 2;
 GLfloat  rr = 1;
 GLint    maxR = 20;
 GLint    numFrames = 60;              //numero de imagens a colocar em loop na tela
-GLint    msec = 100;					//.. definicao do timer (actualizacao)
+GLint    msec = 40;					//.. definicao do timer (actualizacao)
 
 										// Sounds 
 irrklang::ISoundEngine *SoundEngine = irrklang::createIrrKlangDevice();
@@ -79,6 +80,13 @@ void init(void) {
 	lightinit();
 }
 
+GLboolean checkTargets() {
+	for (int i = 0; i < 4; i++) {
+		if (activeTargets[i])
+			return true;
+	}
+	return false;
+}
 
 void resizeWindow(GLsizei w, GLsizei h) {
 	wScreen = w;
@@ -107,7 +115,6 @@ void drawScene() {
 			changetimer(HIT, 10, timer);
 		}
 	}
-
 	if (drawAxis) {
 		//Basic axis
 		if (lights_on)
@@ -135,7 +142,12 @@ void drawScene() {
 }
 
 void display(void) {
-
+	if (checkTargets())
+		actions[3] = 1;
+	else if (activeTargets[4]) {
+		actions[3] = 0;
+		actions[4] = 1;
+	}
 	scripting(actions);
 
 	printf("actions: SC %d, Gl %d, Ball %d, Star %d, Gtar %d, Fog %d, End %d\n",
@@ -190,7 +202,6 @@ void display(void) {
 	glPopMatrix();
 	glutSwapBuffers();
 }
-
 
 void Timer(int value) {
 	glutPostRedisplay();
