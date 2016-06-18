@@ -17,12 +17,6 @@ GLfloat meshDensity = 2.00;
 const struct aiScene* sans = NULL;
 const struct aiScene* papyrus = NULL;
 
-//Materials
-
-GLfloat mat_specular[] = { 1.0, 1.0, 1.0, 1.0 };
-GLfloat mat_dif[] = { 0.5f, 0.5f, 0.5f, 0.5f };
-GLfloat mat_shininess[] = { 50.0 };
-
 void make_plane(GLfloat width, GLfloat height, GLfloat densityValue) {
 	//Draw a Plane
 	//glColor3f(1.0f, 1.0f, 1.0f);

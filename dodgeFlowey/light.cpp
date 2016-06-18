@@ -10,6 +10,12 @@ GLfloat localAttLin = 0.05;
 GLfloat localAttQua = 0.0;
 
 
+//Materials
+
+GLfloat mat_specular[] = { 1.0, 1.0, 1.0, 1.0 };
+GLfloat mat_dif[] = { 0.5f, 0.5f, 0.5f, 0.5f };
+GLfloat mat_shininess[] = { 50.0 };
+
 void createGroundLights() {
 
 	GLfloat LightAmbient[] = { 0.4f, 0.4f, 0.4f, 1.0f };

@@ -3,13 +3,6 @@
 #include "level.h"
 
 
-//Materials
-
-GLfloat mat_specular[] = { 1.0, 1.0, 1.0, 1.0 };
-GLfloat mat_dif[] = { 0.5f, 0.5f, 0.5f, 0.5f };
-GLfloat mat_shininess[] = { 50.0 };
-
-
 GLuint texture;
 GLboolean textureLoaded = false;
 RgbImage img;

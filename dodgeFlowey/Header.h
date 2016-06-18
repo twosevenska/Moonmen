@@ -27,3 +27,10 @@
 #define LGREY	 0.50, 0.50, 0.50, 1.0
 #define PI		 3.14159
 typedef enum {NULLIE, HELLO, FOLLOW, WAIT, HIT, PLEASE, TRUSTME, DONT } enumtext;
+
+
+//Materials
+
+GLfloat mat_specular[];
+GLfloat mat_dif[];
+GLfloat mat_shininess[];
