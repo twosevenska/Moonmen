@@ -7,7 +7,8 @@
 
 GLboolean texturesLoaded = false;
 GLboolean modelsLoaded = false;
-
+GLfloat glassHeight = 16.0;
+GLfloat glassHeightDec = 0.0;
 
 GLfloat meshDensity = 2.00;
 
@@ -254,8 +255,8 @@ void drawCoverGlass(GLfloat x, GLfloat y, GLfloat z) {
 	glEnable(GL_BLEND);
 	glColor4f(CGLASS);
 	glPushMatrix();
-	glTranslatef(-x / 2.0, 0.0, z - 6.1);
-	make_plane(x, y, 4.0);
+	glTranslatef(-x / 2.0, y, z - 6.1);
+	make_plane(x, 16.0, 4.0);
 	glPopMatrix();
 	glDisable(GL_BLEND);
 	
@@ -388,7 +389,7 @@ void drawTargets(GLfloat x, GLfloat z, GLfloat alt, GLboolean *activeTargets) {
 		drawBigTarget(0.0f);
 }
 
-void drawLevel(GLboolean *activeTargets) {
+void drawLevel(GLboolean *activeTargets, GLint *actions) {
 	GLfloat x = 16.0;
 	GLfloat y = 16.0;
 	GLfloat z = 20.0;
@@ -398,13 +399,24 @@ void drawLevel(GLboolean *activeTargets) {
 		texturesLoaded = true;
 	}
 	bool lockWindow = false;
-	GLfloat glassHeight = y - 12.0;
+	
+	//Always rendered
 	//drawModels(x, y, z);
 	drawWalls(x, y, z);
 	drawSpectator(x, y - 4.0, z);
+	
 	//drawFog(5.0, 0.01);
 	drawCover(x, y, z);
-	drawTargets(x, z, 3.5, activeTargets);
-	//drawCoverGlass(x, glassHeight, z);
+
+	if(actions[3] == 1)
+		drawTargets(x, z, 3.5, activeTargets);
+	
+
+	if (glassHeightDec <= -16.0) actions[1] = 0;
+	if (glassHeightDec > -16.0 && actions[1] == 1) {
+		drawCoverGlass(x, glassHeightDec, z);
+		glassHeightDec -= 0.2;
+	}
 	drawTrapFloor(x, y, z, 0.0);
+
 }
