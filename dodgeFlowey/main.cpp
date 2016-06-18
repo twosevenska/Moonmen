@@ -5,10 +5,12 @@
 #include "level.h"
 #include "light.h"
 #include "ballz.h"
+#include "script.h"
+
 
 //Dev flags
 GLboolean god = false;
-GLboolean drawAxis = false;
+GLboolean drawAxis = true;
 
 //Coordinate system variables
 GLfloat   xC = 70.0, yC = 70.0, zC = 70.0;
@@ -35,6 +37,10 @@ GLboolean ballMoving = false;
 
 //Targeting
 GLboolean activeTargets[5] = { true,true,true,true,true };
+
+//Scripting		
+//Scientists, Glass, Ball, Small Targets, Big Target, Fog, EndLevel 		
+GLint actions[7] = { 0, 0, 0, 0, 0, 0, 0 };
 
 //Time is a woobly thing
 GLint    repete = 2;
@@ -63,9 +69,16 @@ void init(void) {
 	glCullFace(GL_BACK);
 
 	//Don't mind Nelly Furtado, this keeps the lights on
-	//lightinit();
+	lightinit();
 }
 
+GLboolean checkTargets() {
+	for (int i = 0; i < 4; i++) {
+		if (activeTargets[i])
+			return true;
+	}
+	return false;
+}
 
 void resizeWindow(GLsizei w, GLsizei h) {
 	wScreen = w;
@@ -78,8 +91,8 @@ void resizeWindow(GLsizei w, GLsizei h) {
 void drawScene() {
 	//reloadLightPos();
 	
-
-	ballMoving = drawBall(obsP, lookP, ballMoving, activeTargets);
+	if (actions[2])
+		ballMoving = drawBall(obsP, lookP, ballMoving, activeTargets);
 
 	//REFLEXÃO 
 	glEnable(GL_STENCIL_TEST); //Activa o uso do stencil buffer
@@ -88,7 +101,7 @@ void drawScene() {
 	glStencilFunc(GL_ALWAYS, 1, 1); //O
 	glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE); //
 
-	drawMetalPlate();
+	drawMirrorPlate();
 
 	glColorMask(1, 1, 1, 1); //Activa a escrita de cor
 	glEnable(GL_DEPTH_TEST); //Activa o teste de profundidade
@@ -109,6 +122,31 @@ void drawScene() {
 
 void display(void) {
 
+	if (checkTargets())
+		actions[3] = 1;
+	else if (activeTargets[4]) {
+		actions[3] = 0;
+		actions[4] = 1;
+	}
+
+
+	scripting(actions);
+
+	printf("actions: SC %d, Gl %d, Ball %d, Star %d, Gtar %d, Fog %d, End %d\n", 
+		actions[0], //Scientists speeches		
+			actions[1], //Glass animation		
+			actions[2], //Ball drawing		
+			actions[3], //Small targets drawing		
+			actions[4], //Big Target drawing		
+			actions[5], //Fog visible		
+			actions[6]  //EndLevel Diferenciator		
+			);
+
+
+	if (actions[6] == 2) {
+		MessageBox(0, "Pity", NULL, MB_OK | MB_ICONSTOP);
+		exit(0);
+	}
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glViewport(0, 0, wScreen, hScreen);
 

@@ -48,25 +48,25 @@
     <ClInclude Include="loadTextures.h">
       <Filter>Headers</Filter>
     </ClInclude>
-    <ClInclude Include="resource.h">
-      <Filter>Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="RgbImage.h">
+    <ClInclude Include="text.h">
       <Filter>Headers</Filter>
     </ClInclude>
     <ClInclude Include="script.h">
       <Filter>Headers</Filter>
     </ClInclude>
-    <ClInclude Include="text.h">
+    <ClInclude Include="RgbImage.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h">
       <Filter>Headers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Headers">
-      <UniqueIdentifier>{4c8bc7c8-92e8-414e-bcd3-3ef118dcb1ac}</UniqueIdentifier>
+      <UniqueIdentifier>{e3a79cab-b351-4a7a-81e7-fa41b90a45ec}</UniqueIdentifier>
     </Filter>
     <Filter Include="Sources">
-      <UniqueIdentifier>{f6df30ce-62c0-4fd7-909d-454120200196}</UniqueIdentifier>
+      <UniqueIdentifier>{60c4bca0-12c1-4cf8-9a28-0ad0eb7abcb3}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
