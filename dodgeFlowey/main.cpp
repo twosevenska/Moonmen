@@ -11,6 +11,7 @@
 //Dev flags
 GLboolean god = false;
 GLboolean drawAxis = true;
+GLboolean textureDevMode = true;
 
 //Coordinate system variables
 GLfloat   xC = 70.0, yC = 70.0, zC = 70.0;
@@ -122,15 +123,19 @@ void drawScene() {
 
 void display(void) {
 
-	if (checkTargets())
-		actions[3] = 1;
-	else if (activeTargets[4]) {
-		actions[3] = 0;
+	if (!textureDevMode) {
+		if (checkTargets())
+			actions[3] = 1;
+		else if (activeTargets[4]) {
+			actions[3] = 0;
+			actions[4] = 1;
+		}
+
+		scripting(actions);
+	}
+	else {
 		actions[4] = 1;
 	}
-
-
-	scripting(actions);
 
 	printf("actions: SC %d, Gl %d, Ball %d, Star %d, Gtar %d, Fog %d, End %d\n", 
 		actions[0], //Scientists speeches		
