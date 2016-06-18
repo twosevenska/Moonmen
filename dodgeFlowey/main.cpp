@@ -41,7 +41,7 @@ GLint    repete = 2;
 GLfloat  rr = 1;
 GLint    maxR = 20;
 GLint    numFrames = 60;              //numero de imagens a colocar em loop na tela
-GLint    msec = 100;					//.. definicao do timer (actualizacao)
+GLint    msec = 80;					//.. definicao do timer (actualizacao)
 
 										// Sounds 
 irrklang::ISoundEngine *SoundEngine = irrklang::createIrrKlangDevice();
@@ -78,7 +78,32 @@ void resizeWindow(GLsizei w, GLsizei h) {
 void drawScene() {
 	//reloadLightPos();
 	
+
 	ballMoving = drawBall(obsP, lookP, ballMoving, activeTargets);
+
+	//REFLEXÃO 
+	glEnable(GL_STENCIL_TEST); //Activa o uso do stencil buffer
+	glColorMask(0, 0, 0, 0); //Nao escreve no color buffer
+	glDisable(GL_DEPTH_TEST); //Torna inactivo o teste de profundidade
+	glStencilFunc(GL_ALWAYS, 1, 1); //O
+	glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE); //
+
+	drawMetalPlate();
+
+	glColorMask(1, 1, 1, 1); //Activa a escrita de cor
+	glEnable(GL_DEPTH_TEST); //Activa o teste de profundidade
+
+	glStencilFunc(GL_EQUAL, 1, 1);//O stencil test passa apenas quando o pixel tem o valor 1 no stencil buffer
+	glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP); //Stencil buffer read-only
+
+	//if (getBallPosition()[2] > 0) {
+	glPushMatrix();
+	glScalef(1, -1, 1);
+	drawBall(obsP, lookP, ballMoving, activeTargets);
+	glPopMatrix();
+	
+	glDisable(GL_STENCIL_TEST); //Desactiva a utilização do stencil buffer
+
 	drawLevel(activeTargets);
 }
 
@@ -100,7 +125,6 @@ void display(void) {
 	glLoadIdentity();
 	gluLookAt(obsP[0], obsP[1], obsP[2], lookP[0], lookP[1], lookP[2], 0, 1, 0);
 	glDisable(GL_NORMALIZE);
-	lightinit();
 	drawScene();
 	glutSwapBuffers();
 }
