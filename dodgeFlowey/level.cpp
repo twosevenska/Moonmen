@@ -11,7 +11,7 @@ GLboolean modelsLoaded = false;
 GLfloat glassHeight = 16.0;
 GLfloat glassHeightDec = 0.0;
 
-GLfloat meshDensity = 2.00;
+GLfloat meshDensity = 1.00;
 
 //Models
 const struct aiScene* sans = NULL;
@@ -41,15 +41,15 @@ void make_plane(GLfloat width, GLfloat height, GLfloat densityValue) {
 					glTexCoord2f(0.0f, 0.0f);
 				}
 				else {
-					glTexCoord2f(0.0f, 1.0f);
+					glTexCoord2f(0.0f, densityValue/2.0);
 				}
 				glVertex3f(w, h, 0);
 
 				glNormal3f(0.0f, 0.0f, 1.0f);
 				if (textureHalf % 2 == 0)
-					glTexCoord2f(1.0f, 0.0f);
+					glTexCoord2f(densityValue / 2.0, 0.0f);
 				else
-					glTexCoord2f(1.0f, 1.0f);
+					glTexCoord2f(densityValue / 2.0, densityValue / 2.0);
 				glVertex3f(w + densityValue, h, 0);
 
 				textureHalf++;
@@ -59,9 +59,9 @@ void make_plane(GLfloat width, GLfloat height, GLfloat densityValue) {
 			for (GLfloat h = height; h >= 0.0; h -= densityValue) {
 				glNormal3f(0.0f, 0.0f, 1.0f);
 				if (textureHalf % 2 == 0)
-					glTexCoord2f(1.0f, 0.0f);
+					glTexCoord2f(densityValue / 2.0, 0.0f);
 				else
-					glTexCoord2f(1.0f, 1.0f);
+					glTexCoord2f(densityValue / 2.0, densityValue / 2.0);
 				glVertex3f(w + densityValue, h, 0);
 
 				glNormal3f(0.0f, 0.0f, 1.0f);
@@ -69,7 +69,7 @@ void make_plane(GLfloat width, GLfloat height, GLfloat densityValue) {
 					glTexCoord2f(0.0f, 0.0f);
 				}
 				else {
-					glTexCoord2f(0.0f, 1.0f);
+					glTexCoord2f(0.0f, densityValue / 2.0);
 				}
 				glVertex3f(w, h, 0);
 				textureHalf++;
