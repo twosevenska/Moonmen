@@ -2,6 +2,7 @@
 #include "Header.h"
 #include "level.h"
 
+
 GLuint texture;
 GLboolean textureLoaded = false;
 RgbImage img;
@@ -288,6 +289,12 @@ GLboolean drawBall(GLfloat *obs, GLfloat *lookAt, GLboolean moving, GLboolean *t
 		}
 	}
 
+	//Color Materials
+	glEnable(GL_COLOR_MATERIAL);
+	glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular);
+	glMaterialfv(GL_FRONT, GL_SHININESS, mat_shininess);
+	glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, mat_dif);
+
 	glEnable(GL_TEXTURE_2D);
 	glBindTexture(GL_TEXTURE_2D, texture);
 	glPushMatrix();
@@ -301,6 +308,7 @@ GLboolean drawBall(GLfloat *obs, GLfloat *lookAt, GLboolean moving, GLboolean *t
 	glPopMatrix();
 	glDisable(GL_TEXTURE_2D);
 
+	glDisable(GL_COLOR_MATERIAL);
 	/*glPushMatrix();
 	glTranslatef(lookAt[0], lookAt[1], lookAt[2]);
 	glutSolidSphere(ballRadius, 250, 250);
