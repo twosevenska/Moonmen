@@ -243,7 +243,7 @@ GLint getBallMovement(GLfloat *lookAt, GLboolean *targets) {
 		ballP[1], ballRadius, ballP[1] + ballRadius,
 		ballP[2], ballRadius, ballP[2] + ballRadius);
 	*/
-	if (ballP[0] + ballRadius > 8.0 || ballP[0] - ballRadius < -8.0)
+	if (ballP[0] - ballRadius < -8.0 || ballP[0] + ballRadius > 8.0 || ballP[2] > 20)
 		return false;
 
 	ydelta += ydelta_inc;
