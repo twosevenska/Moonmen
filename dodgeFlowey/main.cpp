@@ -88,7 +88,7 @@ void drawScene() {
 	glStencilFunc(GL_ALWAYS, 1, 1); //O
 	glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE); //
 
-	drawMetalPlate();
+	drawMirrorPlate();
 
 	glColorMask(1, 1, 1, 1); //Activa a escrita de cor
 	glEnable(GL_DEPTH_TEST); //Activa o teste de profundidade
