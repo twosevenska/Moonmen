@@ -135,6 +135,7 @@ void display(void) {
 		scripting(actions);
 	}
 	else {
+		actions[2] = 1;
 		actions[4] = 1;
 		activeTargets[4] = true;
 	}

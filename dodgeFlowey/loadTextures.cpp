@@ -34,35 +34,41 @@ GLuint getTexture(std::string name) {
 	return texture[textureIdMap[name]];
 }
 
-void createMaskedTextureObject(std::string maskName, std::string textureName, GLfloat x, GLfloat y, GLfloat z, GLfloat rot) {
+
+
+void createMaskedTextureObject(std::string maskName, std::string textureName, GLfloat* pos, GLfloat* dim, GLfloat rot, GLboolean boss) {
 	if (lights_on)
 		glDisable(GL_LIGHTING);
+
 	glEnable(GL_BLEND);									// Enable Blending
-	glDisable(GL_DEPTH_TEST);							// Disable Depth Testing
+	//glDisable(GL_DEPTH_TEST);							// Disable Depth Testing
 	glBlendFunc(GL_DST_COLOR, GL_ZERO);				// Blend Screen Color With Zero (Black)
 	glEnable(GL_TEXTURE_2D);
 
 	glPushMatrix();
-	glTranslatef(x, y, z);
+	glTranslatef(pos[0], pos[1], pos[2] -0.01);
 	glRotatef(rot, 0.0, 0.0, 1.0);
 	//glTranslatef(0.0, 5.0, 15.0);
 	glTranslatef(-1.0, -1.0, 0.0);
 	glBindTexture(GL_TEXTURE_2D, getTexture(maskName));
-	make_plane(2.0, 2.0, 2.0);
+	make_plane(dim[0], dim[1], dim[2]);
 	glPopMatrix();
 
-	glBlendFunc(GL_ONE, GL_ONE);					// Copy Image 2 Color To The Screen
+	if(boss)
+		glBlendFunc(GL_SRC_COLOR, GL_DST_COLOR);					// Copy Image 2 Color To The Screen
+	else
+		glBlendFunc(GL_ONE, GL_ONE);
 
 	glBindTexture(GL_TEXTURE_2D, getTexture(textureName));
 	glPushMatrix();
-	glTranslatef(x, y, z);
+	glTranslatef(pos[0], pos[1], pos[2]);
 	glRotatef(rot, 0.0, 0.0, 1.0);
 	//glTranslatef(0.0, 5.0, 15.0);
 	glTranslatef(-1.0, -1.0, 0.0);
-	make_plane(2.0, 2.0, 2.0);
+	make_plane(dim[0], dim[1], dim[2]);
 	glPopMatrix();
 
-	glEnable(GL_DEPTH_TEST);							// Enable Depth Testing
+	//glEnable(GL_DEPTH_TEST);							// Enable Depth Testing
 	glDisable(GL_BLEND);								// Disable Blending
 	glDisable(GL_TEXTURE_2D);
 

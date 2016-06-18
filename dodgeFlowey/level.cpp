@@ -89,8 +89,8 @@ void load_all_level_textures() {
 	load_texture("OrangeblockTexture.bmp");
 	load_texture("targetOrange.bmp");
 	load_texture("targetMask.bmp");
-	load_texture("eggman.bmp");
-	load_texture("eggmanMask.bmp");
+	load_texture("eggman2.bmp");
+	load_texture("eggmanMask2.bmp");
 	load_texture("winnieMask.bmp");
 	load_texture("winnie.bmp");
 	load_texture("blockTexture.bmp");
@@ -359,13 +359,13 @@ void drawFog(GLfloat distance, GLfloat density) {
 }
 
 void drawSmallTarget(GLfloat x, GLfloat y, GLfloat z, GLfloat rot) {
-	if (lights_on)
+	/*if (lights_on)
 		glDisable(GL_LIGHTING);
 
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE);
 	glEnable(GL_BLEND);
 	glColor4f(CGLASS);
-	glPushMatrix();
+	
 	glTranslatef(x, y, z);
 	glRotatef(rot, 0.0, 0.0, 1.0);
 	glTranslatef(-1.0, -1.0, 0.0);
@@ -374,36 +374,32 @@ void drawSmallTarget(GLfloat x, GLfloat y, GLfloat z, GLfloat rot) {
 	glDisable(GL_BLEND);
 
 	if (lights_on)
-		glEnable(GL_LIGHTING);
+		glEnable(GL_LIGHTING);*/
 
-	createMaskedTextureObject("targetMask.bmp", "targetOrange.bmp", x, y, z, rot);
+	GLfloat pos[3] = {x,y,z};
+	GLfloat dim[3] = {2.0,2.0,2.0};
+
+	glPushMatrix();
+	glTranslatef(-1.0, -1.0, 0.0);
+	createMaskedTextureObject("targetMask.bmp", "targetOrange.bmp", pos, dim, rot,false);
+	glPopMatrix();
 }
 
 void drawBigTarget(GLfloat rot, GLboolean bad) {
-	if (lights_on)
-		glDisable(GL_LIGHTING);
+	GLfloat pos[3] = { 0,0,0 };
+	GLfloat dim[3] = { 6.0, 6.0, 6.0 };
 
-	//glBlendFunc(GL_SRC_ALPHA, GL_ONE);
-	glEnable(GL_BLEND);
-	glColor4f(CGLASS);
 	glPushMatrix();
-	glRotatef(rot, 1.0, 0.0, 0.0);
 	glTranslatef(-2.0, 2.0, 0.0);
-	make_plane(4.0, 6.0, 0.2);
-	glPopMatrix();
-	glDisable(GL_BLEND);
-
-	if (lights_on)
-		glEnable(GL_LIGHTING);
-
-	if(bad)
-		createMaskedTextureObject("eggmanMask.bmp", "eggman.bmp", -2.0, 2.0, 0.0, rot);
+	if(!bad)
+		createMaskedTextureObject("eggmanMask2.bmp", "eggman2.bmp", pos, dim, rot,true);
 	else
-		createMaskedTextureObject("winnieMask.bmp", "winnie.bmp", -2.0, 2.0, 0.0, rot);
+		createMaskedTextureObject("winnieMask.bmp", "winnie.bmp", pos, dim, rot,true);
+	glPopMatrix();
+
 }
 
 void drawTargets(GLfloat x, GLfloat z, GLfloat alt, GLboolean *activeTargets) {
-
 	//First block targets
 	if (activeTargets[0])
 		drawSmallTarget(-x / 2.0 + 2.0, alt, z - 10.2, 0.0);
