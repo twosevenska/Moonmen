@@ -11,7 +11,7 @@
 //Dev flags
 GLboolean god = false;
 GLboolean drawAxis = true;
-GLboolean textureDevMode = true;
+GLboolean textureDevMode = false;
 
 //Coordinate system variables
 GLfloat   xC = 70.0, yC = 70.0, zC = 70.0;
@@ -126,9 +126,10 @@ void display(void) {
 	if (!textureDevMode) {
 		if (checkTargets())
 			actions[3] = 1;
-		else if (activeTargets[4]) {
+		else if (!activeTargets[4]) {
 			actions[3] = 0;
 			actions[4] = 1;
+			activeTargets[4] = true;
 		}
 
 		scripting(actions);
