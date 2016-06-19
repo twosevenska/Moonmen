@@ -5,6 +5,7 @@
 extern bool lights_on = false;
 GLint nLights = 0;
 GLenum lights[] = { GL_LIGHT0 , GL_LIGHT1 , GL_LIGHT2 , GL_LIGHT3 , GL_LIGHT4 , GL_LIGHT5 , GL_LIGHT6 , GL_LIGHT7 };
+GLboolean lightsActive[] = { false , false , false , false , false , false , false , false };
 GLfloat localAttCon = 1.0;
 GLfloat localAttLin = 0.05;
 GLfloat localAttQua = 0.0;
@@ -39,7 +40,12 @@ void createGroundLights() {
 	glLightf(lights[nLights], GL_SPOT_CUTOFF, cutoffv);
 	glLightf(lights[nLights], GL_SPOT_EXPONENT, expv);
 	glEnable(lights[nLights]);
-	nLights++;
+
+	if (lightsActive[nLights] != true) {
+		lightsActive[nLights] = true;
+		nLights++;
+	}
+		
 }
 
 
@@ -148,7 +154,7 @@ void lightinit() {
 	//Ambient
 	glLightModelfv(GL_LIGHT_MODEL_AMBIENT, GlobalLightAmbient);
 	//Let there be lights
-	createCeilingLights();
-	createSpectatorLights();
+	//createCeilingLights();
+	//createSpectatorLights();
 	createGroundLights();
 }

@@ -108,9 +108,6 @@ void init(void) {
 	//Define the visible faces
 	glEnable(GL_CULL_FACE);
 	glCullFace(GL_BACK);
-
-	//Don't mind Nelly Furtado, this keeps the lights on
-	lightinit();
 }
 
 void resizeWindow(GLsizei w, GLsizei h) {
@@ -232,7 +229,12 @@ void display(void) {
 	glLoadIdentity();
 	gluLookAt(obsP[0], obsP[1], obsP[2], lookP[0], lookP[1], lookP[2], 0, 1, 0);
 	glDisable(GL_NORMALIZE);
+
+	//Don't mind Nelly Furtado, this keeps the lights on
+	lightinit();
+
 	drawScene();
+
 	glDisable(GL_DEPTH_TEST);
 	glDisable(GL_CULL_FACE);
 	glDisable(GL_LIGHTING);
