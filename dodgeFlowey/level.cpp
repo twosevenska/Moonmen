@@ -148,6 +148,7 @@ void drawWalls(GLfloat x, GLfloat y, GLfloat z) {
 
 	//Floor
 	glEnable(GL_BLEND);
+	glBlendFunc(GL_ONE, GL_ONE);
 	glBindTexture(GL_TEXTURE_2D, getTexture("floorTile.bmp"));
 	glPushMatrix();
 	glTranslatef(x / 2.0, 0, z - 4.0);
@@ -439,11 +440,13 @@ void drawLevel(GLboolean *activeTargets, GLint *actions) {
 	if(actions[3] == 2)
 		drawTargets(x, z, 3.5, activeTargets);
 
-	if (glassHeightDec <= -16.0) actions[1] = 0;
-	if (glassHeightDec > -16.0 && actions[1] == 1) {
-		drawCoverGlass(x, glassHeightDec, z);
+	if (glassHeightDec <= -16.0)
+		actions[1] = 0;
+	if (glassHeightDec > -16.0 && actions[1] == 1)
 		glassHeightDec -= 0.2;
-	}
+
+	drawCoverGlass(x, glassHeightDec, z);
+
 	if (actions[4] == 1 && activeTargets[4])
 		drawBigTarget(0.0, true);
 
