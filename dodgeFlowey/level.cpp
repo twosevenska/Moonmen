@@ -43,15 +43,15 @@ void make_plane(GLfloat width, GLfloat height, GLfloat densityValue) {
 					glTexCoord2f(0.0f, 0.0f);
 				}
 				else {
-					glTexCoord2f(0.0f, 1.0f);
+					glTexCoord2f(0.0f, densityValue/2.0);
 				}
 				glVertex3f(w, h, 0);
 
 				glNormal3f(0.0f, 0.0f, 1.0f);
 				if (textureHalf % 2 == 0)
-					glTexCoord2f(1.0f, 0.0f);
+					glTexCoord2f(densityValue / 2.0, 0.0f);
 				else
-					glTexCoord2f(1.0f, 1.0f);
+					glTexCoord2f(densityValue / 2.0, densityValue / 2.0);
 				glVertex3f(w + densityValue, h, 0);
 
 				textureHalf++;
@@ -61,9 +61,9 @@ void make_plane(GLfloat width, GLfloat height, GLfloat densityValue) {
 			for (GLfloat h = height; h >= 0.0; h -= densityValue) {
 				glNormal3f(0.0f, 0.0f, 1.0f);
 				if (textureHalf % 2 == 0)
-					glTexCoord2f(1.0f, 0.0f);
+					glTexCoord2f(densityValue / 2.0, 0.0f);
 				else
-					glTexCoord2f(1.0f, 1.0f);
+					glTexCoord2f(densityValue / 2.0, densityValue / 2.0);
 				glVertex3f(w + densityValue, h, 0);
 
 				glNormal3f(0.0f, 0.0f, 1.0f);
@@ -71,7 +71,7 @@ void make_plane(GLfloat width, GLfloat height, GLfloat densityValue) {
 					glTexCoord2f(0.0f, 0.0f);
 				}
 				else {
-					glTexCoord2f(0.0f, 1.0f);
+					glTexCoord2f(0.0f, densityValue / 2.0);
 				}
 				glVertex3f(w, h, 0);
 				textureHalf++;
@@ -361,13 +361,13 @@ void drawFog(GLfloat distance, GLfloat density) {
 }
 
 void drawSmallTarget(GLfloat x, GLfloat y, GLfloat z, GLfloat rot) {
-	if (lights_on)
+	/*if (lights_on)
 		glDisable(GL_LIGHTING);
 
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE);
 	glEnable(GL_BLEND);
 	glColor4f(CGLASS);
-	glPushMatrix();
+	
 	glTranslatef(x, y, z);
 	glRotatef(rot, 0.0, 0.0, 1.0);
 	glTranslatef(-1.0, -1.0, 0.0);
@@ -376,36 +376,32 @@ void drawSmallTarget(GLfloat x, GLfloat y, GLfloat z, GLfloat rot) {
 	glDisable(GL_BLEND);
 
 	if (lights_on)
-		glEnable(GL_LIGHTING);
+		glEnable(GL_LIGHTING);*/
 
-	createMaskedTextureObject("targetMask.bmp", "targetOrange.bmp", x, y, z, rot);
+	GLfloat pos[3] = {x,y,z};
+	GLfloat dim[3] = {2.0,2.0,2.0};
+
+	glPushMatrix();
+	glTranslatef(0.0, -0.5, 0.0);
+	createMaskedTextureObject("targetMask.bmp", "targetOrange.bmp", pos, dim, rot,false);
+	glPopMatrix();
 }
 
 void drawBigTarget(GLfloat rot, GLboolean bad) {
-	if (lights_on)
-		glDisable(GL_LIGHTING);
+	GLfloat pos[3] = { 0,0,0 };
+	GLfloat dim[3] = { 6.0, 6.0, 6.0 };
 
-	//glBlendFunc(GL_SRC_ALPHA, GL_ONE);
-	glEnable(GL_BLEND);
-	glColor4f(CGLASS);
 	glPushMatrix();
-	glRotatef(rot, 1.0, 0.0, 0.0);
-	glTranslatef(-2.0, 2.0, 0.0);
-	make_plane(4.0, 6.0, 0.2);
-	glPopMatrix();
-	glDisable(GL_BLEND);
-
-	if (lights_on)
-		glEnable(GL_LIGHTING);
-
+	glTranslatef(-2.0, 3.0, 0.0);
 	if(bad)
-		createMaskedTextureObject("eggmanMask.bmp", "eggman.bmp", -2.0, 2.0, 0.0, rot);
+		createMaskedTextureObject("eggmanMask.bmp", "eggman.bmp", pos, dim, rot,true);
 	else
-		createMaskedTextureObject("winnieMask.bmp", "winnie.bmp", -2.0, 2.0, 0.0, rot);
+		createMaskedTextureObject("winnieMask.bmp", "winnie.bmp", pos, dim, rot,true);
+	glPopMatrix();
+
 }
 
 void drawTargets(GLfloat x, GLfloat z, GLfloat alt, GLboolean *activeTargets) {
-
 	//First block targets
 	if (activeTargets[0])
 		drawSmallTarget(-x / 2.0 + 2.0, alt, z - 10.2, 0.0);
