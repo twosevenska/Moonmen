@@ -37,6 +37,7 @@ GLuint getTexture(std::string name) {
 
 
 void createMaskedTextureObject(std::string maskName, std::string textureName, GLfloat* pos, GLfloat* dim, GLfloat rot, GLboolean boss) {
+	
 	if (lights_on)
 		glDisable(GL_LIGHTING);
 
@@ -59,7 +60,6 @@ void createMaskedTextureObject(std::string maskName, std::string textureName, GL
 	glTexCoord2f(0.0f, 1.0f); glVertex3f(0.0f, dim[1], 0.0f);
 	glEnd();
 
-	//make_plane(dim[0], dim[1], dim[2]);
 	glPopMatrix();
 
 	if(boss)
@@ -81,7 +81,6 @@ void createMaskedTextureObject(std::string maskName, std::string textureName, GL
 	glTexCoord2f(0.0f, 1.0f); glVertex3f(0.0f, dim[1], 0.0f);
 	glEnd();
 	
-	//make_plane(dim[0], dim[1], dim[2]);
 	glPopMatrix();
 
 	//glEnable(GL_DEPTH_TEST);							// Enable Depth Testing

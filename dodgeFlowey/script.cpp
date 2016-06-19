@@ -24,6 +24,15 @@ void scripting(GLint *actions, GLboolean *activeTargets) {
 	
 	frames++;
 
+	if (actions[6] == 1) {
+		MessageBox(0, "Good Job", NULL, MB_OK | MB_ICONSTOP);
+		exit(0);
+	}
+	if (actions[6] == 2) {
+		MessageBox(0, "Pity", NULL, MB_OK | MB_ICONSTOP);
+		exit(0);
+	}
+
 	if (checkTargets(activeTargets))
 		actions[3] = 1;
 	else if (actions[4] == 0) {
@@ -59,19 +68,11 @@ void scripting(GLint *actions, GLboolean *activeTargets) {
 	if (actions[4] == 4)
 		endFrames++;
 
-	if (endFrames > 40 && !activeTargets[4])
+	if (endFrames > 100 && !activeTargets[4])
 		actions[5] = 1;
-	else if (endFrames > 40)
+	else if (endFrames > 100)
 		actions[6] = 1;
-
-	if (actions[6] == 2) {
-		MessageBox(0, "Pity", NULL, MB_OK | MB_ICONSTOP);
-		exit(0);
-	}if (actions[6] == 1) {
-		MessageBox(0, "Good Job", NULL, MB_OK | MB_ICONSTOP);
-		exit(0);
-	}
-
+	
 	if(frames == 1)
 		actions[1] = 1;
 	
@@ -86,8 +87,6 @@ void scripting(GLint *actions, GLboolean *activeTargets) {
 	if (actions[3] == 1 && gotBall) {
 		actions[3] = 2;
 	}
-
-	
 
 	if (actions[4] == 2 && actions[5] == 0) {
 		actions[3] = 1;

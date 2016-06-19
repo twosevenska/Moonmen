@@ -415,8 +415,6 @@ void drawTargets(GLfloat x, GLfloat z, GLfloat alt, GLboolean *activeTargets) {
 	if (activeTargets[3])
 		drawSmallTarget(x / 2.0 - 2.0, alt, -z + 4.2, 0.0);
 
-	if (activeTargets[4])
-		drawBigTarget(0.0, true);
 }
 
 void drawLevel(GLboolean *activeTargets, GLint *actions) {
@@ -454,10 +452,11 @@ void drawLevel(GLboolean *activeTargets, GLint *actions) {
 	
 	if (actions[5] == 1) {
 		drawFog(5.0, poisonDensity);
-		poisonDensity += 0.0005;
+		poisonDensity += 0.003;
 	}
-	if (poisonDensity > 0.25) {
-		actions[5] = 2;
+	printf("%.3f\n", poisonDensity);
+	if (poisonDensity > 0.15) {
+		actions[6] = 2;
 	}
 	drawTrapFloor(x, y, z, 0.0);
 }

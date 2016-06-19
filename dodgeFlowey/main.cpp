@@ -70,7 +70,7 @@ void init(void) {
 	glCullFace(GL_BACK);
 
 	//Don't mind Nelly Furtado, this keeps the lights on
-	//lightinit();
+	lightinit();
 }
 
 void resizeWindow(GLsizei w, GLsizei h) {
@@ -126,16 +126,17 @@ void display(void) {
 		activeTargets[4] = true;
 	}
 
+	if(god)
+		printf("actions: SC %d, Gl %d, Ball %d, Star %d, Gtar %d, Fog %d, End %d\n", 
+			actions[0], //Scientists speeches		
+				actions[1], //Glass animation		
+				actions[2], //Ball drawing		
+				actions[3], //Small targets drawing		
+				actions[4], //Big Target drawing		
+				actions[5], //Fog visible		
+				actions[6]  //EndLevel Diferenciator		
+		);
 	
-	printf("actions: SC %d, Gl %d, Ball %d, Star %d, Gtar %d, Fog %d, End %d\n", 
-		actions[0], //Scientists speeches		
-			actions[1], //Glass animation		
-			actions[2], //Ball drawing		
-			actions[3], //Small targets drawing		
-			actions[4], //Big Target drawing		
-			actions[5], //Fog visible		
-			actions[6]  //EndLevel Diferenciator		
-			);
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glViewport(0, 0, wScreen, hScreen);
