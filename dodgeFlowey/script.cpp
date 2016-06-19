@@ -25,7 +25,7 @@ void scripting(GLint *actions, GLboolean *activeTargets, irrklang::ISoundEngine*
 	
 	frames++;
 
-	if (actions[6] == 1 && endFrames > 200) {
+	if (actions[6] == 1 && endFrames > 170) {
 		MessageBox(0, "Thanks for playing our game.\nHope to see you next time.", NULL, MB_OK);
 		exit(0);
 	}
