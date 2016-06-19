@@ -26,7 +26,7 @@
 #define DGREY	 0.20, 0.20, 0.20, 1.0
 #define LGREY	 0.50, 0.50, 0.50, 1.0
 #define PI		 3.14159
-typedef enum {NULLIE, HELLO, FOLLOW, WAIT, HIT, PLEASE, TRUSTME, DONT } enumtext;
+typedef enum {NULLIE, HELLO, HIT, PLEASE, DONT } enumtext;
 
 
 //Materials

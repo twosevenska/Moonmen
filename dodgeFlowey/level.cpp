@@ -454,9 +454,9 @@ void drawLevel(GLboolean *activeTargets, GLint *actions) {
 		drawFog(5.0, poisonDensity);
 		poisonDensity += 0.003;
 	}
-	printf("%.3f\n", poisonDensity);
+
 	if (poisonDensity > 0.15) {
-		actions[6] = 2;
+		actions[6] = 1;
 	}
 	drawTrapFloor(x, y, z, 0.0);
 }

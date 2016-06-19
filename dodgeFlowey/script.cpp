@@ -9,6 +9,7 @@ boolean gotBall = false;
 GLboolean activatedBig = false;
 GLboolean endingMod = false;
 GLint endFrames = 0;
+GLboolean fogToActivate = false;
 
 GLboolean checkTargets(GLboolean *activeTargets) {
 	for (int i = 0; i < 4; i++) {
@@ -20,12 +21,12 @@ GLboolean checkTargets(GLboolean *activeTargets) {
 
 
 //Cientistas, Vidro, Bola, Targets pequenos, Target grande, Fog, end level 
-void scripting(GLint *actions, GLboolean *activeTargets) {
+void scripting(GLint *actions, GLboolean *activeTargets, irrklang::ISoundEngine* sEng, irrklang::ISoundSource** soundLib, int *timer) {
 	
 	frames++;
 
-	if (actions[6] == 1) {
-		MessageBox(0, "Good Job", NULL, MB_OK | MB_ICONSTOP);
+	if (actions[6] == 1 && endFrames > 200) {
+		MessageBox(0, "Thanks for playing our game.\nHope to see you next time.", NULL, MB_OK);
 		exit(0);
 	}
 	if (actions[6] == 2) {
@@ -33,13 +34,17 @@ void scripting(GLint *actions, GLboolean *activeTargets) {
 		exit(0);
 	}
 
-	if (checkTargets(activeTargets))
+	if (fogToActivate && endFrames > 80)
+		actions[5] = 1;
+
+	if (checkTargets(activeTargets)) {
 		actions[3] = 1;
-	else if (actions[4] == 0) {
+	}else if (actions[4] == 0) {
+		timer[HIT] = 10;
 		actions[3] = 2;
 		actions[4] = 1;
-	}
-	else if (actions[4] == 3) {
+	}else if (actions[4] == 3) {
+		timer[DONT] = 10;
 		actions[3] = 2;
 		actions[4] = 4;
 
@@ -68,14 +73,22 @@ void scripting(GLint *actions, GLboolean *activeTargets) {
 	if (actions[4] == 4)
 		endFrames++;
 
-	if (endFrames > 100 && !activeTargets[4])
-		actions[5] = 1;
-	else if (endFrames > 100)
-		actions[6] = 1;
-	
-	if(frames == 1)
+	if (endFrames > 50 && activeTargets[4] && !fogToActivate) {
+		fogToActivate = true;
+		sEng->play2D(soundLib[8]);
+	}
+	if (endFrames > 50 && !activeTargets[4]) {
+		actions[6] = 2;
+	}
+
+	if (frames == 1) {
+		sEng->play2D(soundLib[0]);
 		actions[1] = 1;
+	}
 	
+	if (frames == 40)
+		sEng->play2D(soundLib[1]);
+
 	if (actions[1] == 0 && !passGlassGoingDown) {
 		passGlassGoingDown = true;
 	}

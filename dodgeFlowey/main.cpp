@@ -6,12 +6,20 @@
 #include "light.h"
 #include "ballz.h"
 #include "script.h"
+#include "text.h"
 
 
 //Dev flags
 GLboolean god = false;
 GLboolean drawAxis = true;
 GLboolean textureDevMode = false;
+
+//Sounds
+irrklang::ISoundEngine* soundEngine;
+irrklang::ISound* backgroundSound;
+irrklang::ISoundSource* soundLib[20];
+GLboolean firstTargetHit = false;
+GLboolean firstRound = true;
 
 //Coordinate system variables
 GLfloat   xC = 70.0, yC = 70.0, zC = 70.0;
@@ -38,10 +46,15 @@ GLboolean ballMoving = false;
 
 //Targeting
 GLboolean activeTargets[5] = { true, true, true, true, false};
+GLboolean checkTargets[5] = { true, true, true, true, false };
 
 //Scripting		
 //Scientists, Glass, Ball, Small Targets, Big Target, Fog, EndLevel 		
 GLint actions[7] = { 0, 0, 0, 0, 0, 0, 0 };
+
+//2D stuff
+char *text[] = { "","HELLO.","HIT!","TRUST ME!", "DON'T!"};
+int timer[] = { 0,0,0,0,0 };
 
 //Time is a woobly thing
 GLint    repete = 2;
@@ -50,14 +63,41 @@ GLint    maxR = 20;
 GLint    numFrames = 60;              //numero de imagens a colocar em loop na tela
 GLint    msec = 80;					//.. definicao do timer (actualizacao)
 
-										// Sounds 
-irrklang::ISoundEngine *SoundEngine = irrklang::createIrrKlangDevice();
+
+void soundLoad(){
+	//Sound Engine
+	soundEngine = irrklang::createIrrKlangDevice();
+
+	//Start the background music
+	backgroundSound = soundEngine->play2D("resources/sounds/backgroundSound.mp3", true, false, true);
+	backgroundSound->setVolume(0.2f);
+
+	soundLib[0] = soundEngine->addSoundSourceFromFile("resources/sounds/0-Greetings.mp3");
+	soundLib[1] = soundEngine->addSoundSourceFromFile("resources/sounds/1-ThrowPreparation.mp3");
+	soundLib[2] = soundEngine->addSoundSourceFromFile("resources/sounds/2-Throw.mp3");
+	soundLib[3] = soundEngine->addSoundSourceFromFile("resources/sounds/3-FirstTarget.mp3");
+	soundLib[4] = soundEngine->addSoundSourceFromFile("resources/sounds/4-SmallTargetShatters.mp3");
+	soundLib[4]->setDefaultVolume(0.3f);
+	soundLib[5] = soundEngine->addSoundSourceFromFile("resources/sounds/5-BigTargetShatters.mp3");
+	soundLib[5]->setDefaultVolume(0.3f);
+	soundLib[6] = soundEngine->addSoundSourceFromFile("resources/sounds/6-EndRound1.mp3");
+	soundLib[7] = soundEngine->addSoundSourceFromFile("resources/sounds/7-StillAlive.mp3");
+	soundLib[8] = soundEngine->addSoundSourceFromFile("resources/sounds/8-PoohNOTBroken.mp3");
+	soundLib[9] = soundEngine->addSoundSourceFromFile("resources/sounds/9-Gas.mp3");
+	soundLib[9]->setDefaultVolume(0.2f);
+	
+}
 
 void init(void) {
 	if(god){
 		incy = 0.5;
 		inca = 0.03;
 	}
+	
+	soundLoad();
+
+	//Hello text
+	timer[HELLO] = 30;
 
 	glClearColor(0.0f, 0.0f, 0.0f, 0.5f);
 	glShadeModel(GL_SMOOTH);
@@ -83,8 +123,9 @@ void resizeWindow(GLsizei w, GLsizei h) {
 
 void drawScene() {
 	//reloadLightPos();
-	
-	if (actions[2])
+	int i;
+
+	if (actions[2] == 1)
 		ballMoving = drawBall(obsP, lookP, ballMoving, activeTargets);
 
 	//REFLEXÃO 
@@ -101,32 +142,69 @@ void drawScene() {
 
 	glStencilFunc(GL_EQUAL, 1, 1);//O stencil test passa apenas quando o pixel tem o valor 1 no stencil buffer
 	glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP); //Stencil buffer read-only
-
-	//if (getBallPosition()[2] > 0) {
-	glPushMatrix();
-	glScalef(1, -1, 1);
-	drawBall(obsP, lookP, ballMoving, activeTargets);
-	glPopMatrix();
 	
-	glDisable(GL_STENCIL_TEST); //Desactiva a utilização do stencil buffer
+	if (actions[2] == 1) {
+		//if (getBallPosition()[2] > 0) {
+		glPushMatrix();
+		glScalef(1, -1, 1);
+		drawBall(obsP, lookP, ballMoving, activeTargets);
+		glPopMatrix();
+	}
 
+	glDisable(GL_STENCIL_TEST); //Desactiva a utilização do stencil buffer
+	
 	drawLevel(activeTargets, actions);
+
+	for (i = 0; i < 4; i++) {
+		if (checkTargets[i] != activeTargets[i] && !firstTargetHit) {
+			firstTargetHit = true;
+			soundEngine->play2D(soundLib[3]);
+			soundEngine->play2D(soundLib[4]);
+		}
+		else if (checkTargets[i] != activeTargets[i])
+			soundEngine->play2D(soundLib[4]);
+	}
+
+	if (checkTargets[4] == false && activeTargets[4] == true && firstRound)
+		soundEngine->play2D(soundLib[7]);
+
+	if (checkTargets[4] == true && activeTargets[4] == false) {
+		if (!firstRound) {
+			soundEngine->play2D(soundLib[5]);
+		}
+		else {
+			firstRound = false;
+			timer[PLEASE] = 20;
+			soundEngine->play2D(soundLib[5]);
+			soundEngine->play2D(soundLib[6]);
+		}
+	}
 }
 
 void display(void) {
+	int i;
+
+	if (actions[6] == 1) {
+		actions[2] = 0;
+		obsP[1]--;
+		lookP[0] = rand() % 6;
+		lookP[1] = rand() % 6;
+		lookP[2] = 0;
+	}
+
+	for (i = 0; i < 5; i++) {
+		checkTargets[i] = activeTargets[i];
+	}
+	
 
 	if (!textureDevMode) {
-
 		//Scripting conditionals
-		scripting(actions, activeTargets);
+		scripting(actions, activeTargets, soundEngine, soundLib, timer);
 	}
 	else {
-		actions[2] = 1;
-		actions[4] = 1;
-		activeTargets[4] = true;
+		actions[5] = 1;
 	}
 
-	if(god)
 		printf("actions: SC %d, Gl %d, Ball %d, Star %d, Gtar %d, Fog %d, End %d\n", 
 			actions[0], //Scientists speeches		
 				actions[1], //Glass animation		
@@ -155,9 +233,35 @@ void display(void) {
 	gluLookAt(obsP[0], obsP[1], obsP[2], lookP[0], lookP[1], lookP[2], 0, 1, 0);
 	glDisable(GL_NORMALIZE);
 	drawScene();
+	glDisable(GL_DEPTH_TEST);
+	glDisable(GL_CULL_FACE);
+	glDisable(GL_LIGHTING);
+
+	glMatrixMode(GL_PROJECTION);				// Load Projection Matrix
+	glPushMatrix();								// Push Projection
+	glLoadIdentity();							// Reset Projection Matrix
+	gluOrtho2D(0.0, wScreen, 0.0, hScreen);		// Set Paralel Projection
+	glMatrixMode(GL_MODELVIEW);					// Load ModelView Matrix
+	glPushMatrix();		// Push ModelView
+	glLoadIdentity();							// Reset ModelView Matrix
+
+												//2d code
+	load_text(wScreen, hScreen, text, timer);
+	if (actions[0] != 0)
+	{
+		changetimer(actions[0], 30, timer);
+		actions[0] = 0;
+	}
+
+	glEnable(GL_LIGHTING);
+	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_CULL_FACE);
+
+	glPopMatrix();
+
+
 	glutSwapBuffers();
 }
-
 
 void Timer(int value) {
 	glutPostRedisplay();
@@ -231,6 +335,8 @@ void keyboard(unsigned char key, int x, int y) {
 		}
 		break;
 	case ' ':
+		if (!ballMoving)
+			soundEngine->play2D(soundLib[2]);
 		ballMoving = !ballMoving;
 		break;
 		//--------------------------- Textura no papel de parede
@@ -352,8 +458,7 @@ void createWindow() {
 }
 
 int main(int argc, char** argv) {
-	//Start the background music
-	//SoundEngine->play2D("resources/sounds/jacks_office.mp3", GL_FALSE);
+
 	glutInit(&argc, argv);
 
 	createWindow();
@@ -369,5 +474,6 @@ int main(int argc, char** argv) {
 
 	glutMainLoop();
 
+	soundEngine->drop();
 	return 0;
 }
