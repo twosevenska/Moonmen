@@ -296,6 +296,7 @@ void drawCoverGlass(GLfloat x, GLfloat y, GLfloat z) {
 }
 
 void drawTrapFloor(GLfloat x, GLfloat y, GLfloat z, GLfloat slide) {
+	
 	//Left Segment
 	glEnable(GL_TEXTURE_2D);
 	glBindTexture(GL_TEXTURE_2D, getTexture("floorTile.bmp"));
@@ -428,8 +429,9 @@ void drawLevel(GLboolean *activeTargets, GLint *actions) {
 	}
 	bool lockWindow = false;
 	GLfloat glassHeight = y - 12.0;
-	//drawModels(x, y, z);
+	drawModels(x, y, z);
 	drawWalls(x, y, z);
+	drawTrapFloor(x, y, z, 0.0);
 	drawSpectator(x, y - 4.0, z);
 
 	drawCover(x, y, z);
@@ -458,5 +460,5 @@ void drawLevel(GLboolean *activeTargets, GLint *actions) {
 	if (poisonDensity > 0.15) {
 		actions[6] = 1;
 	}
-	drawTrapFloor(x, y, z, 0.0);
+	
 }

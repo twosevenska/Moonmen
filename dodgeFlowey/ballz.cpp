@@ -290,6 +290,11 @@ GLboolean drawBall(GLfloat *obs, GLfloat *lookAt, GLboolean moving, GLboolean *t
 	}
 
 	//Color Materials
+	GLfloat mat_specularBall[] = { 1.0, 1.0, 1.0, 1.0 };
+	GLfloat mat_difBall[] = { 0.9f, 0.7f, 0.7f, 0.7f };
+	GLfloat mat_shininessBall[] = { 50.0 };
+
+
 	glEnable(GL_COLOR_MATERIAL);
 	glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular);
 	glMaterialfv(GL_FRONT, GL_SHININESS, mat_shininess);
