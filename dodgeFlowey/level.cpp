@@ -437,7 +437,7 @@ void drawLevel(GLboolean *activeTargets, GLint *actions) {
 	drawCover(x, y, z);
 
 
-	if(actions[3] == 2)
+	if (actions[3] == 2)
 		drawTargets(x, z, 3.5, activeTargets);
 
 	if (glassHeightDec <= -16.0)
@@ -449,10 +449,12 @@ void drawLevel(GLboolean *activeTargets, GLint *actions) {
 
 	if (actions[4] == 1 && activeTargets[4])
 		drawBigTarget(0.0, true);
-
+	else if (actions[4] == 4 && activeTargets[4]) 
+		drawBigTarget(0.0, false);
+	
 	if (actions[5] == 1) {
 		drawFog(5.0, poisonDensity);
-		poisonDensity += 0.005;
+		poisonDensity += 0.0005;
 	}
 	if (poisonDensity > 0.25) {
 		actions[5] = 2;

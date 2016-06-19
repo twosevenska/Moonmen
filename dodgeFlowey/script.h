@@ -1,3 +1,3 @@
 #pragma once
-void scripting(GLint *actions);
+void scripting(GLint *actions, GLboolean *activeTargets);
 	

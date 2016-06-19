@@ -42,7 +42,6 @@ GLboolean activeTargets[5] = { true, true, true, true, false};
 //Scripting		
 //Scientists, Glass, Ball, Small Targets, Big Target, Fog, EndLevel 		
 GLint actions[7] = { 0, 0, 0, 0, 0, 0, 0 };
-GLboolean activatedBigOnce = false;
 
 //Time is a woobly thing
 GLint    repete = 2;
@@ -71,15 +70,7 @@ void init(void) {
 	glCullFace(GL_BACK);
 
 	//Don't mind Nelly Furtado, this keeps the lights on
-	lightinit();
-}
-
-GLboolean checkTargets() {
-	for (int i = 0; i < 4; i++) {
-		if (activeTargets[i])
-			return true;
-	}
-	return false;
+	//lightinit();
 }
 
 void resizeWindow(GLsizei w, GLsizei h) {
@@ -127,23 +118,7 @@ void display(void) {
 	if (!textureDevMode) {
 
 		//Scripting conditionals
-		if (checkTargets())
-			actions[3] = 1;
-		else if(actions[4] == 0){
-			actions[3] = 0;
-			actions[4] = 1;
-		}else
-			
-		if (!activeTargets[4] && actions[4] == 1 && !activatedBigOnce) {
-			activatedBigOnce = true;
-			activeTargets[4] = true;
-		}
-		
-		if (!activeTargets[4] && !checkTargets() && activatedBigOnce) {
-			actions[4] = 2;
-		}
-
-		scripting(actions);
+		scripting(actions, activeTargets);
 	}
 	else {
 		actions[2] = 1;
@@ -151,7 +126,7 @@ void display(void) {
 		activeTargets[4] = true;
 	}
 
-	/*
+	
 	printf("actions: SC %d, Gl %d, Ball %d, Star %d, Gtar %d, Fog %d, End %d\n", 
 		actions[0], //Scientists speeches		
 			actions[1], //Glass animation		
@@ -161,12 +136,6 @@ void display(void) {
 			actions[5], //Fog visible		
 			actions[6]  //EndLevel Diferenciator		
 			);
-	*/
-
-	if (actions[6] == 2) {
-		MessageBox(0, "Pity", NULL, MB_OK | MB_ICONSTOP);
-		exit(0);
-	}
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glViewport(0, 0, wScreen, hScreen);
