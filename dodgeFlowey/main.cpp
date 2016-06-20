@@ -342,9 +342,13 @@ void keyboard(unsigned char key, int x, int y) {
 		ballMoving = !ballMoving;
 		break;
 		//--------------------------- Textura no papel de parede
-	case 't':
-	case 'T':
-		glutPostRedisplay();
+	case 'p':
+	case 'P':
+		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+		break; 
+	case 'l':
+	case 'L':
+		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 		break;
 		//--------------------------- Projeccao
 	case 'q':

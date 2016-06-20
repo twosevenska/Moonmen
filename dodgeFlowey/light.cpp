@@ -40,11 +40,8 @@ void createGroundLights() {
 	glEnable(lights[nLights]);
 }
 
-
-
 void createSpectatorLights() {
 	
-
 	GLfloat LightAmbient[] = { 1.0f, 1.0f, 1.0f, 1.0f };
 	GLfloat LightDiffuse[] = { 1.0f, 1.0f, 1.0f, 1.0f };
 	GLfloat LightSpecular[] = { 1.0f, 1.0f, 1.0f, 1.0f };
