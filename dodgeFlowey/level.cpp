@@ -96,6 +96,7 @@ void load_all_level_textures() {
 	load_texture("winnieMask.bmp");
 	load_texture("winnie.bmp");
 	load_texture("blockTexture.bmp");
+	load_texture("blockTexture2.bmp");
 }
 
 void drawBlock(GLfloat x, GLfloat y, GLfloat z) {
@@ -245,7 +246,7 @@ void drawMirrorPlate() {
 void drawCover(GLfloat x, GLfloat y, GLfloat z) {
 	//Main Cover
 	glEnable(GL_TEXTURE_2D);
-	glBindTexture(GL_TEXTURE_2D, getTexture("blockTexture.bmp"));
+	glBindTexture(GL_TEXTURE_2D, getTexture("blockTexture2.bmp"));
 	glPushMatrix();
 	glTranslatef(0.0, 0.0, z - 6.0);
 	drawBlock(x, 2.0, 0.2);

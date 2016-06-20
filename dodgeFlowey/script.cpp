@@ -76,6 +76,7 @@ void scripting(GLint *actions, GLboolean *activeTargets, irrklang::ISoundEngine*
 	if (endFrames > 50 && activeTargets[4] && !fogToActivate) {
 		fogToActivate = true;
 		sEng->play2D(soundLib[8]);
+		sEng->play2D(soundLib[9]);
 	}
 	if (endFrames > 50 && !activeTargets[4]) {
 		actions[6] = 2;
